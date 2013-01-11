@@ -2,6 +2,7 @@ require 'rspec'
 require 'active_support/core_ext/string/strip'
 
 class New
+  STRING_REGEXP = /(?<quote>"|')(?<string>.*)\k<quote>/
   attr_accessor :results
 
   def initialize(code)
@@ -13,9 +14,8 @@ class New
     lines = code.split("\n")
     lines.each do |line|
       parts = line.split(': ')
-      string_regexp = /(?<quote>"|')(?<string>.*)\k<quote>/
-      if r = string_regexp.match(parts[1])
-        result = r['string']
+      if string = STRING_REGEXP.match(parts[1]).try(:[], 'string')
+        result = string
       else
         result = Integer(parts[1])
       end
@@ -34,6 +34,7 @@ describe New do
   it 'can assign a variable' do
     new = New.new(%{x: 1}).parse
 
+    expect(new.results["x"]).to be_a(Integer)
     expect(new.results["x"]).to eq(1)
   end
 
