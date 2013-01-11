@@ -1,6 +1,5 @@
 require 'rspec'
 require 'active_support/core_ext/string/strip'
-require 'pry'
 
 class New
   attr_accessor :results
