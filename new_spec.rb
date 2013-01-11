@@ -7,7 +7,14 @@ def parse(code)
   lines = code.split("\n")
   lines.each do |line|
     parts = line.split(': ')
-    @results[parts[0]] = parts[1].to_i
+    string_regexp = /"(?<string>.*)"/
+    if r = string_regexp.match(parts[1])
+      result = r['string']
+    else
+      result = parts[1].to_i
+    end
+
+    @results[parts[0]] = result
   end
 end
 
@@ -28,5 +35,13 @@ describe "it" do
 
     expect(@results["x"]).to eq(1)
     expect(@results["y"]).to eq(2)
+  end
+
+  it 'can assign a string even' do
+    parse(<<-CODE.strip_heredoc)
+      x: "stringy"
+    CODE
+
+    expect(@results["x"]).to eq("stringy")
   end
 end
