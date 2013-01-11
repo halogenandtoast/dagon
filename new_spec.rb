@@ -20,9 +20,7 @@ end
 
 describe "it" do
   it 'can assign a variable' do
-    parse(<<-CODE.strip_heredoc)
-      x: 1
-    CODE
+    parse(%{x: 1})
 
     expect(@results["x"]).to eq(1)
   end
@@ -38,17 +36,13 @@ describe "it" do
   end
 
   it 'can assign a string even' do
-    parse(<<-CODE.strip_heredoc)
-      x: "stringy"
-    CODE
+    parse(%{x: "stringy"})
 
     expect(@results["x"]).to eq("stringy")
   end
 
   it "can has '' string syntax too" do
-    parse(<<-CODE.strip_heredoc)
-      x: 'stringy'
-    CODE
+    parse(%{x: 'stringy'})
 
     expect(@results["x"]).to eq("stringy")
   end
