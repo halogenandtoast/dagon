@@ -16,6 +16,8 @@ class New
       parts = line.split(': ')
       if string = STRING_REGEXP.match(parts[1]).try(:[], 'string')
         result = string
+      elsif parts[1] =~ /\d+\.\d+/
+        result = Float(parts[1])
       else
         result = Integer(parts[1])
       end
@@ -46,6 +48,13 @@ describe New do
 
     expect(new.results["x"]).to eq(1)
     expect(new.results["y"]).to eq(2)
+  end
+
+  it 'maybe knows floats' do
+    new = New.new("x: 1.0").parse
+
+    expect(new.results["x"]).to eq(1.0)
+    puts new.results["x"]
   end
 
   it 'can assign a string even' do
