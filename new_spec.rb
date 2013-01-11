@@ -7,11 +7,11 @@ def parse(code)
   lines = code.split("\n")
   lines.each do |line|
     parts = line.split(': ')
-    string_regexp = /"(?<string>.*)"/
+    string_regexp = /(?<quote>"|')(?<string>.*)\k<quote>/
     if r = string_regexp.match(parts[1])
       result = r['string']
     else
-      result = parts[1].to_i
+      result = Integer(parts[1])
     end
 
     @results[parts[0]] = result
@@ -43,5 +43,17 @@ describe "it" do
     CODE
 
     expect(@results["x"]).to eq("stringy")
+  end
+
+  it "can has '' string syntax too" do
+    parse(<<-CODE.strip_heredoc)
+      x: 'stringy'
+    CODE
+
+    expect(@results["x"]).to eq("stringy")
+  end
+
+  it "doesn't work with mismatched quote types" do
+    expect { parse(%{x: "stringy'}) }.to raise_error(ArgumentError)
   end
 end
