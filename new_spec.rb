@@ -21,9 +21,11 @@ describe "it" do
 
   it 'can assign another variable' do
     parse(<<-CODE.strip_heredoc)
+      x: 1
       y: 2
     CODE
 
+    expect(@x).to eq(1)
     expect(@y).to eq(2)
   end
 end
