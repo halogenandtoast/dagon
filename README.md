@@ -24,14 +24,14 @@ fibonacci-imperative(n):
 ### Hello
 
 ```
-print "Hello World"
+puts "Hello World"
 ```
 
 Outputs strings "Hello " "World\n" (same result as above):
 
 ```
-put "Hello "
-put "World\n"
+print "Hello "
+print "World\n"
 ```
 
 ## Assignment
