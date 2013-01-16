@@ -18,8 +18,9 @@ end
 ---- header
 ---- inner
   attr_accessor :table
-  def initialize
+  def initialize(tokens)
     @table = [:program]
+    @tokens = tokens
   end
 
   def parse
@@ -28,12 +29,33 @@ end
   end
 
   def next_token
-    @tokens.shift
+    tokens.shift
   end
+
+  private
+  attr_accessor :tokens
 ---- footer
   describe Ast::Generator, 'parse' do
     describe 'assignment' do
+      it 'handles integers' do
+        # y: 4
+        tokens = [
+          [:IDENTIFIER, 'y'],
+          [":", ":"],
+          [" ", " "],
+          [:INTEGER, "4"],
+        ]
+        generate(tokens).should == [
+          :program,
+          [:assignment,
+            [:identifier, 'y'],
+            [:integer, 4]
+          ]
+        ]
+      end
+
       it 'handles floats' do
+        # x: 5.0
         tokens = [
           [:IDENTIFIER, 'x'],
           [":", ":"],
