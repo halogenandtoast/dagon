@@ -5,7 +5,7 @@ task :clean do
     `rm lib/ethos/tokenizer.rb`
   end
 end
-task "lib/ethos/tokenizer.rb" => "lib/ethos/tokenizer.rl" do
+file "lib/ethos/tokenizer.rb" => "lib/ethos/tokenizer.rl" do
   `ragel -R lib/ethos/tokenizer.rl`
 end
 
