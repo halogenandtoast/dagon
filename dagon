@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require './lib/ethos/tokenizer'
+require './lib/dagon/tokenizer'
 
 def read_program
   if ARGV[0]
@@ -10,7 +10,7 @@ def read_program
   end
 end
 
-tokenizer = Ethos::Tokenizer.new
+tokenizer = Dagon::Tokenizer.new
 tokens = tokenizer.tokenize read_program
 puts tokens.inspect
 

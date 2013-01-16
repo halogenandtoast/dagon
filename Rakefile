@@ -1,11 +1,11 @@
 task default: [:clean, :build]
-task build: "lib/ethos/tokenizer.rb"
+task build: "lib/dagon/tokenizer.rb"
 task :clean do
-  if File.exists? "./lib/ethos/tokenizer.rb"
-    `rm lib/ethos/tokenizer.rb`
+  if File.exists? "./lib/dagon/tokenizer.rb"
+    `rm lib/dagon/tokenizer.rb`
   end
 end
-file "lib/ethos/tokenizer.rb" => "lib/ethos/tokenizer.rl" do
-  `ragel -R lib/ethos/tokenizer.rl`
+file "lib/dagon/tokenizer.rb" => "lib/dagon/tokenizer.rl" do
+  `ragel -R lib/dagon/tokenizer.rl`
 end
 
