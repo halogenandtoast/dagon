@@ -1,0 +1,88 @@
+StringBuilder:
+  String[] -strings: []
+
+  append(string):
+    string: verify(string)
+    ? string.length > 0
+      -strings<: string
+
+  append-line(string: nuttin):
+    string.stringify
+    append(string)
+    append("\r\n")
+
+  string:
+    -strings.join('')
+
+  clear:
+    -strings: []
+
+  -empty?
+    -strings.length = 0
+
+describe(StringBuilder)
+  it('starts as an empty string')
+    sb: StringBuilder()
+
+    expect(sb.string).to = ""
+
+describe(StringBuilder, ".append")
+  it('appends a string into a new builder')
+    sb: StringBuilder()
+
+    sb.append("a string")
+
+    expect(sb.string).to = "a string"
+
+  it('appends a string into an existing builder')
+    sb: StringBuilder()
+    sb.append("a string")
+
+    sb.append("another string")
+
+    expect(sb.string).to = "a stringanother string"
+
+  it('strigifies an appended number')
+    sb: StringBuilder()
+
+    sb.append(1)
+
+    expect(sb.string).to = ""
+
+  it('returns the StringBuilder so that it can be chained')
+    sb: StringBuilder()
+
+    builder = sb.append('string')
+
+    expect(builder).to = sb
+
+  it('can be chained off of itself')
+    sb: StringBuilder
+
+    sb.append("a ").append("string")
+
+    expect(sb.string).to = "a string"
+
+describe(StringBuilder, ".append")
+  it('appends a string and a newline')
+    sb: StringBuilder()
+
+    sb.append-line('a string')
+
+    expect(sb.string).to = "a string\r\n"
+
+  it('appends into an existing builder')
+    sb: StringBuilder()
+    sb.append("start")
+
+    sb.append-line("newline after me")
+
+    expect(sb.string).to = "startnewline after me\r\n"
+
+  it('appends only a newline if called with no argument')
+    sb: StringBuilder()
+    sb.append("Hello World")
+
+    sb.append-line
+
+    expect(sb.string).to = "Hello World\r\n"
