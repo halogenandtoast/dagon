@@ -1,6 +1,11 @@
-# Ethos
+# The Esoteric Order of Dagon
 
-## Cut to the chase
+This is a language designed and implemented by [Caleb Thompson](/calebthompson) and [Goose Mongeau](/halogenandtoast).
+
+You can call it Dagon for short.
+
+
+## Dagon As She is Wrote
 
 ```
 fibonacci-recursive(n): # fuckin hyphens instead of underscores.
@@ -34,7 +39,9 @@ print "Hello "
 print "World\n"
 ```
 
-## Assignment
+## Syntax
+
+### Assignment
 
 ```
 x: 1
@@ -42,7 +49,7 @@ Integer x: 1 # strongly typed
 x: "string" # raises error or warning: Invalid type (assigning String to Integer)
 ```
 
-## Classes
+### Classes
 
 /^(?:[A-Z][a-z]+)+:$/
 
@@ -56,7 +63,7 @@ Tree(Plant):
 
 ```
 
-## Methods
+### Methods
 
 /^(?:[a-z]+-?)+[^-][\(\)]?:\n  $/
 
@@ -69,7 +76,7 @@ print():
   # definition
 ```
 
-## Variables
+### Variables
 
 /^(?:[a-z]+-?)+[^-]: $/
 
