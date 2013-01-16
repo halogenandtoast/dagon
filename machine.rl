@@ -3,7 +3,7 @@ $column = 0
 $tokens = []
 %%{
   machine new_parser;
-  new_variable = '-'? lower (lower | digit | '-')*;
+  identifier = '-'? lower (lower | digit | '-')*;
   assignment = ': ';
   float = digit+ '.' digit+;
   literal = digit;
@@ -11,7 +11,7 @@ $tokens = []
   string = "\"" (any - "\"")* "\"";
 
   main := |*
-    new_variable => { emit(:variable, data, ts, te) };
+    identifier => { emit(:variable, data, ts, te) };
     assignment => { emit(:assignment, data, ts, te) };
     float => { emit(:float, data, ts, te) };
     literal => { emit(:literal, data, ts, te) };
@@ -23,9 +23,9 @@ $tokens = []
 
 %% write data;
 
-def emit(name, data, ts, te)
-  $tokens << [[$line, $column], name, data[ts...te]]
-  $column += te - ts
+def emit(name, data, start_char, end_char)
+  $tokens << [[$line, $column], name, data[start_char...end_char]]
+  $column += end_char - start_char
 end
 
 def problem(data, ts, te)
@@ -33,7 +33,7 @@ def problem(data, ts, te)
   raise "Oops {#{data[ts...-1]}}"
 end
 
-def tokenize data
+def tokenize(data)
   eof = data.length
   %% write init;
   %% write exec;
