@@ -20,12 +20,6 @@ end
   attr_accessor :table
   def initialize
     @table = [:program]
-    @tokens = [
-      [:IDENTIFIER, 'x'],
-      [":", ":"],
-      [" ", " "],
-      [:FLOAT, "5.0"],
-    ]
   end
 
   def parse
@@ -38,12 +32,25 @@ end
   end
 ---- footer
   describe Ast::Generator, 'parse' do
-    it 'parses' do
-      Ast::Generator.new.parse.table.should == [:program,
-        [:assignment,
-          [:identifier, 'x'],
-          [:float, 5.0]
+    describe 'assignment' do
+      it 'handles floats' do
+        tokens = [
+          [:IDENTIFIER, 'x'],
+          [":", ":"],
+          [" ", " "],
+          [:FLOAT, "5.0"],
         ]
-      ]
+        generate(tokens).should == [
+          :program,
+          [:assignment,
+            [:identifier, 'x'],
+            [:float, 5.0]
+          ]
+        ]
+      end
     end
+  end
+
+  def generate(tokens)
+    Ast::Generator.new(tokens).parse.table
   end
