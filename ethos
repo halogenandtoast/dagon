@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require './lib/ethos/tokenizer'
+
+def read_program
+  if ARGV[0]
+    File.read(ARGV[0])
+  else
+    STDIN.read
+  end
+end
+
+tokenizer = Ethos::Tokenizer.new
+tokens = tokenizer.tokenize read_program
+puts tokens.inspect
+
