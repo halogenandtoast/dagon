@@ -4,7 +4,7 @@ $tokens = []
 %%{
   machine new_parser;
   new_variable = '-'? lower (lower | digit | '-')*;
-  assignment = ':';
+  assignment = ': ';
   float = digit+ '.' digit+;
   literal = digit;
   newline = "\r"? "\n" | "\r";
@@ -17,7 +17,6 @@ $tokens = []
     literal => { emit(:literal, data, ts, te) };
     string => { emit(:string, data, ts, te) };
     newline { $line += 1; $column = 0 };
-    space => { emit(:space, data, ts, te) };
     any => { problem(data, ts, te) };
   *|;
 }%%
