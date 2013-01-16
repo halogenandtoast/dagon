@@ -1,30 +1,35 @@
 $line = 0
 $column = 0
 $tokens = []
+
+=begin
 %%{
   machine new_parser;
   identifier = '-'? lower (lower | digit | '-')*;
   assignment = ':';
   float = digit+ '.' digit+;
-  literal = digit;
+  integer = digit+;
   newline = "\r"? "\n" | "\r";
   string = "\"" (any - "\"")* "\"";
 
   main := |*
-    identifier => { emit(:variable, data, ts, te) };
-    assignment => { emit(:assignment, data, ts, te) };
-    float => { emit(:float, data, ts, te) };
-    literal => { emit(:literal, data, ts, te) };
-    string => { emit(:string, data, ts, te) };
+    identifier => { emit(:IDENTIFIER, data, ts, te) };
+    assignment => { emit(':', data, ts, te) };
+    float => { emit(:FLOAT, data, ts, te) };
+    integer => { emit(:INTEGER, data, ts, te) };
+    string => { emit(:STRING, data, ts, te) };
     newline { $line += 1; $column = 0 };
-    space => { emit(:space, data, ts, te) };
+    space => { emit(' ', data, ts, te) };
+
     any => { problem(data, ts, te) };
   *|;
 }%%
+=end
 
 module Dagon
   class Tokenizer
     %% write data;
+    # % fix syntax highlighting
 
     def self.emit(name, data, start_char, end_char)
       $tokens << [name, data[start_char...end_char]]
