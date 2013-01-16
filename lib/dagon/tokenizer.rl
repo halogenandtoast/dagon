@@ -22,31 +22,29 @@ $tokens = []
   *|;
 }%%
 
-%% write data;
+module Dagon
+  class Tokenizer
+    %% write data;
 
-def emit(name, data, start_char, end_char)
-  $tokens << [[$line, $column], name, data[start_char...end_char]]
-  $column += end_char - start_char
+    def self.emit(name, data, start_char, end_char)
+      $tokens << [name, data[start_char...end_char]]
+      $column += end_char - start_char
+    end
+
+    def self.problem(data, ts, te)
+      puts $tokens.inspect
+      raise "Oops {#{data[ts...-1]}}"
+    end
+
+    def tokenize data
+      self.class.tokenize(data)
+    end
+
+    def self.tokenize(data)
+      eof = data.length
+      %% write init;
+      %% write exec;
+      $tokens
+    end
+  end
 end
-
-def problem(data, ts, te)
-  puts $tokens.inspect
-  raise "Oops {#{data[ts...-1]}}"
-end
-
-def tokenize(data)
-  eof = data.length
-  %% write init;
-  %% write exec;
-end
-
-program = DATA.read
-tokenize program
-puts $tokens.inspect
-
-__END__
-float: 1.0
-one: 1
-two: 2
-five: 5
-string: "stringy"
