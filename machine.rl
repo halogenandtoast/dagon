@@ -8,14 +8,17 @@ $tokens = []
   float = digit+ '.' digit+;
   literal = digit;
   newline = "\r"? "\n" | "\r";
+  string = "\"" (any - "\"")* "\"";
 
   main := |*
     new_variable => { emit(:variable, data, ts, te) };
     assignment => { emit(:assignment, data, ts, te) };
     float => { emit(:float, data, ts, te) };
     literal => { emit(:literal, data, ts, te) };
-    newline => { $line += 1; $column = 0 };
-    space { emit(:space, data, ts, te) };
+    string => { emit(:string, data, ts, te) };
+    newline { $line += 1; $column = 0 };
+    space => { emit(:space, data, ts, te) };
+    any => { problem(data, ts, te) };
   *|;
 }%%
 
@@ -24,6 +27,11 @@ $tokens = []
 def emit(name, data, ts, te)
   $tokens << [[$line, $column], name, data[ts...te]]
   $column += te - ts
+end
+
+def problem(data, ts, te)
+  puts $tokens.inspect
+  raise "Oops {#{data[ts...-1]}}"
 end
 
 def tokenize data
@@ -41,3 +49,4 @@ float: 1.0
 one: 1
 two: 2
 five: 5
+string: "stringy"
