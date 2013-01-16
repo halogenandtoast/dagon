@@ -5,8 +5,9 @@ $tokens = []
 =begin
 %%{
   machine new_parser;
-  identifier = '-'? lower (lower | digit | '-')*;
+  identifier = lower (lower | digit | '-')*;
   assignment = ':';
+  operator = '+';
   lparen = '(';
   rparen = ')';
   float = digit+ '.' digit+;
@@ -20,10 +21,11 @@ $tokens = []
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
     string => { emit(:STRING, data, ts, te) };
-    newline { $line += 1; $column = 0 };
+    newline { $line += 1; $column = 0; emit(:NEWLINE, data, ts, te) };
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
+    operator => { emit(data[ts...te], data, ts, te) };
 
     any => { problem(data, ts, te) };
   *|;
