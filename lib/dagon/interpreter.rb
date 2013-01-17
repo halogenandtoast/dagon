@@ -9,10 +9,18 @@ module Dagon
   class Environment < Binding
     attr_reader :methods
     def initialize
-      @methods = {
+      @defines = {
         puts: Dagon::Method.new('puts') { |*args| puts *args },
         print: Dagon::Method.new('print') { |*args| print *args },
       }
+    end
+
+    def lookup name
+      @defines[name]
+    end
+
+    def define name, value
+      @defines[name] = value
     end
   end
 
@@ -57,6 +65,13 @@ module Dagon
         when :call
           call = Call.new(node, binding)
           call.run
+        when :assignment
+          name = Identifier.new(node[1], binding).to_sym
+          value = Expression.new(node[2], binding).reduce
+          assignment = Assignment.new(name, value, binding)
+          assignment.define
+        else
+          error "Invalid statement #{node}"
         end
       end
     end
@@ -77,11 +92,21 @@ module Dagon
   end
 
   class Identifier < Node
+    def initialize ast, binding
+      super
+      parse
+    end
     def lookup
+      binding.lookup(to_sym)
+    end
+    def parse
       if (node = next_node) != :identifier
         error "Invalid identifier #{node}"
       end
-      binding.methods[next_node.to_sym]
+      @name = next_node
+    end
+    def to_sym
+      @name.to_sym
     end
   end
 
@@ -90,6 +115,8 @@ module Dagon
       type = next_node
       value = next_node
       case type
+      when :identifier
+        Identifier.new([type, value], binding).lookup
       when :integer
         value
       when :addition
@@ -122,6 +149,18 @@ module Dagon
 
     def reduce
       @lhs.send(@operator, @rhs)
+    end
+  end
+
+  class Assignment
+    def initialize name, value, binding
+      @name = name
+      @value = value
+      @binding = binding
+    end
+
+    def define
+      @binding.define(@name, @value)
     end
   end
 
