@@ -4,31 +4,30 @@ rule
 
   program: { result = [] }
          | statement NEWLINE program { result = [val[0], *val[2]] }
-         | statement NEWLINE { result = [val[0]] }
          | statement { result = [val[0]] }
 
-  statement: expression | assignment | method_call
+  statement: expression
+           | assignment
 
-  method_call: identifier OPEN_PAREN expressable CLOSE_PAREN { result = [:call, val[0], val[2]] }
+  assignment: identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
 
-  assignment: identifier ':' ' ' literal    { result = [:assignment, val[0], val[3]] }
-            | identifier ':' ' ' identifier { result = [:assignment, val[0], val[3]] }
-            | identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
+  expression: term ' ' '*' ' ' expression { result = [:addition, val[0], val[4]] }
+            | term ' ' '/' ' ' expression { result = [:division, val[0], val[4]] }
+            | term ' ' '-' ' ' expression { result = [:subtraction, val[0], val[4]] }
+            | term ' ' '+' ' ' expression { result = [:addition, val[0], val[4]] }
+            | term ' ' '**' ' ' expression { result = [:exponentiation, val[0], val[4]] }
+            | term
 
-  expression: expressable logical expressable { result = [val[1], val[0], val[2]] }
-
-  expressable: expression | identifier | literal | method_call
-
-  logical: ' ' '+' ' '  { result = :addition }
-         | ' ' '-' ' '  { result = :subtraction }
-         | ' ' '*' ' '  { result = :multiplication }
-         | ' ' '/' ' '  { result = :division }
-         | ' ' '**' ' ' { result = :exponentiation }
+  term: identifier
+      | literal
+      | method_call
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
+
+  method_call: identifier LPAREN expression RPAREN { result = [:call, val[0], val[2]] }
 end
 
 ---- header
