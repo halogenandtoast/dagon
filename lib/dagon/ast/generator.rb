@@ -10,7 +10,7 @@ require 'racc/parser.rb'
 module Ast
   class Generator < Racc::Parser
 
-module_eval(<<'...end generator.y/module_eval...', 'generator.y', 35)
+module_eval(<<'...end generator.y/module_eval...', 'generator.y', 36)
   attr_accessor :table
   def initialize(tokens)
     @tokens = tokens
@@ -31,11 +31,11 @@ module_eval(<<'...end generator.y/module_eval...', 'generator.y', 35)
 ##### State transition tables begin ###
 
 racc_action_table = [
-    27,    28,    29,    30,    31,    15,   -13,    25,   -14,    10,
+    27,    28,    29,    30,    31,    15,   -14,    25,   -15,    10,
     11,    12,    32,    18,    18,    10,    11,    12,    15,    14,
     16,    10,    11,    12,    10,    11,    12,    10,    11,    12,
-    15,    19,   -16,    18,    36,    37,    38,    39,    40,    13,
-   -15,   -13 ]
+    15,    19,   -17,    18,    36,    37,    38,    39,    40,    13,
+   -16,   -14 ]
 
 racc_action_check = [
     18,    18,    18,    18,    18,    33,     4,    16,    33,     0,
@@ -52,11 +52,11 @@ racc_action_pointer = [
    nil ]
 
 racc_action_default = [
-   -25,   -25,    -1,    -4,    -5,    -6,    -7,   -14,   -25,   -15,
-   -22,   -23,   -24,   -25,    -3,   -25,   -25,   -25,   -25,    41,
-    -2,   -14,   -25,   -13,   -16,   -25,   -12,   -25,   -25,   -25,
-   -25,   -25,    -8,   -10,    -9,   -11,   -17,   -18,   -19,   -20,
-   -21 ]
+    -2,   -26,    -1,    -5,    -6,    -7,    -8,   -15,   -26,   -16,
+   -23,   -24,   -25,   -26,    -2,   -26,   -26,   -26,   -26,    41,
+    -3,   -15,   -26,   -14,   -17,   -26,   -13,   -26,   -26,   -26,
+   -26,   -26,    -9,   -11,   -10,   -12,   -18,   -19,   -20,   -21,
+   -22 ]
 
 racc_goto_table = [
      6,     2,    23,    21,    23,    21,    22,     1,    26,    34,
@@ -77,31 +77,32 @@ racc_goto_default = [
 racc_reduce_table = [
   0, 0, :racc_error,
   1, 16, :_reduce_1,
-  3, 17, :_reduce_2,
-  2, 17, :_reduce_3,
-  1, 17, :_reduce_4,
+  0, 17, :_reduce_2,
+  3, 17, :_reduce_3,
+  2, 17, :_reduce_4,
+  1, 17, :_reduce_5,
   1, 18, :_reduce_none,
   1, 18, :_reduce_none,
   1, 18, :_reduce_none,
-  4, 21, :_reduce_8,
-  4, 20, :_reduce_9,
+  4, 21, :_reduce_9,
   4, 20, :_reduce_10,
   4, 20, :_reduce_11,
-  3, 19, :_reduce_12,
+  4, 20, :_reduce_12,
+  3, 19, :_reduce_13,
   1, 23, :_reduce_none,
   1, 23, :_reduce_none,
   1, 23, :_reduce_none,
   1, 23, :_reduce_none,
-  3, 25, :_reduce_17,
   3, 25, :_reduce_18,
   3, 25, :_reduce_19,
   3, 25, :_reduce_20,
   3, 25, :_reduce_21,
-  1, 24, :_reduce_22,
+  3, 25, :_reduce_22,
   1, 24, :_reduce_23,
-  1, 22, :_reduce_24 ]
+  1, 24, :_reduce_24,
+  1, 22, :_reduce_25 ]
 
-racc_reduce_n = 25
+racc_reduce_n = 26
 
 racc_shift_n = 41
 
@@ -185,14 +186,14 @@ module_eval(<<'.,.,', 'generator.y', 2)
 
 module_eval(<<'.,.,', 'generator.y', 4)
   def _reduce_2(val, _values, result)
-     result = [val[0], *val[2]] 
+     result = [] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 5)
   def _reduce_3(val, _values, result)
-     result = [val[0]] 
+     result = [val[0], *val[2]] 
     result
   end
 .,.,
@@ -204,22 +205,22 @@ module_eval(<<'.,.,', 'generator.y', 6)
   end
 .,.,
 
-# reduce 5 omitted
+module_eval(<<'.,.,', 'generator.y', 7)
+  def _reduce_5(val, _values, result)
+     result = [val[0]] 
+    result
+  end
+.,.,
 
 # reduce 6 omitted
 
 # reduce 7 omitted
 
-module_eval(<<'.,.,', 'generator.y', 10)
-  def _reduce_8(val, _values, result)
-     result = [:call, val[0], val[2]] 
-    result
-  end
-.,.,
+# reduce 8 omitted
 
-module_eval(<<'.,.,', 'generator.y', 12)
+module_eval(<<'.,.,', 'generator.y', 11)
   def _reduce_9(val, _values, result)
-     result = [:assignment, val[0], val[3]] 
+     result = [:call, val[0], val[2]] 
     result
   end
 .,.,
@@ -238,14 +239,19 @@ module_eval(<<'.,.,', 'generator.y', 14)
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 16)
+module_eval(<<'.,.,', 'generator.y', 15)
   def _reduce_12(val, _values, result)
-     result = [val[1], val[0], val[2]] 
+     result = [:assignment, val[0], val[3]] 
     result
   end
 .,.,
 
-# reduce 13 omitted
+module_eval(<<'.,.,', 'generator.y', 17)
+  def _reduce_13(val, _values, result)
+     result = [val[1], val[0], val[2]] 
+    result
+  end
+.,.,
 
 # reduce 14 omitted
 
@@ -253,57 +259,59 @@ module_eval(<<'.,.,', 'generator.y', 16)
 
 # reduce 16 omitted
 
-module_eval(<<'.,.,', 'generator.y', 20)
-  def _reduce_17(val, _values, result)
-     result = :addition 
-    result
-  end
-.,.,
+# reduce 17 omitted
 
 module_eval(<<'.,.,', 'generator.y', 21)
   def _reduce_18(val, _values, result)
-     result = :subtraction 
+     result = :addition 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 22)
   def _reduce_19(val, _values, result)
-     result = :multiplication 
+     result = :subtraction 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 23)
   def _reduce_20(val, _values, result)
-     result = :division 
+     result = :multiplication 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 24)
   def _reduce_21(val, _values, result)
-     result = :exponentiation 
+     result = :division 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 26)
+module_eval(<<'.,.,', 'generator.y', 25)
   def _reduce_22(val, _values, result)
-     result = [:float, val[0].to_f] 
+     result = :exponentiation 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 27)
   def _reduce_23(val, _values, result)
+     result = [:float, val[0].to_f] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 28)
+  def _reduce_24(val, _values, result)
      result = [:integer, val[0].to_i] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 29)
-  def _reduce_24(val, _values, result)
+module_eval(<<'.,.,', 'generator.y', 30)
+  def _reduce_25(val, _values, result)
      result = [:identifier, val[0]]
     result
   end

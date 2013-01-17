@@ -2,7 +2,8 @@ class Ast::Generator
 rule
   target: program { result = [:program, val[0]]}
 
-  program: statement NEWLINE program { result = [val[0], *val[2]] }
+  program: { result = [] }
+         | statement NEWLINE program { result = [val[0], *val[2]] }
          | statement NEWLINE { result = [val[0]] }
          | statement { result = [val[0]] }
 
