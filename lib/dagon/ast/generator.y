@@ -16,6 +16,7 @@ rule
   expressable: expression | identifier | literal | method_call
 
   logical: ' ' '+' ' ' { result = :addition }
+         | ' ' '-' ' ' { result = :subtraction }
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }

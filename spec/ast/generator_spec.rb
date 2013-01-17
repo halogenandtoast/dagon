@@ -28,11 +28,20 @@ describe Ast::Generator, 'parse' do
     end
   end
 
-  describe 'addition' do
+  describe 'statements', 'addition' do
     it 'handles integer addition' do
       generate("8 + 4").should == [
         :program,
         [:addition, [:integer, 8], [:integer, 4]]
+      ]
+    end
+  end
+
+  describe 'statements', 'subtraction' do
+    it 'handles integer addition' do
+      generate("8 - 4").should == [
+        :program,
+        [:subtraction, [:integer, 8], [:integer, 4]]
       ]
     end
   end
@@ -72,6 +81,7 @@ def tokenize(code)
     'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4']],
     'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y']],
     '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
+    '8 - 4' => [[:INTEGER, '8'], [' ', ' '], ['-', '-'], [' ', ' '], [:INTEGER, '4']],
     'puts(1)' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')']],
     'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:IDENTIFIER, 'translate'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')'], [:CLOSE_PAREN, ')']],
     'puts(4 + 2)' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:CLOSE_PAREN, ')']],
