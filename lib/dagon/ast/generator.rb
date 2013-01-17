@@ -10,9 +10,10 @@ require 'racc/parser.rb'
 module Ast
   class Generator < Racc::Parser
 
-module_eval(<<'...end generator.y/module_eval...', 'generator.y', 35)
+module_eval(<<'...end generator.y/module_eval...', 'generator.y', 46)
   attr_accessor :table
   def initialize(tokens)
+    @yydebug = true
     @tokens = tokens
   end
 
@@ -31,92 +32,116 @@ module_eval(<<'...end generator.y/module_eval...', 'generator.y', 35)
 ##### State transition tables begin ###
 
 racc_action_table = [
-    15,    23,    24,    25,    26,    27,    10,    11,    12,    20,
-    16,    10,    11,    12,    10,    11,    12,    10,    11,    12,
-    10,    11,    12,    10,    11,    12,    10,    11,    12,    10,
-    11,    12,    10,    11,    12,    29,    30,    31,    32,    33,
-    34,    18,    17,    14,    13,    16 ]
+     8,    39,    22,    51,    18,    19,     8,    23,    40,     8,
+    41,    13,    14,    15,    13,    14,    15,    13,    14,    15,
+    13,    14,    15,    24,    42,    38,    45,    13,    14,    15,
+    13,    14,    15,    13,    14,    15,    27,    28,    29,    30,
+    31,    13,    14,    15,    13,    14,    15,    13,    14,    15,
+    13,    14,    15,    13,    14,    15,    44,    37,    36,    35,
+    32,    21,    20,    16,    32,    53 ]
 
 racc_action_check = [
-     6,    17,    17,    17,    17,    17,    30,    30,    30,    15,
-     6,    33,    33,    33,    31,    31,    31,    32,    32,    32,
-    14,    14,    14,    20,    20,    20,    16,    16,    16,     0,
-     0,     0,    34,    34,    34,    22,    23,    24,    25,    26,
-    27,    13,     7,     3,     1,    21 ]
+     0,    28,    18,    43,     9,     9,     3,    18,    29,    32,
+    30,     0,     0,     0,    43,    43,    43,     3,     3,     3,
+    32,    32,    32,    19,    31,    27,    36,    40,    40,    40,
+    19,    19,    19,    36,    36,    36,    20,    20,    20,    20,
+    20,    42,    42,    42,    23,    23,    23,    39,    39,    39,
+    41,    41,    41,    38,    38,    38,    35,    26,    25,    24,
+    22,    16,    10,     1,    44,    51 ]
 
 racc_action_pointer = [
-    19,    44,   nil,    41,   nil,   nil,    -3,    38,   nil,   nil,
-   nil,   nil,   nil,    41,    10,     5,    16,    -4,   nil,   nil,
-    13,    32,    21,    32,    33,    34,    35,    36,   nil,   nil,
-    -4,     4,     7,     1,    22,   nil,   nil,   nil,   nil,   nil ]
+    -3,    63,   nil,     3,   nil,   nil,   nil,   nil,   nil,    -1,
+    54,   nil,   nil,   nil,   nil,   nil,    61,   nil,    -1,    16,
+    27,   nil,    58,    30,    54,    52,    50,    17,    -7,     0,
+     2,    16,     6,   nil,   nil,    53,    19,   nil,    39,    33,
+    13,    36,    27,     0,    62,   nil,   nil,   nil,   nil,   nil,
+   nil,    61,   nil,   nil ]
 
 racc_action_default = [
-    -2,   -21,    -1,    -4,    -5,    -6,   -14,   -13,   -15,   -16,
-   -17,   -18,   -19,   -21,    -2,   -21,   -21,   -21,    40,    -3,
-   -21,   -14,   -21,   -21,   -21,   -21,   -21,   -21,    -7,   -20,
-   -21,   -21,   -21,   -21,   -21,    -8,    -9,   -10,   -11,   -12 ]
+    -2,   -29,    -1,    -3,    -7,    -8,    -9,   -10,   -11,   -21,
+   -20,   -22,   -23,   -24,   -25,   -26,   -29,    -6,   -29,   -29,
+   -29,    54,   -29,   -29,   -27,   -21,   -29,   -29,   -29,   -29,
+   -29,   -29,   -29,   -12,   -14,   -29,   -29,   -28,   -29,   -29,
+   -29,   -29,   -29,    -5,   -29,   -27,   -15,   -16,   -17,   -18,
+   -19,   -11,   -13,    -4 ]
 
 racc_goto_table = [
-    22,     1,   nil,   nil,    28,     2,     6,   nil,   nil,   nil,
-   nil,   nil,   nil,   nil,    35,    36,    37,    38,    39,    19,
-     6 ]
+     9,    17,     3,     9,    26,     2,    33,     1,    34,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,    26,   nil,    46,    47,    48,    49,    50,    52,   nil,
+   nil,   nil,     9,   nil,    43,   nil,   nil,   nil,   nil,   nil,
+   nil,    17,   nil,     9 ]
 
 racc_goto_check = [
-     4,     1,   nil,   nil,     4,     2,     6,   nil,   nil,   nil,
-   nil,   nil,   nil,   nil,     4,     4,     4,     4,     4,     2,
-     6 ]
+     9,     5,     3,     9,     8,     2,     4,     1,     8,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,     8,   nil,     8,     8,     8,     8,     8,     4,   nil,
+   nil,   nil,     9,   nil,     3,   nil,   nil,   nil,   nil,   nil,
+   nil,     5,   nil,     9 ]
 
 racc_goto_pointer = [
-   nil,     1,     5,   nil,   -16,   nil,     6,   nil,   nil,   nil ]
+   nil,     7,     5,     2,   -16,    -2,   nil,   nil,   -15,     0,
+   nil,   nil,   nil ]
 
 racc_goto_default = [
-   nil,   nil,   nil,     3,     4,     5,    21,     7,     8,     9 ]
+   nil,   nil,   nil,   nil,   nil,     4,     5,     6,     7,    25,
+    10,    11,    12 ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  1, 16, :_reduce_1,
-  0, 17, :_reduce_2,
-  3, 17, :_reduce_3,
-  1, 17, :_reduce_4,
-  1, 18, :_reduce_none,
-  1, 18, :_reduce_none,
-  4, 20, :_reduce_7,
-  5, 19, :_reduce_8,
-  5, 19, :_reduce_9,
-  5, 19, :_reduce_10,
-  5, 19, :_reduce_11,
-  5, 19, :_reduce_12,
+  1, 18, :_reduce_1,
+  0, 19, :_reduce_2,
   1, 19, :_reduce_none,
+  4, 21, :_reduce_4,
+  2, 21, :_reduce_5,
+  2, 20, :_reduce_6,
+  1, 20, :_reduce_7,
   1, 22, :_reduce_none,
   1, 22, :_reduce_none,
   1, 22, :_reduce_none,
-  1, 23, :_reduce_17,
-  1, 23, :_reduce_18,
-  1, 21, :_reduce_19,
-  4, 24, :_reduce_20 ]
+  1, 22, :_reduce_11,
+  4, 23, :_reduce_12,
+  6, 23, :_reduce_13,
+  4, 24, :_reduce_14,
+  5, 25, :_reduce_15,
+  5, 25, :_reduce_16,
+  5, 25, :_reduce_17,
+  5, 25, :_reduce_18,
+  5, 25, :_reduce_19,
+  1, 25, :_reduce_none,
+  1, 27, :_reduce_none,
+  1, 27, :_reduce_none,
+  1, 27, :_reduce_none,
+  1, 28, :_reduce_24,
+  1, 28, :_reduce_25,
+  1, 26, :_reduce_26,
+  3, 29, :_reduce_27,
+  4, 29, :_reduce_28 ]
 
-racc_reduce_n = 21
+racc_reduce_n = 29
 
-racc_shift_n = 40
+racc_shift_n = 54
 
 racc_token_table = {
   false => 0,
   :error => 1,
-  :NEWLINE => 2,
-  ":" => 3,
-  " " => 4,
-  "*" => 5,
-  "/" => 6,
-  "-" => 7,
-  "+" => 8,
-  "**" => 9,
-  :FLOAT => 10,
-  :INTEGER => 11,
-  :IDENTIFIER => 12,
-  :LPAREN => 13,
-  :RPAREN => 14 }
+  :INDENT => 2,
+  :NEWLINE => 3,
+  :DEDENT => 4,
+  ":" => 5,
+  :LPAREN => 6,
+  :RPAREN => 7,
+  " " => 8,
+  "*" => 9,
+  "/" => 10,
+  "-" => 11,
+  "+" => 12,
+  "**" => 13,
+  :FLOAT => 14,
+  :INTEGER => 15,
+  :IDENTIFIER => 16 }
 
-racc_nt_base = 15
+racc_nt_base = 17
 
 racc_use_result_var = true
 
@@ -139,8 +164,12 @@ Racc_arg = [
 Racc_token_to_s_table = [
   "$end",
   "error",
+  "INDENT",
   "NEWLINE",
+  "DEDENT",
   "\":\"",
+  "LPAREN",
+  "RPAREN",
   "\" \"",
   "\"*\"",
   "\"/\"",
@@ -150,20 +179,21 @@ Racc_token_to_s_table = [
   "FLOAT",
   "INTEGER",
   "IDENTIFIER",
-  "LPAREN",
-  "RPAREN",
   "$start",
   "target",
   "program",
+  "statements",
+  "block",
   "statement",
-  "expression",
+  "method_definition",
   "assignment",
+  "expression",
   "identifier",
   "term",
   "literal",
   "method_call" ]
 
-Racc_debug_parser = false
+Racc_debug_parser = true
 
 ##### State transition tables end #####
 
@@ -183,98 +213,144 @@ module_eval(<<'.,.,', 'generator.y', 4)
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 5)
-  def _reduce_3(val, _values, result)
-     result = [val[0], *val[2]] 
+# reduce 3 omitted
+
+module_eval(<<'.,.,', 'generator.y', 7)
+  def _reduce_4(val, _values, result)
+     result = [:block, val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 6)
-  def _reduce_4(val, _values, result)
+module_eval(<<'.,.,', 'generator.y', 8)
+  def _reduce_5(val, _values, result)
+     result = [:block, val[1]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 10)
+  def _reduce_6(val, _values, result)
+     result = [*val[0], val[1]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 11)
+  def _reduce_7(val, _values, result)
      result = [val[0]] 
     result
   end
 .,.,
 
-# reduce 5 omitted
+# reduce 8 omitted
 
-# reduce 6 omitted
+# reduce 9 omitted
 
-module_eval(<<'.,.,', 'generator.y', 11)
-  def _reduce_7(val, _values, result)
+# reduce 10 omitted
+
+module_eval(<<'.,.,', 'generator.y', 16)
+  def _reduce_11(val, _values, result)
+     result = [:noop, :noop] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 18)
+  def _reduce_12(val, _values, result)
+     result = [:method_definition, val[0], val[3]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 19)
+  def _reduce_13(val, _values, result)
+     result = [:method_definition, val[0], val[5]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 21)
+  def _reduce_14(val, _values, result)
      result = [:assignment, val[0], val[3]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 13)
-  def _reduce_8(val, _values, result)
+module_eval(<<'.,.,', 'generator.y', 23)
+  def _reduce_15(val, _values, result)
      result = [:addition, val[0], val[4]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 14)
-  def _reduce_9(val, _values, result)
+module_eval(<<'.,.,', 'generator.y', 24)
+  def _reduce_16(val, _values, result)
      result = [:division, val[0], val[4]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 15)
-  def _reduce_10(val, _values, result)
+module_eval(<<'.,.,', 'generator.y', 25)
+  def _reduce_17(val, _values, result)
      result = [:subtraction, val[0], val[4]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 16)
-  def _reduce_11(val, _values, result)
-     result = [:addition, val[0], val[4]] 
-    result
-  end
-.,.,
-
-module_eval(<<'.,.,', 'generator.y', 17)
-  def _reduce_12(val, _values, result)
-     result = [:exponentiation, val[0], val[4]] 
-    result
-  end
-.,.,
-
-# reduce 13 omitted
-
-# reduce 14 omitted
-
-# reduce 15 omitted
-
-# reduce 16 omitted
-
-module_eval(<<'.,.,', 'generator.y', 24)
-  def _reduce_17(val, _values, result)
-     result = [:float, val[0].to_f] 
-    result
-  end
-.,.,
-
-module_eval(<<'.,.,', 'generator.y', 25)
+module_eval(<<'.,.,', 'generator.y', 26)
   def _reduce_18(val, _values, result)
-     result = [:integer, val[0].to_i] 
+     result = [:addition, val[0], val[4]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 27)
   def _reduce_19(val, _values, result)
+     result = [:exponentiation, val[0], val[4]] 
+    result
+  end
+.,.,
+
+# reduce 20 omitted
+
+# reduce 21 omitted
+
+# reduce 22 omitted
+
+# reduce 23 omitted
+
+module_eval(<<'.,.,', 'generator.y', 34)
+  def _reduce_24(val, _values, result)
+     result = [:float, val[0].to_f] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 35)
+  def _reduce_25(val, _values, result)
+     result = [:integer, val[0].to_i] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 37)
+  def _reduce_26(val, _values, result)
      result = [:identifier, val[0]]
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'generator.y', 29)
-  def _reduce_20(val, _values, result)
-     result = [:call, val[0], val[2]] 
+module_eval(<<'.,.,', 'generator.y', 39)
+  def _reduce_27(val, _values, result)
+     result = [:call, val[0], [:args, []]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'generator.y', 40)
+  def _reduce_28(val, _values, result)
+     result = [:call, val[0], [:args, [val[2]]]] 
     result
   end
 .,.,

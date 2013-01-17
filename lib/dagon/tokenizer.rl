@@ -1,6 +1,9 @@
 $line = 0
 $column = 0
 $tokens = []
+$indent_count = 0
+$last_indent_count = 0
+$check_indents = true
 
 =begin
 %%{
@@ -14,6 +17,7 @@ $tokens = []
   integer = digit+;
   newline = "\r"? "\n" | "\r";
   string = "\"" (any - "\"")* "\"";
+  indent = "  ";
 
   main := |*
     identifier => { emit(:IDENTIFIER, data, ts, te) };
@@ -21,7 +25,8 @@ $tokens = []
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
     string => { emit(:STRING, data, ts, te) };
-    newline { $line += 1; $column = 0; emit(:NEWLINE, data, ts, te) };
+    newline { $last_indent_count = $indent_count; $indent_count = 0; $line += 1; $column = 0; emit(:NEWLINE, data, ts, te); $check_indents = true };
+    indent => { $indent_count += 1; };
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
@@ -38,8 +43,24 @@ module Dagon
     # % fix syntax highlighting
 
     def self.emit(name, data, start_char, end_char)
+      handle_indents
       $tokens << [name, data[start_char...end_char]]
       $column += end_char - start_char
+    end
+
+    def self.handle_indents
+      if $check_indents
+        $check_indents = false
+        if $indent_count > $last_indent_count
+          ($indent_count - $last_indent_count).times do
+            $tokens << [:INDENT, "  "]
+          end
+        elsif $indent_count < $last_indent_count
+          ($last_indent_count - $indent_count).times do
+            $tokens << [:DEDENT, "  "]
+          end
+        end
+      end
     end
 
     def self.problem(data, ts, te)
@@ -52,8 +73,8 @@ module Dagon
     end
 
     def self.tokenize(data)
-      eof = data.length
       %% write init;
+      eof = data.length
       %% write exec;
       $tokens
     end

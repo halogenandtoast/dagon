@@ -4,6 +4,7 @@ module Dagon
       type = next_node
       value = next_node
       case type
+      when :noop
       when :identifier
         Identifier.new([type, value], binding).lookup
       when :integer

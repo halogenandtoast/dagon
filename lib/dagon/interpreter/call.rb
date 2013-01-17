@@ -6,9 +6,9 @@ module Dagon
       end
 
       identifier = Identifier.new(next_node, binding)
-      expression = Expression.new(next_node, binding)
+      args = next_node[1].map { |node| Expression.new(node, binding).reduce }
       method = identifier.lookup
-      method.invoke(expression.reduce)
+      method.invoke(*args)
     end
 
   end

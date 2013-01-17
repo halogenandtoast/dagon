@@ -21,7 +21,7 @@ task :clean do
 end
 
 file "lib/dagon/ast/generator.rb" => "lib/dagon/ast/generator.y" do
-  `racc -o lib/dagon/ast/generator.rb lib/dagon/ast/generator.y`
+  `racc -g -o lib/dagon/ast/generator.rb lib/dagon/ast/generator.y`
 end
 file "lib/dagon/tokenizer.rb" => "lib/dagon/tokenizer.rl" do
   `ragel -R lib/dagon/tokenizer.rl`
