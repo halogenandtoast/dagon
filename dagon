@@ -2,6 +2,7 @@
 
 require './lib/dagon/tokenizer'
 require './lib/dagon/interpreter'
+require './lib/dagon/ast/generator'
 
 def read_program
   if ARGV[0]
@@ -14,8 +15,8 @@ end
 tokenizer = Dagon::Tokenizer.new
 tokens = tokenizer.tokenize read_program
 
-# ast = Ast::Generator.new.parse.table
-ast = [:program, [:call, [:identifier, 'puts'], [:integer, 5]]]
+ast = Ast::Generator.new(tokens).parse.table
 
+puts ast.inspect
 interpreter = Dagon::Interpreter.new(ast)
 interpreter.run

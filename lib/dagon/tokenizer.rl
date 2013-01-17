@@ -23,8 +23,8 @@ $tokens = []
     string => { emit(:STRING, data, ts, te) };
     newline { $line += 1; $column = 0; emit(:NEWLINE, data, ts, te) };
     space => { emit(' ', data, ts, te) };
-    lparen => { emit(:LPAREN, data, ts, te) };
-    rparen => { emit(:RPAREN, data, ts, te) };
+    lparen => { emit(:OPEN_PAREN, data, ts, te) };
+    rparen => { emit(:CLOSE_PAREN, data, ts, te) };
     operator => { emit(data[ts...te], data, ts, te) };
 
     any => { problem(data, ts, te) };

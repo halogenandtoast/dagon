@@ -6,22 +6,22 @@ namespace :build do
   task tokenizer: "lib/dagon/tokenizer.rb"
 
   desc "Build AST generator"
-  task ast_generator: "build/ast/generator.rb"
+  task ast_generator: "lib/dagon/ast/generator.rb"
 end
 desc "Build tokenizer and AST generator"
 task build: %w{build:tokenizer build:ast_generator}
 
 desc "Remove generated files"
 task :clean do
-  ["./lib/dagon/tokenizer.rb", "build/ast/generator.rb"].each do |file|
+  ["./lib/dagon/tokenizer.rb", "lib/dagon/ast/generator.rb"].each do |file|
     if File.exists? file
       `rm #{file}`
     end
   end
 end
 
-file "build/ast/generator.rb" => "lib/dagon/ast/generator.y" do
-  `racc -o build/ast/generator.rb lib/dagon/ast/generator.y`
+file "lib/dagon/ast/generator.rb" => "lib/dagon/ast/generator.y" do
+  `racc -o lib/dagon/ast/generator.rb lib/dagon/ast/generator.y`
 end
 file "lib/dagon/tokenizer.rb" => "lib/dagon/tokenizer.rl" do
   `ragel -R lib/dagon/tokenizer.rl`

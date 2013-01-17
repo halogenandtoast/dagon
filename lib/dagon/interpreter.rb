@@ -46,12 +46,14 @@ module Dagon
         error "Invalid program"
       end
 
-      node = next_node
+      statements = next_node
 
-      case node[0]
-      when :call
-        call = Call.new(node, environment)
-        call.run
+      statements.each do |node|
+        case node[0]
+        when :call
+          call = Call.new(node, environment)
+          call.run
+        end
       end
     end
   end
