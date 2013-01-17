@@ -1,3 +1,4 @@
+# vim: set syntax=ruby:
 $line = 0
 $column = 0
 $tokens = []
@@ -9,6 +10,7 @@ $block_open = false
 =begin
 %%{
   machine new_parser;
+  constant = upper (alnum | '-')*;
   identifier = lower (lower | digit | '-')*;
   assignment = ':';
   operator = '+' | '-' | '*' | '/' | '**';
@@ -21,6 +23,7 @@ $block_open = false
   indent = "  ";
 
   main := |*
+    constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
     assignment => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
