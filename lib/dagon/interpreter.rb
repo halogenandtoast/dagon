@@ -118,7 +118,7 @@ module Dagon
       when :identifier
         Identifier.new([type, value], binding).lookup
       when :integer
-        value
+        DInteger.new(value)
       when :addition
         lhs = Expression.new(value, binding).reduce
         rhs = Expression.new(next_node, binding).reduce
@@ -172,6 +172,31 @@ module Dagon
 
     def invoke *args
       @block.call(*args)
+    end
+  end
+
+  class DObject
+    attr_reader :value
+    def initialize value
+      @value = value
+    end
+  end
+
+  class DInteger < DObject
+    def + object
+      value + object.value
+    end
+
+    def - object
+      value - object.value
+    end
+
+    def * object
+      value * object.value
+    end
+
+    def / object
+      value / object.value
     end
   end
 end
