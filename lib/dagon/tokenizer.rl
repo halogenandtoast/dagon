@@ -7,7 +7,7 @@ $tokens = []
   machine new_parser;
   identifier = lower (lower | digit | '-')*;
   assignment = ':';
-  operator = '+';
+  operator = '+' | '-' | '*' | '/';
   lparen = '(';
   rparen = ')';
   float = digit+ '.' digit+;

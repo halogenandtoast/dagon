@@ -88,9 +88,36 @@ module Dagon
       case type
       when :integer
         value
+      when :addition
+        lhs = Expression.new(value, environment).reduce
+        rhs = Expression.new(next_node, environment).reduce
+        Operation.new(:+, lhs, rhs).reduce
+      when :subtraction
+        lhs = Expression.new(value, environment).reduce
+        rhs = Expression.new(next_node, environment).reduce
+        Operation.new(:-, lhs, rhs).reduce
+      when :multiplication
+        lhs = Expression.new(value, environment).reduce
+        rhs = Expression.new(next_node, environment).reduce
+        Operation.new(:*, lhs, rhs).reduce
+      when :division
+        lhs = Expression.new(value, environment).reduce
+        rhs = Expression.new(next_node, environment).reduce
+        Operation.new(:/, lhs, rhs).reduce
       else
         error "Unknown type: #{type}"
       end
+    end
+  end
+
+  class Operation
+    def initialize operator, lhs, rhs
+      @operator = operator
+      @lhs, @rhs = lhs, rhs
+    end
+
+    def reduce
+      @lhs.send(@operator, @rhs)
     end
   end
 
