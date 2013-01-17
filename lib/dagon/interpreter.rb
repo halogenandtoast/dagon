@@ -1,18 +1,8 @@
-require_relative 'interpreter/binding'
-require_relative 'interpreter/environment'
-require_relative 'interpreter/node'
-require_relative 'interpreter/statement'
-require_relative 'interpreter/program'
-require_relative 'interpreter/call'
-require_relative 'interpreter/identifier'
-require_relative 'interpreter/expression'
-require_relative 'interpreter/operation'
-require_relative 'interpreter/assignment'
-require_relative 'interpreter/method'
-require_relative 'interpreter/dobject'
-require_relative 'interpreter/dinteger'
-require_relative 'interpreter/block'
-require_relative 'interpreter/dclass'
+%w(binding environment node statement program call identifier
+   expression operation assignment method dobject dinteger 
+   block dclass).each do |file|
+    require_relative "interpreter/#{file}"
+   end
 
 module Dagon
   class Interpreter
