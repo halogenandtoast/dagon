@@ -12,7 +12,7 @@ rule
                           val[3]
                         ]
                 }
-            | IDENTIFIER ':' ' ' IDENTIFIER # x: y
+            | IDENTIFIER ':' ' ' IDENTIFIER { table << [:assignment, [:identifier, val[0]], [:identifier, val[3]]] }
 end
 
 ---- header

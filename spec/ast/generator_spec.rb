@@ -22,15 +22,25 @@ describe Ast::Generator, 'parse' do
         ]
       ]
     end
+
+    it 'handles literals' do
+      generate("x: y").should == [
+        :program,
+        [:assignment,
+          [:identifier, 'x'],
+          [:identifier, 'y']
+        ]
+      ]
+    end
   end
 end
 
 def generate(dagon)
-  tokens = tokenize[dagon]
+  tokens = tokenize(dagon)
   Ast::Generator.new(tokens).parse.table
 end
 
-def tokenize
+def tokenize(code)
   {
     "x: 5.0" => [
       [:IDENTIFIER, 'x'],
@@ -44,5 +54,11 @@ def tokenize
       [" ", " "],
       [:INTEGER, "4"],
     ],
-  }
+    "x: y" => [
+      [:IDENTIFIER, 'x'],
+      [":", ":"],
+      [" ", " "],
+      [:IDENTIFIER, 'y'],
+    ],
+  }.fetch(code) { raise %{"#{code}": No token definition.}}
 end
