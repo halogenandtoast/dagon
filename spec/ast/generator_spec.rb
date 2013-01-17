@@ -36,6 +36,22 @@ describe Ast::Generator, 'parse' do
       ]
     end
   end
+
+  describe 'method call' do
+    it 'calls puts with argument 1' do
+      generate("puts(1)").should == [
+        :program,
+        [:call, [:identifier, 'puts'], [:integer, 1]]
+      ]
+    end
+
+    it 'can be called with a method call as an argument' do
+      generate("puts(translate(1))").should == [
+        :program,
+        [:call, [:identifier, 'puts'], [:call, [:identifier, 'translate'], [:integer, 1]]]
+      ]
+    end
+  end
 end
 
 def generate(dagon)
@@ -49,5 +65,7 @@ def tokenize(code)
     'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4']],
     'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y']],
     '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
+    'puts(1)' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')']],
+    'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:IDENTIFIER, 'translate'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')'], [:CLOSE_PAREN, ')']],
   }.fetch(code) { raise %{"#{code}": No token definition.}}
 end
