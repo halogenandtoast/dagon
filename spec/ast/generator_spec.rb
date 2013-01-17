@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'build/ast/generator'
 
-describe Ast::Generator, 'parse' do
+describe Dagon::Ast::Generator, 'parse' do
   describe 'assignment' do
     it 'handles integers' do
       generate("y: 4").should == [
@@ -93,11 +93,21 @@ describe Ast::Generator, 'parse' do
       ]
     end
   end
+
+  describe 'method call on object' do
+    it 'foo.bar()' do
+      generate('foo.bar()').should == [
+        :program, [
+          [:call_on_object, [:identifier, 'foo'], [:call, [:identifier, 'bar'], [:args, []]]]
+        ]
+      ]
+    end
+  end
 end
 
 def generate(dagon)
   tokens = tokenize(dagon)
-  Ast::Generator.new(tokens).parse.table
+  Dagon::Ast::Generator.new(tokens).parse.table
 end
 
 def tokenize(code)
@@ -113,6 +123,7 @@ def tokenize(code)
     '8 ** 4' => [[:INTEGER, '8'], [' ', ' '], ['**', '**'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
     'puts(1)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:EOF, 'EOF']],
     'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:IDENTIFIER, 'translate'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:RPAREN, ')'], [:EOF, 'EOF']],
+    'foo.bar()' => [[:IDENTIFIER, 'foo'], ['.', '.'], [:IDENTIFIER, 'bar'], [:LPAREN, '('], [:RPAREN, ')'], [:EOF, 'EOF']],
     'puts(4 + 2)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']],
     'MyClass:
   x: 1' => [[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, 'INDENT'], [:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:INTEGER, '1'], [:DEDENT, 'DENENT'], [:EOF, 'EOF']]

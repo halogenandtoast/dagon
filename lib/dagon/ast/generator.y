@@ -1,4 +1,4 @@
-class Ast::Generator
+class Dagon::Ast::Generator
 prechigh
   left '*' '/'
   left '+' '-'
@@ -37,12 +37,14 @@ rule
   term: identifier
       | literal
       | method_call
+      | method_call_on_object
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
+  method_call_on_object: identifier '.' method_call { result = [:call_on_object, val[0], val[2]]}
   method_call: identifier LPAREN RPAREN { result = [:call, val[0], [:args, []]] }
              | identifier LPAREN expression RPAREN { result = [:call, val[0], [:args, [val[2]]]] }
 end
