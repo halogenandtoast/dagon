@@ -1,24 +1,46 @@
 module Dagon
+  class Environment
+    attr_reader :methods
+    def initialize
+      @methods = {
+        puts: Dagon::Method.new('puts') { |*args| puts *args }
+      }
+    end
+
+    def error string
+      $stderr.puts string
+      exit
+    end
+  end
   class Interpreter
     def initialize ast
       @ast = ast
     end
 
     def run
-      program = Program.new(@ast)
+      environment = Environment.new
+      program = Program.new(@ast, environment)
       program.run
     end
   end
 
-  class Program
-    def initialize ast
+  class Node
+    attr_reader :environment, :ast
+    def initialize ast, environment
       @ast = ast
+      @environment = environment
+    end
+
+    def next_node
+      ast.shift
     end
 
     def error string
-      $stderr.puts string
+      environment.error string
     end
+  end
 
+  class Program < Node
     def run
       if next_node != :program
         error "Invalid program"
@@ -28,60 +50,36 @@ module Dagon
 
       case node[0]
       when :call
-        call = Call.new(node)
+        call = Call.new(node, environment)
         call.run
       end
     end
-
-    def next_node
-      @ast.shift
-    end
   end
 
-  class Call
-    def initialize ast
-      @ast = ast
-    end
-
+  class Call < Node
     def run
       if next_node != :call
         error "Invalid call"
       end
 
-      identifier = Identifier.new(next_node)
-      expression = Expression.new(next_node)
+      identifier = Identifier.new(next_node, environment)
+      expression = Expression.new(next_node, environment)
       method = identifier.lookup
       method.invoke(expression.reduce)
     end
 
-    def next_node
-      @ast.shift
-    end
   end
 
-  class Identifier
-    def initialize ast
-      @ast = ast
-    end
-
+  class Identifier < Node
     def lookup
       if (node = next_node) != :identifier
-        puts "Invalid identifier #{node}"
-        exit
+        error "Invalid identifier #{node}"
       end
-      $methods[next_node.to_sym]
-    end
-
-    def next_node
-      @ast.shift
+      environment.methods[next_node.to_sym]
     end
   end
 
-  class Expression
-    def initialize ast
-      @ast = ast
-    end
-
+  class Expression < Node
     def reduce
       type = next_node
       value = next_node
@@ -89,15 +87,9 @@ module Dagon
       when :integer
         value
       else
-        puts "Unknown type: #{type}"
-        exit
+        error "Unknown type: #{type}"
       end
     end
-
-    def next_node
-      @ast.shift
-    end
-
   end
 
   class Method
@@ -111,7 +103,3 @@ module Dagon
     end
   end
 end
-
-$methods = {
-  puts: Dagon::Method.new('puts') { |*args| puts *args }
-}
