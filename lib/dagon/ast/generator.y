@@ -1,18 +1,28 @@
 class Ast::Generator
 rule
-  program: assignment
-         | program NEWLINE assignment
+  target: program { result = [:program, val[0]]}
+
+  program: statement
+         | program NEWLINE statement
+
+  statement: assignment
+           | expression
+
+  assignment: identifier ':' ' ' literal    { result = [:assignment, val[0], val[3]] }
+            | identifier ':' ' ' identifier { result = [:assignment, val[0], val[3]] }
+
+  expression: expressable logical expressable { result = [val[1], val[0], val[2]] }
+
+  expressable: literal
+             | identifier
+             | expression
+
+  logical: ' ' '+' ' ' { result = :addition }
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
 
-  assignment: IDENTIFIER ':' ' ' literal {
-                table << [:assignment,
-                          [:identifier, val[0]],
-                          val[3]
-                        ]
-                }
-            | IDENTIFIER ':' ' ' IDENTIFIER { table << [:assignment, [:identifier, val[0]], [:identifier, val[3]]] }
+  identifier: IDENTIFIER { result = [:identifier, val[0]]}
 end
 
 ---- header

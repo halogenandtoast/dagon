@@ -16,20 +16,23 @@ describe Ast::Generator, 'parse' do
     it 'handles floats' do
       generate("x: 5.0").should == [
         :program,
-        [:assignment,
-          [:identifier, 'x'],
-          [:float, 5.0]
-        ]
+        [:assignment, [:identifier, 'x'], [:float, 5.0]]
       ]
     end
 
     it 'handles literals' do
       generate("x: y").should == [
         :program,
-        [:assignment,
-          [:identifier, 'x'],
-          [:identifier, 'y']
-        ]
+        [:assignment, [:identifier, 'x'], [:identifier, 'y']]
+      ]
+    end
+  end
+
+  describe 'addition' do
+    it 'handles integer addition' do
+      generate("8 + 4").should == [
+        :program,
+        [:addition, [:integer, 8], [:integer, 4]]
       ]
     end
   end
@@ -42,23 +45,9 @@ end
 
 def tokenize(code)
   {
-    "x: 5.0" => [
-      [:IDENTIFIER, 'x'],
-      [":", ":"],
-      [" ", " "],
-      [:FLOAT, "5.0"],
-    ],
-    "y: 4" => [
-      [:IDENTIFIER, 'y'],
-      [":", ":"],
-      [" ", " "],
-      [:INTEGER, "4"],
-    ],
-    "x: y" => [
-      [:IDENTIFIER, 'x'],
-      [":", ":"],
-      [" ", " "],
-      [:IDENTIFIER, 'y'],
-    ],
+    'x: 5.0' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:FLOAT, '5.0']],
+    'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4']],
+    'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y']],
+    '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
   }.fetch(code) { raise %{"#{code}": No token definition.}}
 end
