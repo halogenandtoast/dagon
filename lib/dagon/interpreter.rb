@@ -135,6 +135,10 @@ module Dagon
         lhs = Expression.new(value, binding).reduce
         rhs = Expression.new(next_node, binding).reduce
         Operation.new(:/, lhs, rhs).reduce
+      when :exponentiation
+        lhs = Expression.new(value, binding).reduce
+        rhs = Expression.new(next_node, binding).reduce
+        Operation.new(:**, lhs, rhs).reduce
       else
         error "Unknown type: #{type}"
       end
@@ -197,6 +201,10 @@ module Dagon
 
     def / object
       DInteger.new(value / object.value)
+    end
+
+    def ** object
+      DInteger.new(value ** object.value)
     end
   end
 end
