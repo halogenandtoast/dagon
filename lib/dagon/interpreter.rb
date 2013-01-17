@@ -10,8 +10,8 @@ module Dagon
     attr_reader :methods
     def initialize
       @defines = {
-        puts: Dagon::Method.new('puts') { |*args| puts *args },
-        print: Dagon::Method.new('print') { |*args| print *args },
+        puts: Dagon::Method.new('puts') { |*args| puts *args.map(&:value) },
+        print: Dagon::Method.new('print') { |*args| print *args.map(&:value) },
       }
     end
 
@@ -184,19 +184,19 @@ module Dagon
 
   class DInteger < DObject
     def + object
-      value + object.value
+      DInteger.new(value + object.value)
     end
 
     def - object
-      value - object.value
+      DInteger.new(value - object.value)
     end
 
     def * object
-      value * object.value
+      DInteger.new(value * object.value)
     end
 
     def / object
-      value / object.value
+      DInteger.new(value / object.value)
     end
   end
 end
