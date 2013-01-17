@@ -15,8 +15,11 @@ rule
 
   expressable: expression | identifier | literal | method_call
 
-  logical: ' ' '+' ' ' { result = :addition }
-         | ' ' '-' ' ' { result = :subtraction }
+  logical: ' ' '+' ' '  { result = :addition }
+         | ' ' '-' ' '  { result = :subtraction }
+         | ' ' '*' ' '  { result = :multiplication }
+         | ' ' '/' ' '  { result = :division }
+         | ' ' '**' ' ' { result = :exponentiation }
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
