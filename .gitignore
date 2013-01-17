@@ -1,4 +1,3 @@
-lib/dagon/tokenizer.rb
 build/
 .DS_Store
 test.dg
