@@ -14,12 +14,15 @@ rule
   statements: statements statement { result = [*val[0], val[1]] }
             | statement { result = [val[0]] }
 
-  statement: method_definition
+  statement: class_definition
+           | method_definition
            | assignment
            | expression
            | NEWLINE { result = [:noop, :noop] }
 
-  method_definition: identifier ':' block { result = [:method_definition, val[0], val[3]] }
+  class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
+
+  method_definition: identifier ':' block { result = [:method_definition, val[0], val[2]] }
                    | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], val[4]] }
 
   assignment: identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }

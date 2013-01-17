@@ -80,6 +80,19 @@ describe Ast::Generator, 'parse' do
       ]
     end
   end
+
+  describe 'class definition' do
+    it 'defines a class' do
+      dagon =
+  "MyClass:
+  x: 1"
+      generate(dagon).should == [
+        :program, [
+          [:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]
+        ]
+      ]
+    end
+  end
 end
 
 def generate(dagon)
@@ -89,17 +102,19 @@ end
 
 def tokenize(code)
   {
-    'x: 5.0' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:FLOAT, '5.0']],
-    'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4']],
-    'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y']],
-    '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
-    '1 + 2 + 3' => [[:INTEGER, '1'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '3']],
-    '8 - 4' => [[:INTEGER, '8'], [' ', ' '], ['-', '-'], [' ', ' '], [:INTEGER, '4']],
-    '8 * 4' => [[:INTEGER, '8'], [' ', ' '], ['*', '*'], [' ', ' '], [:INTEGER, '4']],
-    '8 / 4' => [[:INTEGER, '8'], [' ', ' '], ['/', '/'], [' ', ' '], [:INTEGER, '4']],
-    '8 ** 4' => [[:INTEGER, '8'], [' ', ' '], ['**', '**'], [' ', ' '], [:INTEGER, '4']],
-    'puts(1)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')']],
-    'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:IDENTIFIER, 'translate'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:RPAREN, ')']],
-    'puts(4 + 2)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:RPAREN, ')']],
+    'x: 5.0' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:FLOAT, '5.0'], [:EOF, 'EOF']],
+    'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y'], [:EOF, 'EOF']],
+    '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    '1 + 2 + 3' => [[:INTEGER, '1'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '3'], [:EOF, 'EOF']],
+    '8 - 4' => [[:INTEGER, '8'], [' ', ' '], ['-', '-'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    '8 * 4' => [[:INTEGER, '8'], [' ', ' '], ['*', '*'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    '8 / 4' => [[:INTEGER, '8'], [' ', ' '], ['/', '/'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    '8 ** 4' => [[:INTEGER, '8'], [' ', ' '], ['**', '**'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']],
+    'puts(1)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:EOF, 'EOF']],
+    'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:IDENTIFIER, 'translate'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:RPAREN, ')'], [:EOF, 'EOF']],
+    'puts(4 + 2)' => [[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']],
+    'MyClass:
+  x: 1' => [[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, 'INDENT'], [:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:INTEGER, '1'], [:DEDENT, 'DENENT'], [:EOF, 'EOF']]
   }.fetch(code) { raise %{"#{code}": No token definition.}}
 end
