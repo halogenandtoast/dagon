@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require './lib/dagon/tokenizer'
+require './build/tokenizer'
 require './lib/dagon/interpreter'
-require './lib/dagon/ast/generator'
+require './build/ast/generator'
 
 def read_program
   if ARGV[0]
