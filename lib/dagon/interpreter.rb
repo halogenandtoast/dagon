@@ -1,34 +1,38 @@
 module Dagon
-  class Environment
-    attr_reader :methods
-    def initialize
-      @methods = {
-        puts: Dagon::Method.new('puts') { |*args| puts *args }
-      }
-    end
-
+  class Binding
     def error string
       $stderr.puts string
       exit
     end
   end
+
+  class Environment < Binding
+    attr_reader :methods
+    def initialize
+      @methods = {
+        puts: Dagon::Method.new('puts') { |*args| puts *args },
+        print: Dagon::Method.new('print') { |*args| print *args },
+      }
+    end
+  end
+
   class Interpreter
     def initialize ast
       @ast = ast
     end
 
     def run
-      environment = Environment.new
-      program = Program.new(@ast, environment)
+      binding = Environment.new
+      program = Program.new(@ast, binding)
       program.run
     end
   end
 
   class Node
-    attr_reader :environment, :ast
-    def initialize ast, environment
+    attr_reader :binding, :ast
+    def initialize ast, binding
       @ast = ast
-      @environment = environment
+      @binding = binding
     end
 
     def next_node
@@ -36,7 +40,7 @@ module Dagon
     end
 
     def error string
-      environment.error string
+      binding.error string
     end
   end
 
@@ -51,7 +55,7 @@ module Dagon
       statements.each do |node|
         case node[0]
         when :call
-          call = Call.new(node, environment)
+          call = Call.new(node, binding)
           call.run
         end
       end
@@ -64,8 +68,8 @@ module Dagon
         error "Invalid call"
       end
 
-      identifier = Identifier.new(next_node, environment)
-      expression = Expression.new(next_node, environment)
+      identifier = Identifier.new(next_node, binding)
+      expression = Expression.new(next_node, binding)
       method = identifier.lookup
       method.invoke(expression.reduce)
     end
@@ -77,7 +81,7 @@ module Dagon
       if (node = next_node) != :identifier
         error "Invalid identifier #{node}"
       end
-      environment.methods[next_node.to_sym]
+      binding.methods[next_node.to_sym]
     end
   end
 
@@ -89,20 +93,20 @@ module Dagon
       when :integer
         value
       when :addition
-        lhs = Expression.new(value, environment).reduce
-        rhs = Expression.new(next_node, environment).reduce
+        lhs = Expression.new(value, binding).reduce
+        rhs = Expression.new(next_node, binding).reduce
         Operation.new(:+, lhs, rhs).reduce
       when :subtraction
-        lhs = Expression.new(value, environment).reduce
-        rhs = Expression.new(next_node, environment).reduce
+        lhs = Expression.new(value, binding).reduce
+        rhs = Expression.new(next_node, binding).reduce
         Operation.new(:-, lhs, rhs).reduce
       when :multiplication
-        lhs = Expression.new(value, environment).reduce
-        rhs = Expression.new(next_node, environment).reduce
+        lhs = Expression.new(value, binding).reduce
+        rhs = Expression.new(next_node, binding).reduce
         Operation.new(:*, lhs, rhs).reduce
       when :division
-        lhs = Expression.new(value, environment).reduce
-        rhs = Expression.new(next_node, environment).reduce
+        lhs = Expression.new(value, binding).reduce
+        rhs = Expression.new(next_node, binding).reduce
         Operation.new(:/, lhs, rhs).reduce
       else
         error "Unknown type: #{type}"
