@@ -21,7 +21,7 @@ rule
 
   assignment: identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
 
-  expression: term ' ' '*' ' ' expression { result = [:addition, val[0], val[4]] }
+  expression: term ' ' '*' ' ' expression { result = [:multiplication, val[0], val[4]] }
             | term ' ' '/' ' ' expression { result = [:division, val[0], val[4]] }
             | term ' ' '-' ' ' expression { result = [:subtraction, val[0], val[4]] }
             | term ' ' '+' ' ' expression { result = [:addition, val[0], val[4]] }
