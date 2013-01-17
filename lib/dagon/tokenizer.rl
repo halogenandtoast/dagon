@@ -16,6 +16,7 @@ $block_open = false
   operator = '+' | '-' | '*' | '/' | '**';
   lparen = '(';
   rparen = ')';
+  dot = '.';
   float = digit+ '.' digit+;
   integer = digit+;
   newline = "\r"? "\n" | "\r";
@@ -34,6 +35,7 @@ $block_open = false
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
+    dot => { emit(:DOT, data, ts, te) };
     operator => { emit(data[ts...te], data, ts, te) };
 
     any => { problem(data, ts, te) };

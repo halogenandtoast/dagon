@@ -21,9 +21,14 @@ module Dagon
         block = Block.new(node[2], binding).reduce
         assignment = Assignment.new(name, block, binding)
         assignment.define
+      when :class_definition
+        class_name = DConstant.new(node[1], binding).to_sym
+        block = Block.new(node[2], binding).reduce
+        class_definition = ClassDefinition.new(name, block, binding)
+        class_definition.define
       when :noop
       else
-        error "Invalid statement #{node}"
+        @binding.error "Invalid statement #{node}"
       end
     end
   end

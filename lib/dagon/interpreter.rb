@@ -12,6 +12,7 @@ require_relative 'interpreter/method'
 require_relative 'interpreter/dobject'
 require_relative 'interpreter/dinteger'
 require_relative 'interpreter/block'
+require_relative 'interpreter/dclass'
 
 module Dagon
   class Interpreter
