@@ -180,21 +180,21 @@ module_eval(<<'.,.,', 'generator.y', 2)
 
 module_eval(<<'.,.,', 'generator.y', 4)
   def _reduce_2(val, _values, result)
-     result = [val[0], val[2]] 
+     result = [val[0], *val[2]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 5)
   def _reduce_3(val, _values, result)
-     result = val[0] 
+     result = [val[0]] 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'generator.y', 6)
   def _reduce_4(val, _values, result)
-     result = val[0] 
+     result = [val[0]] 
     result
   end
 .,.,
