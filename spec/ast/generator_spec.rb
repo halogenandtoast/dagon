@@ -50,7 +50,7 @@ describe Dagon::Ast::Generator, 'parse' do
     it "has some trouble with nested expressions" do
       generate("1 + 2 + 3").should == [
         :program,
-        [:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]
+        [[:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]]
       ]
     end
   end
