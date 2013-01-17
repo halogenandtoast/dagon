@@ -12,6 +12,7 @@ rule
 
   assignment: identifier ':' ' ' literal    { result = [:assignment, val[0], val[3]] }
             | identifier ':' ' ' identifier { result = [:assignment, val[0], val[3]] }
+            | identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
 
   expression: expressable logical expressable { result = [val[1], val[0], val[2]] }
 
