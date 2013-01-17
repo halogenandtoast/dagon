@@ -51,6 +51,13 @@ describe Ast::Generator, 'parse' do
         [:call, [:identifier, 'puts'], [:call, [:identifier, 'translate'], [:integer, 1]]]
       ]
     end
+
+    it 'can take assignment as an argument' do
+      generate("puts(4 + 2)").should == [
+        :program,
+        [:call, [:identifier, 'puts'], [:addition, [:integer, 4], [:integer, 2]]]
+      ]
+    end
   end
 end
 
@@ -67,5 +74,6 @@ def tokenize(code)
     '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
     'puts(1)' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')']],
     'puts(translate(1))' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:IDENTIFIER, 'translate'], [:OPEN_PAREN, '('], [:INTEGER, '1'], [:CLOSE_PAREN, ')'], [:CLOSE_PAREN, ')']],
+    'puts(4 + 2)' => [[:IDENTIFIER, 'puts'], [:OPEN_PAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:CLOSE_PAREN, ')']],
   }.fetch(code) { raise %{"#{code}": No token definition.}}
 end
