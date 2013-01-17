@@ -46,6 +46,15 @@ describe Ast::Generator, 'parse' do
     end
   end
 
+  describe 'a personal failing' do
+    it "has some trouble with nested expressions" do
+      generate("1 + 2 + 3").should == [
+        :program,
+        [:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]
+      ]
+    end
+  end
+
   describe 'method call' do
     it 'calls puts with argument 1' do
       generate("puts(1)").should == [
@@ -84,6 +93,7 @@ def tokenize(code)
     'y: 4' => [[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4']],
     'x: y' => [[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y']],
     '8 + 4' => [[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4']],
+    '1 + 2 + 3' => [[:INTEGER, '1'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '3']],
     '8 - 4' => [[:INTEGER, '8'], [' ', ' '], ['-', '-'], [' ', ' '], [:INTEGER, '4']],
     '8 * 4' => [[:INTEGER, '8'], [' ', ' '], ['*', '*'], [' ', ' '], [:INTEGER, '4']],
     '8 / 4' => [[:INTEGER, '8'], [' ', ' '], ['/', '/'], [' ', ' '], [:INTEGER, '4']],
