@@ -1,11 +1,4 @@
 # vim: set syntax=ruby:
-$line = 0
-$column = 0
-$tokens = []
-$indent_count = 0
-$last_indent_count = 0
-$check_indents = true
-$block_open = false
 
 =begin
 %%{
@@ -30,8 +23,8 @@ $block_open = false
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
     string => { emit(:STRING, data, ts, te) };
-    newline { $last_indent_count = $indent_count; $indent_count = 0; $line += 1; $column = 0; emit(:NEWLINE, data, ts, te); $check_indents = true };
-    indent => { $indent_count += 1; };
+    newline { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; emit(:NEWLINE, data, ts, te); @check_indents = true };
+    indent => { @indent_count += 1; };
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
@@ -50,33 +43,31 @@ module Dagon
 
     def self.emit(name, data, start_char, end_char)
       handle_indents
-      $tokens << [name, data[start_char...end_char]]
-      $column += end_char - start_char
+      @tokens << [name, data[start_char...end_char]]
+      @column += end_char - start_char
     end
 
     def self.handle_indents
-      if $check_indents
-        $check_indents = false
-        if $indent_count > $last_indent_count
-          $block_open = true
-          $tokens.pop
-          ($indent_count - $last_indent_count).times do
-            $tokens << [:INDENT, "  "]
+      if @check_indents
+        @check_indents = false
+        if @indent_count > @last_indent_count
+          @tokens.pop
+          (@indent_count - @last_indent_count).times do
+            @tokens << [:INDENT, "  "]
           end
-        elsif $indent_count < $last_indent_count
-          if $indent_count == 0
-            $block_open = false
+        elsif @indent_count < @last_indent_count
+          if @tokens.last[0] == :NEWLINE
+            @tokens.pop
           end
-          $tokens.pop
-          ($last_indent_count - $indent_count).times do
-            $tokens << [:DEDENT, "  "]
+          (@last_indent_count - @indent_count).times do
+            @tokens << [:DEDENT, "  "]
           end
         end
       end
     end
 
     def self.problem(data, ts, te)
-      puts $tokens.inspect
+      puts @tokens.inspect
       raise "Oops {#{data[ts...-1]}}"
     end
 
@@ -84,14 +75,26 @@ module Dagon
       self.class.tokenize(data)
     end
 
+    def self.reset
+      @line = 0
+      @column = 0
+      @tokens = []
+      @indent_count = 0
+      @last_indent_count = 0
+      @check_indents = true
+    end
+
     def self.tokenize(data)
+      reset
       %% write init;
       eof = data.length
       %% write exec;
-      $ident_count = 0
+      @check_indents = true
+      @last_indent_count = @indent_count
+      @indent_count = 0
       handle_indents
-      $tokens << [:EOF, "EOF"]
-      $tokens
+      @tokens << [:EOF, "EOF"]
+      @tokens
     end
   end
 end
