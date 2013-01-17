@@ -1,16 +1,32 @@
 module Dagon
-  class Binding
+  class DBinding
+    attr_reader :defines
+    def initialize defines = {}, child_binding = NullBinding.new
+      @child_binding = child_binding
+      @defines = defines
+    end
+
     def error string
       $stderr.puts string
       exit
     end
 
     def lookup name
-      @defines[name]
+      defines.fetch(name) { @child_binding.lookup(name) }
     end
 
     def define name, value
-      @defines[name] = value
+      defines[name] = value
+    end
+  end
+
+  class NullBinding
+    def lookup name
+      error("Undefined variable or method #{name}")
+    end
+    def error string
+      $stderr.puts string
+      exit
     end
   end
 end

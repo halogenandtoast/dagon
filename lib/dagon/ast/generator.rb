@@ -13,7 +13,6 @@ module Ast
 module_eval(<<'...end generator.y/module_eval...', 'generator.y', 46)
   attr_accessor :table
   def initialize(tokens)
-    @yydebug = true
     @tokens = tokens
   end
 

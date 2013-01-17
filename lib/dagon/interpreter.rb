@@ -20,8 +20,8 @@ module Dagon
     end
 
     def run
-      binding = Environment.new
-      program = Program.new(@ast, binding)
+      environment = Environment.new
+      program = Program.new(@ast, environment.binding)
       program.run
     end
   end

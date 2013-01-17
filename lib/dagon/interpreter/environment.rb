@@ -1,6 +1,5 @@
 module Dagon
-  class Environment < Binding
-    attr_reader :methods
+  class Environment
     def initialize
       @defines = {
         puts: Dagon::Method.new('puts') { |*args| puts *args.map(&:value) },
@@ -8,5 +7,8 @@ module Dagon
       }
     end
 
+    def binding
+      DBinding.new(@defines)
+    end
   end
 end

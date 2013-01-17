@@ -3,7 +3,7 @@ module Dagon
     def reduce
       type = next_node
       statements = next_node
-      DBlock.new(statements, binding)
+      DBlock.new(statements, DBinding.new({}, binding))
     end
   end
 

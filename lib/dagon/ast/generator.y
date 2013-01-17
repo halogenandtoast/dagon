@@ -45,7 +45,6 @@ end
 ---- inner
   attr_accessor :table
   def initialize(tokens)
-    @yydebug = true
     @tokens = tokens
   end
 
