@@ -1,12 +1,15 @@
 class Ast::Generator
+prechigh
+  left '*' '/'
+  left '+' '-'
+preclow
 rule
-  target: program { result = [:program, val[0]]}
+  target: program EOF { result = [:program, val[0]]}
 
   program: { result = [] }
          | statements
 
-  block: INDENT statements NEWLINE DEDENT { result = [:block, val[1]] }
-       | INDENT statements { result = [:block, val[1]] }
+  block: INDENT statements DEDENT { result = [:block, val[1]] }
 
   statements: statements statement { result = [*val[0], val[1]] }
             | statement { result = [val[0]] }
@@ -16,8 +19,8 @@ rule
            | expression
            | NEWLINE { result = [:noop, :noop] }
 
-  method_definition: identifier ':' NEWLINE block { result = [:method_definition, val[0], val[3]] }
-                   | identifier LPAREN RPAREN ':' NEWLINE block { result = [:method_definition, val[0], val[5]] }
+  method_definition: identifier ':' block { result = [:method_definition, val[0], val[3]] }
+                   | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], val[4]] }
 
   assignment: identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
 

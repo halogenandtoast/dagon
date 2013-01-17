@@ -4,6 +4,7 @@ $tokens = []
 $indent_count = 0
 $last_indent_count = 0
 $check_indents = true
+$block_open = false
 
 =begin
 %%{
@@ -52,10 +53,16 @@ module Dagon
       if $check_indents
         $check_indents = false
         if $indent_count > $last_indent_count
+          $block_open = true
+          $tokens.pop
           ($indent_count - $last_indent_count).times do
             $tokens << [:INDENT, "  "]
           end
         elsif $indent_count < $last_indent_count
+          if $indent_count == 0
+            $block_open = false
+          end
+          $tokens.pop
           ($last_indent_count - $indent_count).times do
             $tokens << [:DEDENT, "  "]
           end
@@ -76,6 +83,9 @@ module Dagon
       %% write init;
       eof = data.length
       %% write exec;
+      $ident_count = 0
+      handle_indents
+      $tokens << [:EOF, "EOF"]
       $tokens
     end
   end
