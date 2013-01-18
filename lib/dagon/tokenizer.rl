@@ -3,7 +3,10 @@
 =begin
 %%{
   machine new_parser;
+  newline = "\r"? "\n" | "\r";
+  newlines = newline+;
   string = '"' ( [^"\\] | /\\./ )* '"';
+  comment = '#' (any - newline)* newline;
   constant = upper (alnum | '-')*;
   identifier = lower (lower | digit | '-')*;
   assignment = ': ';
@@ -18,11 +21,12 @@
   dot = '.';
   float = digit+ '.' digit+;
   integer = digit+;
-  newline = "\r"? "\n" | "\r";
-  newlines = newline+;
   indent = "  ";
 
   main := |*
+    newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; @check_indents = true };
+    comment;
+    space;
     string => { emit(:STRING, data, ts+1, te-1) };
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
@@ -30,7 +34,6 @@
     colon => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
-    newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; @check_indents = true };
     indent => { @indent_count += 1; };
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
