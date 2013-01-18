@@ -5,7 +5,7 @@ prechigh
   left '+' '-'
 preclow
 rule
-  target: program EOF { result = [:program, val[0]]}
+  target: program { result = [:program, val[0]]}
 
   program: { result = [] }
          | statements

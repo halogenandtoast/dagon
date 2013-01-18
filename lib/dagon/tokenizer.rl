@@ -100,7 +100,6 @@ module Dagon
       @last_indent_count = @indent_count
       @indent_count = 0
       handle_indents
-      @tokens << [:EOF, "EOF"]
       @tokens
     end
   end
