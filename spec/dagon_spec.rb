@@ -18,7 +18,6 @@ end
 describe Dagon::Ast::Generator do
   EXAMPLES.each do |dagon, extra|
     it dagon do
-      # pending dagon if dagon == "1 + 2 + 3"
       Dagon::Ast::Generator.new(eval(extra[0])).parse.table.should == eval(extra[1])
     end
   end
