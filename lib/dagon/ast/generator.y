@@ -23,7 +23,8 @@ rule
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
   method_definition: identifier ':' block { result = [:method_definition, val[0], val[2]] }
-                   | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], val[4]] }
+                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], val[2], val[5]]}
+                   | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], [], val[4]] }
 
   assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
 
@@ -34,9 +35,9 @@ rule
             | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
             | term
 
-  array: LBRACKET contents RBRACKET { result = [:array, [:values, val[1]]] }
-  contents: literal { result = val }
-          | contents COMMA ' ' literal { result.push val[3] }
+  array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
+  list: expression { result = val }
+      | list COMMA expression { result.push val[2] }
 
   term: identifier
       | literal
@@ -52,7 +53,7 @@ rule
 
   method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]]}
   method_call: identifier LPAREN RPAREN { result = [:call, val[0], [:args, []]] }
-             | identifier LPAREN expression RPAREN { result = [:call, val[0], [:args, [val[2]]]] }
+             | identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
 end
 
 ---- header

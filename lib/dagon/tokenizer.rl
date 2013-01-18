@@ -13,7 +13,7 @@
   rparen = ')';
   lbracket = '[';
   rbracket = ']';
-  comma = ',';
+  comma = ', ';
   dot = '.';
   float = digit+ '.' digit+;
   integer = digit+;

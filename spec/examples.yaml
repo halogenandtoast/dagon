@@ -41,6 +41,9 @@
 'puts(4 + 2)':
   - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], ['+', '+'], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:addition, [:integer, 4], [:integer, 2]]]]]]]"
+'puts(1, 2)':
+  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:COMMA, ', '], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']]"
+  - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:integer, 1], [:integer, 2]]]]]]"
 "MyClass:\n  x: 1":
   - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1'], [:DEDENT, '  '], [:EOF, 'EOF']]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
@@ -48,5 +51,5 @@
   - "[[:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:EOF, 'EOF']]"
   - "[:program, [[:string, 'string']]]"
 'x: ["string", 1, 4.2]':
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ','], [' ', ' '], [:INTEGER, '1'], [:COMMA, ','], [' ', ' '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ', '], [:INTEGER, '1'], [:COMMA, ', '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]]"
