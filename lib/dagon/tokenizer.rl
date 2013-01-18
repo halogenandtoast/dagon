@@ -61,16 +61,10 @@ module Dagon
       if @check_indents
         @check_indents = false
         if @indent_count > @last_indent_count
-          if @tokens.last[0] == :NEWLINE
-            @tokens.pop
-          end
           (@indent_count - @last_indent_count).times do
             @tokens << [:INDENT, "  "]
           end
         elsif @indent_count < @last_indent_count
-          if @tokens.last[0] == :NEWLINE
-            @tokens.pop
-          end
           (@last_indent_count - @indent_count).times do
             @tokens << [:DEDENT, "  "]
           end
