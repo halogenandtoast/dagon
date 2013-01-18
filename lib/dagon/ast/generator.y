@@ -3,6 +3,7 @@ prechigh
   left EXPONENT
   left '*' '/'
   left '+' '-'
+  nonassoc '>' '<' '>=' '<=' '='
 preclow
 rule
   target: program { result = [:program, val[0]]}
@@ -19,9 +20,11 @@ rule
            | method_definition
            | assignment
            | expression
-           | something_for_if
+           | conditional_statement
 
-  something_for_if: IF condition block { result = [:if, val[1], val[2]] }
+  conditional_statement: IF condition block { result = [:conditional_statement, [[:if, val[1], val[2]]]] }
+                       | conditional_statement ELSEIF condition block { result << [:elseif, val[2], val[3]] }
+                       | conditional_statement ELSE block { result << [:else, val[2]] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
@@ -38,7 +41,12 @@ rule
             | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
             | term
 
-  condition: term
+  condition: expression '>' expression { result = [:greater_than, val[0], val[2]] }
+           | expression '<' expression { result = [:less_than, val[0], val[2]] }
+           | expression '<=' expression { result = [:less_than_equal, val[0], val[2]] }
+           | expression '>=' expression { result = [:greater_than_equal, val[0], val[2]] }
+           | expression '=' expression { result = [:equal, val[0], val[2]] }
+           | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
   list: expression { result = val }

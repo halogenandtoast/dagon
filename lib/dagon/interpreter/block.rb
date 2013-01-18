@@ -7,7 +7,7 @@ module Dagon
     end
   end
 
-  class DBlock
+  class DBlock < DObject
     def initialize code, scope
       @code = code
       @scope = scope
@@ -15,7 +15,7 @@ module Dagon
 
     def invoke *args
       @code.each do |statement|
-        Statement.new(statement, @scope).reduce
+        Statement.new(statement, scope).reduce
       end
     end
   end

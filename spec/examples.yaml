@@ -64,4 +64,4 @@
   - "[:program, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]"
 "if true\n  1":
   - "[[:IF, 'if'], [:TRUE, 'true'], [:INDENT, '  '], [:INTEGER, '1'], [:DEDENT, '  ']]"
-  - "[:program, [[:if, true, [:block, [[:integer, 1]]]]]]"
+  - "[:program, [[:conditional_statement, [[:if, true, [:block, [[:integer, 1]]]]]]]]"

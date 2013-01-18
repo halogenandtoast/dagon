@@ -34,6 +34,9 @@ module Dagon
         lhs = Expression.new(value, scope).reduce
         rhs = Expression.new(next_node, scope).reduce
         Operation.new(:**, lhs, rhs).reduce
+      when :call
+        call = Call.new([type, value, next_node], binding)
+        call.run
       else
         error "Unknown type: #{type}"
       end

@@ -26,9 +26,11 @@ module Dagon
         block = Block.new(node[2], scope).reduce
         class_definition = ClassDefinition.new(name, block, scope)
         class_definition.define
+      when :conditional_statement
+        ConditionChain.new(node, scope).reduce
       when :noop
       else
-        @scope.error "Invalid statement #{node}"
+        Expression.new(node, scope).reduce
       end
     end
   end
