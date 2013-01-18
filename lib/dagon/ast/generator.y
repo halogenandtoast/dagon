@@ -44,7 +44,7 @@ rule
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
-  method_call_on_object: identifier '.' method_call { result = [:call_on_object, val[0], val[2]]}
+  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]]}
   method_call: identifier LPAREN RPAREN { result = [:call, val[0], [:args, []]] }
              | identifier LPAREN expression RPAREN { result = [:call, val[0], [:args, [val[2]]]] }
 end
