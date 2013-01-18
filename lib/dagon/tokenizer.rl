@@ -100,7 +100,10 @@ module Dagon
       eof = data.length
       %% write exec;
       @check_indents = true
-      @indent_count = 0
+      if @indent_count != 0
+        @last_indent_count = @indent_count
+        @indent_count = 0
+      end
       handle_indents
       @tokens
     end
