@@ -7,10 +7,17 @@ namespace :build do
 
   desc "Build AST generator"
   task ast_generator: "build/ast/generator.rb"
+
+  namespace :debug do
+    task :ast_generator do
+      `racc -g -v -O build/ast/generator.output -o build/ast/generator.rb lib/dagon/ast/generator.y`
+    end
+  end
 end
 
 desc "Build tokenizer and AST generator"
 task build: %w{build:tokenizer build:ast_generator}
+task debug: %w{build:tokenizer build:debug:ast_generator}
 
 desc "Remove generated files"
 task :clean do
