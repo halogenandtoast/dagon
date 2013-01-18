@@ -1,8 +1,21 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require './build/tokenizer'
 require './lib/dagon/interpreter'
 require './build/ast/generator'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.on("-t", "--tokens", "Show only tokens") do |v|
+    options[:only_tokens] = v
+  end
+
+  opts.on("-d", "--debug", "Debug") do |v|
+    options[:debug] = v
+  end
+end.parse!
 
 def read_program
   if ARGV[0]
@@ -15,7 +28,20 @@ end
 tokenizer = Dagon::Tokenizer.new
 tokens = tokenizer.tokenize read_program
 
-ast = Dagon::Ast::Generator.new(tokens, !!ENV['DEBUG']).parse.table
+if options[:debug]
+  puts "-" * 40 + " TOKENS " + "-" * 40
+  puts tokens.inspect
+  puts "-" * 40 + "--------" + "-" * 40
+end
 
-interpreter = Dagon::Interpreter.new(ast)
-interpreter.run
+unless options[:only_tokens]
+  ast = Dagon::Ast::Generator.new(tokens, options[:debug]).parse.table
+
+  if options[:debug]
+    puts "-" * 40 + "- AST --" + "-" * 40
+    puts ast.inspect
+    puts "-" * 40 + "--------" + "-" * 40
+  end
+  interpreter = Dagon::Interpreter.new(ast)
+  interpreter.run
+end
