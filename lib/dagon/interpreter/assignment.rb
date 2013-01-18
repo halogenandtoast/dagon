@@ -1,13 +1,13 @@
 module Dagon
   class Assignment
-    def initialize name, value, binding
+    def initialize name, value, scope
       @name = name
       @value = value
-      @binding = binding
+      @scope = scope
     end
 
     def define
-      @binding.define(@name, @value)
+      @scope.define(@name, @value)
     end
   end
 

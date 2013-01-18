@@ -1,11 +1,11 @@
 module Dagon
   class Identifier < Node
-    def initialize ast, binding
+    def initialize ast, scope
       super
       parse
     end
     def lookup
-      binding.lookup(to_sym)
+      scope.lookup(to_sym)
     end
     def parse
       if (node = next_node) != :identifier

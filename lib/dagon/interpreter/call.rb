@@ -5,8 +5,8 @@ module Dagon
         error "Invalid call"
       end
 
-      identifier = Identifier.new(next_node, binding)
-      args = next_node[1].map { |node| Expression.new(node, binding).reduce }
+      identifier = Identifier.new(next_node, scope)
+      args = next_node[1].map { |node| Expression.new(node, scope).reduce }
       method = identifier.lookup
       method.invoke(*args)
     end

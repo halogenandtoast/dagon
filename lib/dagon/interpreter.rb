@@ -1,4 +1,4 @@
-%w(binding environment node statement program call identifier
+%w(scope environment node statement program call identifier
    expression operation assignment method dobject dinteger
    block dclass dstring darray).each do |file|
     require_relative "interpreter/#{file}"
@@ -12,7 +12,7 @@ module Dagon
 
     def run
       environment = Environment.instance
-      program = Program.new(@ast, environment.binding)
+      program = Program.new(@ast, environment.scope)
       program.run
     end
   end

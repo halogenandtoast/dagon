@@ -1,8 +1,8 @@
 module Dagon
-  class DBinding
+  class DScope
     attr_reader :defines
-    def initialize defines = {}, child_binding = NullBinding.new
-      @child_binding = child_binding
+    def initialize defines = {}, parent_scope = NullBinding.new
+      @parent_scope = parent_scope
       @defines = defines
     end
 
@@ -12,7 +12,7 @@ module Dagon
     end
 
     def lookup name
-      defines.fetch(name) { @child_binding.lookup(name) }
+      defines.fetch(name) { @parent_scope.lookup(name) }
     end
 
     def define name, value

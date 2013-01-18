@@ -11,21 +11,21 @@ module Dagon
         print: Dagon::Method.new('print') { |*args| print args.map(&:to_s) },
         eval: Dagon::Method.new('eval') do |*args|
           string = args[0]
-          binding = args[1]
-          binding = binding || Environment.instance.binding.dup
+          scope = args[1]
+          scope = scope || Environment.instance.scope.dup
           tokenizer = Tokenizer.new
           tokens = tokenizer.tokenize(string.value)
           ast = Ast::Generator.new(tokens).parse.table
           code = ast[1]
           code.each do |statement|
-            Statement.new(statement, binding).reduce
+            Statement.new(statement, scope).reduce
           end
         end
       }
     end
 
-    def binding
-      DBinding.new(@defines)
+    def scope
+      DScope.new(@defines)
     end
   end
 end

@@ -9,23 +9,23 @@ module Dagon
   end
 
   class ClassDefinition
-    def initialize name, block, binding
+    def initialize name, block, scope
       @name = name
       @block = block
-      @binding = binding
+      @scope = scope
     end
 
     def define
-      dclass = DClass.new(@name, @block, @binding)
-      @binding.define @name, dclass
+      dclass = DClass.new(@name, @block, @scope)
+      @scope.define @name, dclass
     end
   end
 
   class DClass
-    def initialize name, block, binding
+    def initialize name, block, scope
       @name = name
       @block = block
-      @binding = binding
+      @scope = scope
     end
   end
 end

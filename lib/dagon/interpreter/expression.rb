@@ -6,7 +6,7 @@ module Dagon
       case type
       when :noop
       when :identifier
-        id = Identifier.new([type, value], binding).lookup
+        id = Identifier.new([type, value], scope).lookup
         id.reduce
       when :integer
         DInteger.new(value)
@@ -15,24 +15,24 @@ module Dagon
       when :string
         DString.new(value)
       when :addition
-        lhs = Expression.new(value, binding).reduce
-        rhs = Expression.new(next_node, binding).reduce
+        lhs = Expression.new(value, scope).reduce
+        rhs = Expression.new(next_node, scope).reduce
         Operation.new(:+, lhs, rhs).reduce
       when :subtraction
-        lhs = Expression.new(value, binding).reduce
-        rhs = Expression.new(next_node, binding).reduce
+        lhs = Expression.new(value, scope).reduce
+        rhs = Expression.new(next_node, scope).reduce
         Operation.new(:-, lhs, rhs).reduce
       when :multiplication
-        lhs = Expression.new(value, binding).reduce
-        rhs = Expression.new(next_node, binding).reduce
+        lhs = Expression.new(value, scope).reduce
+        rhs = Expression.new(next_node, scope).reduce
         Operation.new(:*, lhs, rhs).reduce
       when :division
-        lhs = Expression.new(value, binding).reduce
-        rhs = Expression.new(next_node, binding).reduce
+        lhs = Expression.new(value, scope).reduce
+        rhs = Expression.new(next_node, scope).reduce
         Operation.new(:/, lhs, rhs).reduce
       when :exponentiation
-        lhs = Expression.new(value, binding).reduce
-        rhs = Expression.new(next_node, binding).reduce
+        lhs = Expression.new(value, scope).reduce
+        rhs = Expression.new(next_node, scope).reduce
         Operation.new(:**, lhs, rhs).reduce
       else
         error "Unknown type: #{type}"

@@ -1,9 +1,9 @@
 module Dagon
   class Node
-    attr_reader :binding, :ast
-    def initialize ast, binding
+    attr_reader :scope, :ast
+    def initialize ast, scope
       @ast = ast
-      @binding = binding
+      @scope = scope
     end
 
     def next_node
@@ -11,7 +11,14 @@ module Dagon
     end
 
     def error string
-      binding.error string
+      scope.error string
+    end
+
+    def expect *types
+      type = next_node
+      unless types.include? type
+        error "#{type} is not of type #{types.join(",")}"
+      end
     end
   end
 end

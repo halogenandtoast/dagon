@@ -1,14 +1,11 @@
 module Dagon
   class Program < Node
     def run
-      if next_node != :program
-        error "Invalid program"
-      end
+      expect :program
 
       statements = next_node
-
       statements.each do |node|
-        Statement.new(node, binding).reduce
+        Statement.new(node, scope).reduce
       end
     end
   end
