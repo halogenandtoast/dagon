@@ -9,6 +9,9 @@
   operator = '+' | '-' | '*' | '/' | '**';
   lparen = '(';
   rparen = ')';
+  lbracket = '[';
+  rbracket = ']';
+  comma = ',';
   dot = '.';
   float = digit+ '.' digit+;
   integer = digit+;
@@ -27,9 +30,12 @@
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
+    lbracket => { emit(:LBRACKET, data, ts, te) };
+    rbracket => { emit(:RBRACKET, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
     operator => { emit(data[ts...te], data, ts, te) };
     double_quote => { emit(:DOUBLE_QUOTE, data, ts, te) };
+    comma => { emit(:COMMA, data, ts, te) };
 
     any => { problem(data, ts, te) };
   *|;

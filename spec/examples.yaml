@@ -44,3 +44,6 @@
 '"string"':
   - "[[:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:EOF, 'EOF']]"
   - "[:program, [[:string, 'string']]]"
+'["string", 1, 4.2]':
+  - "[[:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ','], [' ', ' '], [:INTEGER, '1'], [:COMMA, ','], [' ', ' '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
+  - "[:program, [[:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]"

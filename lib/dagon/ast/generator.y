@@ -18,6 +18,7 @@ rule
            | method_definition
            | assignment
            | expression
+           | array
            | NEWLINE { result = [:noop, :noop] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
@@ -33,6 +34,10 @@ rule
             | term ' ' '+' ' ' expression { result = [:addition, val[0], val[4]] }
             | term ' ' '**' ' ' expression { result = [:exponentiation, val[0], val[4]] }
             | term
+
+  array: LBRACKET contents RBRACKET { result = [:array, [:values, val[1]]] }
+  contents: literal { result = val }
+          | contents COMMA ' ' literal { result.push val[3] }
 
   term: identifier
       | literal
@@ -62,6 +67,12 @@ end
     self
   end
 
+  def next_token
+    tokens.shift
+  end
+
+  private
+  attr_accessor :tokens
   def next_token
     tokens.shift
   end
