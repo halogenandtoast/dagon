@@ -1,7 +1,7 @@
 module Dagon
   class DString < DObject
     def initialize value
-      @value = eval("\"#{value}\"")
+      @value = value
     end
 
     def +(string)

@@ -1,9 +1,7 @@
 module Dagon
   class DConstant < Identifier
     def parse
-      if (node = next_node) != :constant
-        error "Invalid identifier #{node}"
-      end
+      expect :constant
       @name = next_node
     end
   end

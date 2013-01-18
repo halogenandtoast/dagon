@@ -8,7 +8,6 @@ module Dagon
 
     def error string
       $stderr.puts string
-      exit
     end
 
     def lookup name

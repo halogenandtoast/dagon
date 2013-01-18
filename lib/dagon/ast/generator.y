@@ -21,6 +21,9 @@ rule
            | assignment
            | expression
            | conditional_statement
+           | while_statement
+
+  while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
 
   conditional_statement: IF condition block { result = [:conditional_statement, [[:if, val[1], val[2]]]] }
                        | conditional_statement ELSEIF condition block { result << [:elseif, val[2], val[3]] }

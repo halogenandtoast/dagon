@@ -19,6 +19,14 @@ module Dagon
       end
     end
 
+    def reduce
+      invoke
+    end
+
+    def inspect
+      @statements.map(&:inspect)
+    end
+
     private
 
     attr_reader :scope, :statements

@@ -7,6 +7,7 @@ module Dagon
     end
 
     def reduce
+      node = @node.dup
       case node[0]
       when :call
         call = Call.new(node, scope)
@@ -28,6 +29,8 @@ module Dagon
         class_definition.define
       when :conditional_statement
         ConditionalStatement.new(node, scope).reduce
+      when :while_statement
+        WhileStatement.new(node, scope).reduce
       when :noop
       else
         Expression.new(node, scope).reduce

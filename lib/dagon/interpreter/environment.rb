@@ -6,9 +6,10 @@ module Dagon
 
     def initialize
       @defines = {
-        gets: Dagon::Method.new('gets') { |*args| Dagon::DString.new($stdin.gets) },
-        puts: Dagon::Method.new('puts') { |*args| puts args.map(&:to_s) },
-        print: Dagon::Method.new('print') { |*args| print args.map(&:to_s) },
+        binding: Dagon::Method.new('binding') { |*args| Dagon::Environment.instance.scope },
+        gets: Dagon::Method.new('gets') { |*args| Dagon::DString.new($stdin.gets.chomp) },
+        puts: Dagon::Method.new('puts') { |*args| puts *args.map(&:to_s) },
+        print: Dagon::Method.new('print') { |*args| print *args.map(&:to_s) },
         eval: Dagon::Method.new('eval') do |*args|
           string = args[0]
           scope = args[1]

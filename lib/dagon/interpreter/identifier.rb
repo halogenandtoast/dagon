@@ -8,9 +8,7 @@ module Dagon
       scope.lookup(to_sym)
     end
     def parse
-      if (node = next_node) != :identifier
-        error "Invalid identifier #{node}"
-      end
+      expect :identifier
       @name = next_node
     end
     def to_sym
