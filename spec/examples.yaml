@@ -62,3 +62,6 @@
 "x: 1 #comment\n":
   - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]"
+"if true\n  1":
+  - "[[:IF, 'if'], [:TRUE, 'true'], [:INDENT, '  '], [:INTEGER, '1'], [:DEDENT, '  ']]"
+  - "[:program, [[:if, true, [:block, [[:integer, 1]]]]]]"

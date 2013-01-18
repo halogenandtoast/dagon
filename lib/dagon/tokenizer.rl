@@ -5,6 +5,7 @@
   machine new_parser;
   newline = "\r"? "\n" | "\r";
   newlines = newline+;
+  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false';
   string = '"' ( [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline;
   constant = upper (alnum | '-')*;
@@ -26,6 +27,7 @@
   main := |*
     newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; @check_indents = true };
     comment;
+    keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
     space;
     string => { emit(:STRING, data, ts+1, te-1) };
     constant => { emit(:CONSTANT, data, ts, te) };

@@ -1,6 +1,6 @@
 %w(scope environment node statement program call identifier
    expression operation assignment method dobject dinteger
-   block dclass dstring darray).each do |file|
+   block dclass dstring darray dfalse).each do |file|
     require_relative "interpreter/#{file}"
    end
 

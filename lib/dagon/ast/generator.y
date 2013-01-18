@@ -19,6 +19,9 @@ rule
            | method_definition
            | assignment
            | expression
+           | something_for_if
+
+  something_for_if: IF condition block { result = [:if, val[1], val[2]] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
@@ -35,6 +38,8 @@ rule
             | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
             | term
 
+  condition: term
+
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
   list: expression { result = val }
       | list COMMA expression { result.push val[2] }
@@ -48,6 +53,8 @@ rule
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
          | STRING { result = [:string, val[0]] }
+         | TRUE { result = true }
+         | FALSE { result = false }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
