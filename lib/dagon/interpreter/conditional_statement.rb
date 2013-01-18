@@ -1,5 +1,5 @@
 module Dagon
-  class ConditionChain
+  class ConditionalStatement
     def initialize(conditional_statements, scope)
       unless conditional_statements.shift == :conditional_statement
         raise ArgumentError

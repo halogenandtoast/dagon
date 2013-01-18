@@ -24,10 +24,10 @@ module Dagon
       when :class_definition
         class_name = DConstant.new(node[1], scope).to_sym
         block = Block.new(node[2], scope).reduce
-        class_definition = ClassDefinition.new(name, block, scope)
+        class_definition = ClassDefinition.new(class_name, block, scope)
         class_definition.define
       when :conditional_statement
-        ConditionChain.new(node, scope).reduce
+        ConditionalStatement.new(node, scope).reduce
       when :noop
       else
         Expression.new(node, scope).reduce

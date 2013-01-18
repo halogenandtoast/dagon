@@ -35,9 +35,6 @@ file "build/tokenizer.rb" => "lib/dagon/tokenizer.rl" do
   `ragel -R lib/dagon/tokenizer.rl -o build/tokenizer.rb`
 end
 
-namespace :test do
-  task ast_generator: "build:ast_generator" do
-    puts `rspec`
-  end
+task test: :default do
+  puts `rspec`
 end
-task test: %w{default test:ast_generator}
