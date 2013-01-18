@@ -9,6 +9,8 @@ module Dagon
         Identifier.new([type, value], binding).lookup
       when :integer
         DInteger.new(value)
+      when :array
+        DArray.new(value)
       when :string
         DString.new(value)
       when :addition

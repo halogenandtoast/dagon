@@ -18,7 +18,6 @@ rule
            | method_definition
            | assignment
            | expression
-           | array
            | NEWLINE { result = [:noop, :noop] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
@@ -41,6 +40,7 @@ rule
 
   term: identifier
       | literal
+      | array
       | method_call
       | method_call_on_object
 

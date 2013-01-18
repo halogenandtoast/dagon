@@ -2,8 +2,8 @@ module Dagon
   class Environment
     def initialize
       @defines = {
-        puts: Dagon::Method.new('puts') { |*args| puts *args.map(&:value) },
-        print: Dagon::Method.new('print') { |*args| print *args.map(&:value) },
+        puts: Dagon::Method.new('puts') { |*args| puts *args.map(&:to_s) },
+        print: Dagon::Method.new('print') { |*args| print *args.map(&:to_s) },
       }
     end
 
