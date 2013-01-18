@@ -11,7 +11,7 @@ module Dagon
     end
 
     def run
-      environment = Environment.new
+      environment = Environment.instance
       program = Program.new(@ast, environment.binding)
       program.run
     end

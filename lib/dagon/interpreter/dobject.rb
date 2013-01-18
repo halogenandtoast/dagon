@@ -8,5 +8,9 @@ module Dagon
     def to_s
       value
     end
+
+    def reduce
+      self
+    end
   end
 end

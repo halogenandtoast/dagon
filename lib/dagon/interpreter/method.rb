@@ -8,5 +8,9 @@ module Dagon
     def invoke *args
       @block.call(*args)
     end
+
+    def reduce
+      invoke
+    end
   end
 end

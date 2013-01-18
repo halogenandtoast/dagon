@@ -18,6 +18,10 @@ module Dagon
     def define name, value
       defines[name] = value
     end
+
+    def to_s
+      defines.keys.inspect
+    end
   end
 
   class NullBinding

@@ -6,7 +6,8 @@ module Dagon
       case type
       when :noop
       when :identifier
-        Identifier.new([type, value], binding).lookup
+        id = Identifier.new([type, value], binding).lookup
+        id.reduce
       when :integer
         DInteger.new(value)
       when :array

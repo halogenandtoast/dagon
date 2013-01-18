@@ -1,0 +1,15 @@
+#!/usr/bin/env dagon
+
+Idg:
+  run:
+    bnd: binding
+    line: gets
+    while line
+      if line == "exit"
+        line: false
+      else
+        eval(line, bnd)
+        line: gets
+
+idg: Idg()
+idg.run
