@@ -15,7 +15,7 @@ end
 tokenizer = Dagon::Tokenizer.new
 tokens = tokenizer.tokenize read_program
 
-ast = Dagon::Ast::Generator.new(tokens).parse.table
+ast = Dagon::Ast::Generator.new(tokens, !!ENV['DEBUG']).parse.table
 
 interpreter = Dagon::Interpreter.new(ast)
 interpreter.run

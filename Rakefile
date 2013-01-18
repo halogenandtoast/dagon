@@ -30,7 +30,7 @@ end
 
 namespace :test do
   task ast_generator: "build:ast_generator" do
-    puts `rspec spec/ast/generator_spec.rb`
+    puts `rspec`
   end
 end
 task test: %w{default test:ast_generator}

@@ -5,8 +5,10 @@
   machine new_parser;
   constant = upper (alnum | '-')*;
   identifier = lower (lower | digit | '-')*;
-  assignment = ':';
-  operator = '+' | '-' | '*' | '/' | '**';
+  assignment = ': ';
+  colon = ':';
+  operator = ' + ' | ' - ' | ' * ' | ' / ';
+  exponent = ' ** ';
   lparen = '(';
   rparen = ')';
   lbracket = '[';
@@ -22,10 +24,11 @@
   main := |*
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
-    assignment => { emit(':', data, ts, te) };
+    assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
+    colon => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
-    newline { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; emit(:NEWLINE, data, ts, te); @check_indents = true };
+    newline { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; @check_indents = true };
     indent => { @indent_count += 1; };
     space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
@@ -33,7 +36,8 @@
     lbracket => { emit(:LBRACKET, data, ts, te) };
     rbracket => { emit(:RBRACKET, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
-    operator => { emit(data[ts...te], data, ts, te) };
+    operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
+    exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     double_quote => { emit(:DOUBLE_QUOTE, data, ts, te) };
     comma => { emit(:COMMA, data, ts, te) };
 
@@ -57,7 +61,9 @@ module Dagon
       if @check_indents
         @check_indents = false
         if @indent_count > @last_indent_count
-          @tokens.pop
+          if @tokens.last[0] == :NEWLINE
+            @tokens.pop
+          end
           (@indent_count - @last_indent_count).times do
             @tokens << [:INDENT, "  "]
           end

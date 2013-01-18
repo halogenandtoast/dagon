@@ -1,31 +1,34 @@
 ---
 'x: 5.0':
-  - "[[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:FLOAT, '5.0'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:FLOAT, '5.0'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:float, 5.0]]]]"
 'y: 4':
-  - "[[:IDENTIFIER, 'y'], [':', ':'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'y'], [:ASSIGNMENT, ':'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'y'], [:integer, 4]]]]"
 'x: y':
-  - "[[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:IDENTIFIER, 'y'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:IDENTIFIER, 'y'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:identifier, 'y']]]]"
 '8 + 4':
-  - "[[:INTEGER, '8'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:INTEGER, '8'], ['+', '+'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:addition, [:integer, 8], [:integer, 4]]]]"
 '8 - 4':
-  - "[[:INTEGER, '8'], [' ', ' '], ['-', '-'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:INTEGER, '8'], ['-', '-'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:subtraction, [:integer, 8], [:integer, 4]]]]"
 '8 * 4':
-  - "[[:INTEGER, '8'], [' ', ' '], ['*', '*'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:INTEGER, '8'], ['*', '*'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:multiplication, [:integer, 8], [:integer, 4]]]]"
 '8 / 4':
-  - "[[:INTEGER, '8'], [' ', ' '], ['/', '/'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:INTEGER, '8'], ['/', '/'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:division, [:integer, 8], [:integer, 4]]]]"
 '8 ** 4':
-  - "[[:INTEGER, '8'], [' ', ' '], ['**', '**'], [' ', ' '], [:INTEGER, '4'], [:EOF, 'EOF']]"
+  - "[[:INTEGER, '8'], [:EXPONENT, '**'], [:INTEGER, '4'], [:EOF, 'EOF']]"
   - "[:program, [[:exponentiation, [:integer, 8], [:integer, 4]]]]"
 '1 + 2 + 3':
-  - "[[:INTEGER, '1'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '3'], [:EOF, 'EOF']]"
-  - "[:program, [:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]]"
+  - "[[:INTEGER, '1'], ['+', '+'], [:INTEGER, '2'], ['+', '+'], [:INTEGER, '3'], [:EOF, 'EOF']]"
+  - "[:program, [[:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]]]"
+'1 + 2 * 3':
+  - "[[:INTEGER, '1'], ['+', '+'], [:INTEGER, '2'], ['*', '*'], [:INTEGER, '3'], [:EOF, 'EOF']]"
+  - "[:program, [[:addition, [:integer, 1], [:multiplication, [:integer, 2], [:integer, 3]]]]]"
 'puts(1)':
   - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:EOF, 'EOF']]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:integer, 1]]]]]]"
@@ -36,14 +39,14 @@
   - "[[:IDENTIFIER, 'foo'], [:DOT, '.'], [:IDENTIFIER, 'bar'], [:LPAREN, '('], [:RPAREN, ')'], [:EOF, 'EOF']]"
   - "[:program, [[:call_on_object, [:identifier, 'foo'], [:call, [:identifier, 'bar'], [:args, []]]]]]"
 'puts(4 + 2)':
-  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], [' ', ' '], ['+', '+'], [' ', ' '], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], ['+', '+'], [:INTEGER, '2'], [:RPAREN, ')'], [:EOF, 'EOF']]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:addition, [:integer, 4], [:integer, 2]]]]]]]"
 "MyClass:\n  x: 1":
-  - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:INTEGER, '1'], [:DEDENT, '  '], [:EOF, 'EOF']]"
+  - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1'], [:DEDENT, '  '], [:EOF, 'EOF']]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
 '"string"':
   - "[[:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:EOF, 'EOF']]"
   - "[:program, [[:string, 'string']]]"
 'x: ["string", 1, 4.2]':
-  - "[[:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ','], [' ', ' '], [:INTEGER, '1'], [:COMMA, ','], [' ', ' '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ','], [' ', ' '], [:INTEGER, '1'], [:COMMA, ','], [' ', ' '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]]"

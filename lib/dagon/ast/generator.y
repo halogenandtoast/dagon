@@ -1,5 +1,6 @@
 class Dagon::Ast::Generator
 prechigh
+  left EXPONENT
   left '*' '/'
   left '+' '-'
 preclow
@@ -18,20 +19,19 @@ rule
            | method_definition
            | assignment
            | expression
-           | NEWLINE { result = [:noop, :noop] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
   method_definition: identifier ':' block { result = [:method_definition, val[0], val[2]] }
                    | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], val[4]] }
 
-  assignment: identifier ':' ' ' expression { result = [:assignment, val[0], val[3]] }
+  assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
 
-  expression: term ' ' '*' ' ' expression { result = [:multiplication, val[0], val[4]] }
-            | term ' ' '/' ' ' expression { result = [:division, val[0], val[4]] }
-            | term ' ' '-' ' ' expression { result = [:subtraction, val[0], val[4]] }
-            | term ' ' '+' ' ' expression { result = [:addition, val[0], val[4]] }
-            | term ' ' '**' ' ' expression { result = [:exponentiation, val[0], val[4]] }
+  expression: expression '-' expression { result = [:subtraction, val[0], val[2]] }
+            | expression '+' expression { result = [:addition, val[0], val[2]] }
+            | expression '*' expression { result = [:multiplication, val[0], val[2]] }
+            | expression '/' expression { result = [:division, val[0], val[2]] }
+            | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
             | term
 
   array: LBRACKET contents RBRACKET { result = [:array, [:values, val[1]]] }
@@ -58,7 +58,8 @@ end
 ---- header
 ---- inner
   attr_accessor :table
-  def initialize(tokens)
+  def initialize(tokens, debug = false)
+    @yydebug = debug
     @tokens = tokens
   end
 
