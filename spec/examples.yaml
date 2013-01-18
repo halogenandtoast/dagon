@@ -57,8 +57,8 @@
   - "[[:STRING, 'escaped \\\"']]"
   - "[:program, [[:string, 'escaped \\\"']]]"
 "#comment\n":
-  - "[[:EOF, 'EOF']]"
+  - "[]"
   - "[:program, []]"
 "x: 1 #comment\n":
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]"
