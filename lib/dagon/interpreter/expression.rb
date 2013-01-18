@@ -9,6 +9,8 @@ module Dagon
         Identifier.new([type, value], binding).lookup
       when :integer
         DInteger.new(value)
+      when :string
+        DString.new(value)
       when :addition
         lhs = Expression.new(value, binding).reduce
         rhs = Expression.new(next_node, binding).reduce

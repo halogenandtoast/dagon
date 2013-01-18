@@ -1,6 +1,6 @@
 %w(binding environment node statement program call identifier
-   expression operation assignment method dobject dinteger 
-   block dclass).each do |file|
+   expression operation assignment method dobject dinteger
+   block dclass dstring).each do |file|
     require_relative "interpreter/#{file}"
    end
 

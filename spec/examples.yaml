@@ -41,3 +41,6 @@
 "MyClass:\n  x: 1":
   - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [':', ':'], [' ', ' '], [:INTEGER, '1'], [:DEDENT, '  '], [:EOF, 'EOF']]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
+'"string"':
+  - "[[:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:EOF, 'EOF']]"
+  - "[:program, [[:string, 'string']]]"

@@ -13,7 +13,7 @@
   float = digit+ '.' digit+;
   integer = digit+;
   newline = "\r"? "\n" | "\r";
-  string = "\"" (any - "\"")* "\"";
+  double_quote = "\"";
   indent = "  ";
 
   main := |*
@@ -22,7 +22,6 @@
     assignment => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
-    string => { emit(:STRING, data, ts, te) };
     newline { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; emit(:NEWLINE, data, ts, te); @check_indents = true };
     indent => { @indent_count += 1; };
     space => { emit(' ', data, ts, te) };
@@ -30,6 +29,7 @@
     rparen => { emit(:RPAREN, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
     operator => { emit(data[ts...te], data, ts, te) };
+    double_quote => { emit(:DOUBLE_QUOTE, data, ts, te) };
 
     any => { problem(data, ts, te) };
   *|;
