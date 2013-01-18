@@ -47,7 +47,7 @@ rule
 
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
-         | DOUBLE_QUOTE identifier DOUBLE_QUOTE { result = [:string, val[1][1] ]}
+         | STRING { result = [:string, val[0]] }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 

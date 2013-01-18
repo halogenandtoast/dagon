@@ -48,8 +48,11 @@
   - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1'], [:DEDENT, '  '], [:EOF, 'EOF']]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
 '"string"':
-  - "[[:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:EOF, 'EOF']]"
+  - "[[:STRING, 'string'], [:EOF, 'EOF']]"
   - "[:program, [[:string, 'string']]]"
 'x: ["string", 1, 4.2]':
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:DOUBLE_QUOTE, '\"'], [:IDENTIFIER, 'string'], [:DOUBLE_QUOTE, '\"'], [:COMMA, ', '], [:INTEGER, '1'], [:COMMA, ', '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
+  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:STRING, 'string'], [:COMMA, ', '], [:INTEGER, '1'], [:COMMA, ', '], [:FLOAT, '4.2'], [:RBRACKET, ']'], [:EOF, 'EOF']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]]"
+'"escaped \""':
+  - "[[:STRING, 'escaped \\\"'], [:EOF, 'EOF']]"
+  - "[:program, [[:string, 'escaped \\\"']]]"
