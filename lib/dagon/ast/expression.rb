@@ -19,6 +19,10 @@ module Dagon
           Dagon::Core::Array.new(value)
         when :string
           Dagon::Core::String.new(value)
+        when :true
+          Dagon::Core::True.instance
+        when :false
+          Dagon::Core::False.instance
         when :addition
           lhs = Dagon::Ast::Expression.new(value, scope).reduce
           rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
@@ -41,6 +45,14 @@ module Dagon
           Dagon::Ast::Operation.new(:**, lhs, rhs).reduce
         when :call
           call = Dagon::Ast::Call.new([type, value, next_node], scope)
+          call.run
+        when :call_on_object
+          call_node = next_node
+          object = Expression.new(value, scope).reduce
+          if object.binding == nil
+            binding.pry
+          end
+          call = Call.new(call_node, object.binding)
           call.run
         else
           error "Unknown type: #{type}"

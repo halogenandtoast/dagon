@@ -24,7 +24,7 @@ module Dagon
           assignment = Dagon::Ast::Assignment.new(name, block, scope)
           assignment.define
         when :class_definition
-          class_name = Dagon::Core::Constant.new(node[1], scope).to_sym
+          class_name = Dagon::Ast::Constant.new(node[1], scope).to_sym
           block = Dagon::Ast::Block.new(node[2], scope).reduce
           class_definition = Dagon::Ast::ClassDefinition.new(class_name, block, scope)
           class_definition.define

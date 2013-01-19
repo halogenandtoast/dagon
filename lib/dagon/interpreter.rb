@@ -1,9 +1,10 @@
 require 'pry'
-CORE = %w(environment object class method integer block string array false scope)
+CORE = %w(environment object class method integer block string array true false scope)
 
 AST = %w(node statement program call identifier
          expression operation assignment block
-         conditional_statement while_statement)
+         conditional_statement while_statement
+         condition constant class_definition)
 
 CORE.each do |file|
   require_relative "./core/#{file}"

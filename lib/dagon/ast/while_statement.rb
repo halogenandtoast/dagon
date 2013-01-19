@@ -1,12 +1,13 @@
 module Dagon
   module Ast
-    class WhileStatement
+    class WhileStatement < Dagon::Ast::Node
       def reduce
         expect :while_statement
-        @condition = next_node
+        @condition = Expression.new(next_node, scope)
         @block = Dagon::Ast::Block.new(next_node, scope).reduce
+        puts @condition.inspect
 
-        while @condition.reduce != Dagon::Core::False
+        while @condition.reduce != Dagon::Core::False.instance do
           @block.invoke
         end
       end

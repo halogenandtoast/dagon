@@ -5,13 +5,6 @@ module Dagon
     class Environment
       include Singleton
 
-      def initialize
-        public_methods(false).each do |method|
-          dagon_method = Dagon::Core::Method.new(method) { |*args| self.send(method, *args) }
-          scope.define(method, dagon_method)
-        end
-      end
-
       def binding
         scope
       end
@@ -42,7 +35,7 @@ module Dagon
       end
 
       def scope
-        @scope ||= Scope.new
+        @scope ||= Dagon::Core::Scope.new(self)
       end
     end
   end

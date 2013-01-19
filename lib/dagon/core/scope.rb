@@ -1,22 +1,33 @@
 module Dagon
   module Core
+    class UndefinedError < StandardError; end
     class Scope
       attr_reader :defines
-      def initialize defines = {}, parent_scope = NullScope.new
+      def initialize object, parent_scope = NullScope.new
+        @object = object
         @parent_scope = parent_scope
-        @defines = defines
+        @defines = {}
+        object.public_methods(false).map do |method|
+          dagon_method = Dagon::Core::Method.new(method) { |*args| object.send(method, *args) }
+          @defines[method] = dagon_method
+        end
       end
 
       def error string
         $stderr.puts string
       end
 
-      def lookup name
-        defines.fetch(name) { @parent_scope.lookup(name) }
-      end
-
       def define name, value
         defines[name] = value
+      end
+
+      def lookup name
+        begin
+          defines.fetch(name.to_sym) { @parent_scope.lookup(name) }
+        rescue UndefinedError
+          error("Undefined variable or method #{name} for #{@object}")
+          raise
+        end
       end
 
       def to_s
@@ -26,11 +37,7 @@ module Dagon
 
     class NullScope
       def lookup name
-        error("Undefined variable or method #{name}")
-      end
-      def error string
-        $stderr.puts string
-        exit
+        raise UndefinedError
       end
     end
   end

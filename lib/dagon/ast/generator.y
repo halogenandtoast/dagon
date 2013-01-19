@@ -28,7 +28,7 @@ rule
 
   conditional_statement: IF condition block { result = [:conditional_statement, [[:if, val[1], val[2]]]] }
                        | conditional_statement ELSEIF condition block { result[1] << [:elseif, val[2], val[3]] }
-                       | conditional_statement ELSE block { result[1] << [:else, true, val[2]] }
+                       | conditional_statement ELSE block { result[1] << [:else, [:true, true], val[2]] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
@@ -45,12 +45,12 @@ rule
             | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
             | condition
 
-  condition: expression '>' expression { result = [:greater_than, val[0], val[2]] }
-           | expression '<' expression { result = [:less_than, val[0], val[2]] }
-           | expression '<=' expression { result = [:less_than_equal, val[0], val[2]] }
-           | expression '>=' expression { result = [:greater_than_equal, val[0], val[2]] }
-           | expression '=' expression { result = [:equal, val[0], val[2]] }
-           | expression '!=' expression { result = [:not_equal, val[0], val[2]] }
+  condition: expression '>' expression { result = call_on_object(val[0], val[1], val[2]) }
+           | expression '<' expression { result = call_on_object(val[0], val[1], val[2]) }
+           | expression '<=' expression { result = call_on_object(val[0], val[1], val[2]) }
+           | expression '>=' expression { result = call_on_object(val[0], val[1], val[2]) }
+           | expression '=' expression { result = call_on_object(val[0], :equal, val[2]) }
+           | expression '!=' expression { result = call_on_object(val[0], :not_equal, val[2]) }
            | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
@@ -66,12 +66,12 @@ rule
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = [:integer, val[0].to_i] }
          | STRING { result = [:string, val[0]] }
-         | TRUE { result = true }
-         | FALSE { result = false }
+         | TRUE { result = [:true, true] }
+         | FALSE { result = [:false, false] }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
-  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]]}
+  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]] }
   method_call: identifier LPAREN RPAREN { result = [:call, val[0], [:args, []]] }
              | identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
 end
@@ -91,6 +91,10 @@ end
 
   def next_token
     tokens.shift
+  end
+
+  def call_on_object(object, method, *args)
+    [:call_on_object, object, [:call, [:identifier, method], [:args, [*args]]]]
   end
 
   private

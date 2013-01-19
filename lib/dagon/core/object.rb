@@ -1,61 +1,14 @@
 module Dagon
   module Core
     class Object
-      attr_reader :value
+      attr_reader :value, :binding
       def initialize value
         @value = value
+        @binding = Dagon::Core::Scope.new(self)
       end
 
       def to_s
         value
-      end
-
-      def > other
-        if value > other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
-      end
-
-      def < other
-        if value < other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
-      end
-
-      def >= other
-        if value >= other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
-      end
-
-      def <= other
-        if value < other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
-      end
-
-      def equal other
-        if value == other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
-      end
-
-      def not_equal other
-        if value != other.value
-          Dagon::Core::True.instance
-        else
-          Dagon::Core::False.instance
-        end
       end
     end
   end

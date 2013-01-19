@@ -8,8 +8,8 @@ module Dagon
         end
 
         branches.each do |type, condition, block|
-          if value = condition.reduce
-            return value
+          if condition.reduce == Dagon::Core::True.instance
+            return block.invoke
           end
         end
       end
