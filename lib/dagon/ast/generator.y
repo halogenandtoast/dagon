@@ -106,5 +106,5 @@ end
   end
 
   def call_on_object(object, method, *args)
-    [:call_on_object, object, [:call, [:identifier, method], [:args, [*args]]]]
+    [:call_on_object, object, [:call, [:identifier, method], [:args, args]]]
   end
