@@ -1,0 +1,8 @@
+assert(value):
+  if value
+    true
+  else
+    puts("Failed assertion.")
+
+assert(true)
+assert(false)

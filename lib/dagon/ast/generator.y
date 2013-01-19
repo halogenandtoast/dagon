@@ -32,8 +32,8 @@ rule
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
-  method_definition: identifier ':' block { result = [:method_definition, val[0], val[2]] }
-                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], val[2], val[5]]}
+  method_definition: identifier ':' block { result = [:method_definition, val[0], [:args, []], val[2]] }
+                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], [:args, *val[2]], val[5]]}
 
   assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
 
@@ -101,7 +101,7 @@ end
   end
 
   def on_error error_token_id, error_value, value_stack
-    $stderr.puts "line #{@line+1}: syntax error, unexpected #{error_value}"
+    $stderr.puts "line #{@line+1}: syntax error, unexpected #{error_value}", value_stack.inspect
     exit
   end
 

@@ -47,6 +47,9 @@
 "MyClass:\n  x: 1":
   - "[[:CONSTANT, 'MyClass', [0]], [':', ':', [0]], [:INDENT, '  ', [1]], [:IDENTIFIER, 'x', [1]], [:ASSIGNMENT, ':', [1]], [:INTEGER, '1', [1]], [:DEDENT, '  ', [1]]]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
+"my-method(with, arguments):\n  puts(with, arguments)":
+  - "[[:IDENTIFIER, 'my-method', [0]], [:LPAREN, '(', [0]], [:IDENTIFIER, 'with', [0]], [:COMMA, ', ', [0]], [:IDENTIFIER, 'arguments', [0]], [:RPAREN, ')', [0]], [':', ':', [0]], [:INDENT, '  ', [1]], [:IDENTIFIER, 'puts', [1]], [:LPAREN, '(', [1]], [:IDENTIFIER, 'with', [1]], [:COMMA, ', ', [1]], [:IDENTIFIER, 'arguments', [1]], [:RPAREN, ')', [1]], [:DEDENT, '  ', [1]]]"
+  - "[:program, [[:method_definition, [:identifier, 'my-method'], [:args, [:identifier, 'with'], [:identifier, 'arguments']], [:block, [[:call, [:identifier, 'puts'], [:args, [[:identifier, 'with'], [:identifier, 'arguments']]]]]]]]]"
 '"string"':
   - "[[:STRING, 'string', [0]]]"
   - "[:program, [[:string, 'string']]]"

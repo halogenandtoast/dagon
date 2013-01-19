@@ -20,7 +20,7 @@ module Dagon
           assignment.define
         when :method_definition
           name = Dagon::Ast::Identifier.new(node[1], scope).to_sym
-          block = Dagon::Ast::Block.new(node[2], scope).reduce
+          block = Dagon::Ast::Block.new(node[3], scope, node[2]).reduce
           assignment = Dagon::Ast::Assignment.new(name, block, scope)
           assignment.define
         when :class_definition

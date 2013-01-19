@@ -1,0 +1,4 @@
+foo(bar):
+  puts(bar)
+foo("banana")
+

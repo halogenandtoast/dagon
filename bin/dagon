@@ -4,6 +4,7 @@ require 'optparse'
 require './build/tokenizer'
 require './lib/dagon/interpreter'
 require './build/ast/generator'
+require 'pp'
 
 options = {}
 
@@ -31,7 +32,7 @@ tokens = tokenizer.tokenize program
 
 if options[:debug]
   puts "-" * 40 + " TOKENS " + "-" * 40
-  puts tokens.inspect
+  pp tokens.inspect
   puts "-" * 40 + "--------" + "-" * 40
 end
 
@@ -40,7 +41,7 @@ unless options[:only_tokens]
 
   if options[:debug]
     puts "-" * 40 + "- AST --" + "-" * 40
-    puts ast.inspect
+    pp ast.inspect
     puts "-" * 40 + "--------" + "-" * 40
   end
   interpreter = Dagon::Interpreter.new(ast)
