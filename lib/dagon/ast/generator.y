@@ -101,7 +101,7 @@ end
   end
 
   def on_error error_token_id, error_value, value_stack
-    $stdout.puts "line #{@line+1}: syntax error, unexpected #{error_value}"
+    $stderr.puts "line #{@line+1}: syntax error, unexpected #{error_value}"
     exit
   end
 
