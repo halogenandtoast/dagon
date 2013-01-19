@@ -1,0 +1,6 @@
+if false
+  puts(1)
+elseif true
+  puts("fuck yeah")
+else
+  puts("huh?")

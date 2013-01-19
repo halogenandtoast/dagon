@@ -26,8 +26,8 @@ rule
   while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
 
   conditional_statement: IF condition block { result = [:conditional_statement, [[:if, val[1], val[2]]]] }
-                       | conditional_statement ELSEIF condition block { result << [:elseif, val[2], val[3]] }
-                       | conditional_statement ELSE block { result << [:else, val[2]] }
+                       | conditional_statement ELSEIF condition block { result[1] << [:elseif, val[2], val[3]] }
+                       | conditional_statement ELSE block { result[1] << [:else, true, val[2]] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
