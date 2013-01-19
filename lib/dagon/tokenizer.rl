@@ -12,7 +12,7 @@
   identifier = lower (lower | digit | '-')*;
   assignment = ': ';
   colon = ':';
-  operator = ' + ' | ' - ' | ' * ' | ' / ';
+  operator = ' + ' | ' - ' | ' * ' | ' / ' | ' = ' | ' != ' | ' < ' | ' > ' | ' <= ' | ' >= ';
   exponent = ' ** ';
   lparen = '(';
   rparen = ')';

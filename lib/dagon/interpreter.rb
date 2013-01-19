@@ -1,3 +1,4 @@
+require 'pry'
 %w(scope environment node statement program call identifier
    expression operation assignment method dobject dinteger
    block dclass dstring darray dfalse conditional_statement

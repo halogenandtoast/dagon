@@ -1,15 +1,10 @@
 module Dagon
-  class WhileStatement
-    def initialize(node, scope)
-      type = node[0]
-      @condition = node[1]
-      @block = Block.new(node[2], scope).reduce
-    end
-
+  class WhileStatement < Node
     def reduce
-      while @condition
-        @block.reduce
-      end
+      expect :while_statement
+      @condition = next_node
+      @block = Block.new(next_node, scope).reduce
+      DCondition.new(@condition, scope)._while(@block)
     end
   end
 end

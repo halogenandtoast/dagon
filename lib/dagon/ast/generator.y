@@ -3,7 +3,8 @@ prechigh
   left EXPONENT
   left '*' '/'
   left '+' '-'
-  nonassoc '>' '<' '>=' '<=' '='
+  left ':'
+  nonassoc '>' '<' '>=' '<=' '=' '!='
 preclow
 rule
   target: program { result = [:program, val[0]]}
@@ -42,13 +43,14 @@ rule
             | expression '*' expression { result = [:multiplication, val[0], val[2]] }
             | expression '/' expression { result = [:division, val[0], val[2]] }
             | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
-            | term
+            | condition
 
   condition: expression '>' expression { result = [:greater_than, val[0], val[2]] }
            | expression '<' expression { result = [:less_than, val[0], val[2]] }
            | expression '<=' expression { result = [:less_than_equal, val[0], val[2]] }
            | expression '>=' expression { result = [:greater_than_equal, val[0], val[2]] }
            | expression '=' expression { result = [:equal, val[0], val[2]] }
+           | expression '!=' expression { result = [:not_equal, val[0], val[2]] }
            | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }

@@ -3,7 +3,7 @@ module Dagon
   class Node
     attr_reader :scope, :ast
     def initialize ast, scope
-      @ast = ast.dup
+      @ast = !!ast == ast ? ast : ast.dup
       @scope = scope
     end
 

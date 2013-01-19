@@ -1,0 +1,4 @@
+if 1 = 1
+  puts("numbers")
+if "foo" = "foo"
+  puts("strings")

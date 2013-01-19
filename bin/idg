@@ -2,7 +2,7 @@
 
 print("idg:> ")
 line: gets
-while line
+while line != "exit"
   print("=> ")
   puts(eval(line, binding))
   print("idg:> ")

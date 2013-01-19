@@ -11,7 +11,7 @@ module Dagon
     end
 
     def lookup name
-      defines.fetch(name) { @parent_scope.lookup(name) }
+      defines.fetch(name.to_sym) { @parent_scope.lookup(name) }
     end
 
     def define name, value
