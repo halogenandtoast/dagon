@@ -23,26 +23,6 @@ module Dagon
           Dagon::Core::True.instance
         when :false
           Dagon::Core::False.instance
-        when :addition
-          lhs = Dagon::Ast::Expression.new(value, scope).reduce
-          rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
-          Dagon::Ast::Operation.new(:+, lhs, rhs).reduce
-        when :subtraction
-          lhs = Dagon::Ast::Expression.new(value, scope).reduce
-          rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
-          Dagon::Ast::Operation.new(:-, lhs, rhs).reduce
-        when :multiplication
-          lhs = Dagon::Ast::Expression.new(value, scope).reduce
-          rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
-          Dagon::Ast::Operation.new(:*, lhs, rhs).reduce
-        when :division
-          lhs = Dagon::Ast::Expression.new(value, scope).reduce
-          rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
-          Dagon::Ast::Operation.new(:/, lhs, rhs).reduce
-        when :exponentiation
-          lhs = Dagon::Ast::Expression.new(value, scope).reduce
-          rhs = Dagon::Ast::Expression.new(next_node, scope).reduce
-          Dagon::Ast::Operation.new(:**, lhs, rhs).reduce
         when :call
           call = Dagon::Ast::Call.new([type, value, next_node], scope)
           call.run

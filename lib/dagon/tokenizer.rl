@@ -25,7 +25,7 @@
   indent = "  ";
 
   main := |*
-    newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += 1; @column = 0; @check_indents = true };
+    newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += data[ts...te].lines.count; @column = 0; @check_indents = true };
     comment;
     keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
     space;
@@ -59,14 +59,14 @@ module Dagon
 
     def self.emit(name, data, start_char, end_char)
       handle_indents
-      @tokens << [name, data[start_char...end_char]]
+      @tokens << [name, data[start_char...end_char], [@line]]
       @column += end_char - start_char
     end
 
     def self.emit_string(data, start_char, end_char)
       handle_indents
       str = data[(start_char+1)...(end_char-1)].gsub(/\\(.)/) { $1 }
-      @tokens << [:STRING, str]
+      @tokens << [:STRING, str, [@line]]
       @column += end_char - start_char
     end
 
@@ -75,11 +75,11 @@ module Dagon
         @check_indents = false
         if @indent_count > @last_indent_count
           (@indent_count - @last_indent_count).times do
-            @tokens << [:INDENT, "  "]
+            @tokens << [:INDENT, "  ", [@line]]
           end
         elsif @indent_count < @last_indent_count
           (@last_indent_count - @indent_count).times do
-            @tokens << [:DEDENT, "  "]
+            @tokens << [:DEDENT, "  ", [@line]]
           end
         end
       end

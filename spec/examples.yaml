@@ -1,70 +1,70 @@
 ---
 'x: 5.0':
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:FLOAT, '5.0']]"
+  - "[[:IDENTIFIER, 'x', [0]], [:ASSIGNMENT, ':', [0]], [:FLOAT, '5.0', [0]]]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:float, 5.0]]]]"
 'y: 4':
-  - "[[:IDENTIFIER, 'y'], [:ASSIGNMENT, ':'], [:INTEGER, '4']]"
+  - "[[:IDENTIFIER, 'y', [0]], [:ASSIGNMENT, ':', [0]], [:INTEGER, '4', [0]]]"
   - "[:program, [[:assignment, [:identifier, 'y'], [:integer, 4]]]]"
 'x: y':
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:IDENTIFIER, 'y']]"
+  - "[[:IDENTIFIER, 'x', [0]], [:ASSIGNMENT, ':', [0]], [:IDENTIFIER, 'y', [0]]]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:identifier, 'y']]]]"
 '8 + 4':
-  - "[[:INTEGER, '8'], ['+', '+'], [:INTEGER, '4']]"
-  - "[:program, [[:addition, [:integer, 8], [:integer, 4]]]]"
+  - "[[:INTEGER, '8', [0]], ['+', '+', [0]], [:INTEGER, '4', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 8], [:call, [:identifier, '+'], [:args, [[:integer, 4]]]]]]]"
 '8 - 4':
-  - "[[:INTEGER, '8'], ['-', '-'], [:INTEGER, '4']]"
-  - "[:program, [[:subtraction, [:integer, 8], [:integer, 4]]]]"
+  - "[[:INTEGER, '8', [0]], ['-', '-', [0]], [:INTEGER, '4', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 8], [:call, [:identifier, '-'], [:args, [[:integer, 4]]]]]]]"
 '8 * 4':
-  - "[[:INTEGER, '8'], ['*', '*'], [:INTEGER, '4']]"
-  - "[:program, [[:multiplication, [:integer, 8], [:integer, 4]]]]"
+  - "[[:INTEGER, '8', [0]], ['*', '*', [0]], [:INTEGER, '4', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 8], [:call, [:identifier, '*'], [:args, [[:integer, 4]]]]]]]"
 '8 / 4':
-  - "[[:INTEGER, '8'], ['/', '/'], [:INTEGER, '4']]"
-  - "[:program, [[:division, [:integer, 8], [:integer, 4]]]]"
+  - "[[:INTEGER, '8', [0]], ['/', '/', [0]], [:INTEGER, '4', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 8], [:call, [:identifier, '/'], [:args, [[:integer, 4]]]]]]]"
 '8 ** 4':
-  - "[[:INTEGER, '8'], [:EXPONENT, '**'], [:INTEGER, '4']]"
-  - "[:program, [[:exponentiation, [:integer, 8], [:integer, 4]]]]"
+  - "[[:INTEGER, '8', [0]], [:EXPONENT, '**', [0]], [:INTEGER, '4', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 8], [:call, [:identifier, '**'], [:args, [[:integer, 4]]]]]]]"
 '1 + 2 + 3':
-  - "[[:INTEGER, '1'], ['+', '+'], [:INTEGER, '2'], ['+', '+'], [:INTEGER, '3']]"
-  - "[:program, [[:addition, [:addition, [:integer, 1], [:integer, 2]], [:integer, 3]]]]"
+  - "[[:INTEGER, '1', [0]], ['+', '+', [0]], [:INTEGER, '2', [0]], ['+', '+', [0]], [:INTEGER, '3', [0]]]"
+  - "[:program, [[:call_on_object, [:call_on_object, [:integer, 1], [:call, [:identifier, '+'], [:args, [[:integer, 2]]]]], [:call, [:identifier, '+'], [:args, [[:integer, 3]]]]]]]"
 '1 + 2 * 3':
-  - "[[:INTEGER, '1'], ['+', '+'], [:INTEGER, '2'], ['*', '*'], [:INTEGER, '3']]"
-  - "[:program, [[:addition, [:integer, 1], [:multiplication, [:integer, 2], [:integer, 3]]]]]"
+  - "[[:INTEGER, '1', [0]], ['+', '+', [0]], [:INTEGER, '2', [0]], ['*', '*', [0]], [:INTEGER, '3', [0]]]"
+  - "[:program, [[:call_on_object, [:integer, 1], [:call, [:identifier, '+'], [:args, [[:call_on_object, [:integer, 2], [:call, [:identifier, '*'], [:args, [[:integer, 3]]]]]]]]]]]"
 'puts(1)':
-  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')']]"
+  - "[[:IDENTIFIER, 'puts', [0]], [:LPAREN, '(', [0]], [:INTEGER, '1', [0]], [:RPAREN, ')', [0]]]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:integer, 1]]]]]]"
 'puts(translate(1))':
-  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:IDENTIFIER, 'translate'], [:LPAREN, '('], [:INTEGER, '1'], [:RPAREN, ')'], [:RPAREN, ')']]"
+  - "[[:IDENTIFIER, 'puts', [0]], [:LPAREN, '(', [0]], [:IDENTIFIER, 'translate', [0]], [:LPAREN, '(', [0]], [:INTEGER, '1', [0]], [:RPAREN, ')', [0]], [:RPAREN, ')', [0]]]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:call, [:identifier, 'translate'], [:args, [[:integer, 1]]]]]]]]]"
 'foo.bar()':
-  - "[[:IDENTIFIER, 'foo'], [:DOT, '.'], [:IDENTIFIER, 'bar'], [:LPAREN, '('], [:RPAREN, ')']]"
+  - "[[:IDENTIFIER, 'foo', [0]], [:DOT, '.', [0]], [:IDENTIFIER, 'bar', [0]], [:LPAREN, '(', [0]], [:RPAREN, ')', [0]]]"
   - "[:program, [[:call_on_object, [:identifier, 'foo'], [:call, [:identifier, 'bar'], [:args, []]]]]]"
 'puts(4 + 2)':
-  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '4'], ['+', '+'], [:INTEGER, '2'], [:RPAREN, ')']]"
-  - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:addition, [:integer, 4], [:integer, 2]]]]]]]"
+  - "[[:IDENTIFIER, 'puts', [0]], [:LPAREN, '(', [0]], [:INTEGER, '4', [0]], ['+', '+', [0]], [:INTEGER, '2', [0]], [:RPAREN, ')', [0]]]"
+  - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:call_on_object, [:integer, 4], [:call, [:identifier, '+'], [:args, [[:integer, 2]]]]]]]]]]"
 'puts(1, 2)':
-  - "[[:IDENTIFIER, 'puts'], [:LPAREN, '('], [:INTEGER, '1'], [:COMMA, ', '], [:INTEGER, '2'], [:RPAREN, ')']]"
+  - "[[:IDENTIFIER, 'puts', [0]], [:LPAREN, '(', [0]], [:INTEGER, '1', [0]], [:COMMA, ', ', [0]], [:INTEGER, '2', [0]], [:RPAREN, ')', [0]]]"
   - "[:program, [[:call, [:identifier, 'puts'], [:args, [[:integer, 1], [:integer, 2]]]]]]"
 "MyClass:\n  x: 1":
-  - "[[:CONSTANT, 'MyClass'], [':', ':'], [:INDENT, '  '], [:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1'], [:DEDENT, '  ']]"
+  - "[[:CONSTANT, 'MyClass', [0]], [':', ':', [0]], [:INDENT, '  ', [1]], [:IDENTIFIER, 'x', [1]], [:ASSIGNMENT, ':', [1]], [:INTEGER, '1', [1]], [:DEDENT, '  ', [1]]]"
   - "[:program, [[:class_definition, [:constant, 'MyClass'], [:block, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]]]]"
 '"string"':
-  - "[[:STRING, 'string']]"
+  - "[[:STRING, 'string', [0]]]"
   - "[:program, [[:string, 'string']]]"
 'x: ["string", 1, 4.2]':
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:STRING, 'string'], [:COMMA, ', '], [:INTEGER, '1'], [:COMMA, ', '], [:FLOAT, '4.2'], [:RBRACKET, ']']]"
+  - "[[:IDENTIFIER, 'x', [0]], [:ASSIGNMENT, ':', [0]], [:LBRACKET, '[', [0]], [:STRING, 'string', [0]], [:COMMA, ', ', [0]], [:INTEGER, '1', [0]], [:COMMA, ', ', [0]], [:FLOAT, '4.2', [0]], [:RBRACKET, ']', [0]]]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]]"
 '"escaped \""':
-  - "[[:STRING, 'escaped \"']]"
+  - "[[:STRING, 'escaped \"', [0]]]"
   - "[:program, [[:string, 'escaped \"']]]"
 "#comment\n":
   - "[]"
   - "[:program, []]"
 "x: 1 #comment\n":
-  - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:INTEGER, '1']]"
+  - "[[:IDENTIFIER, 'x', [0]], [:ASSIGNMENT, ':', [0]], [:INTEGER, '1', [0]]]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:integer, 1]]]]"
 "if true\n  1":
-  - "[[:IF, 'if'], [:TRUE, 'true'], [:INDENT, '  '], [:INTEGER, '1'], [:DEDENT, '  ']]"
+  - "[[:IF, 'if', [0]], [:TRUE, 'true', [0]], [:INDENT, '  ', [1]], [:INTEGER, '1', [1]], [:DEDENT, '  ', [1]]]"
   - "[:program, [[:conditional_statement, [[:if, [:true, true], [:block, [[:integer, 1]]]]]]]]"
 "if false\n  false\nelse\n  true":
-  - "[[:IF, 'if'], [:FALSE, 'false'], [:INDENT, '  '], [:FALSE, 'false'], [:DEDENT, '  '], [:ELSE, 'else'], [:INDENT, '  '], [:TRUE, 'true'], [:DEDENT, '  ']]"
+  - "[[:IF, 'if', [0]], [:FALSE, 'false', [0]], [:INDENT, '  ', [1]], [:FALSE, 'false', [1]], [:DEDENT, '  ', [2]], [:ELSE, 'else', [2]], [:INDENT, '  ', [3]], [:TRUE, 'true', [3]], [:DEDENT, '  ', [3]]]"
   - "[:program, [[:conditional_statement, [[:if, [:false, false], [:block, [[:false, false]]]], [:else, [:true, true], [:block, [[:true, true]]]]]]]]"

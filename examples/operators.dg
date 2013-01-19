@@ -1,0 +1,7 @@
+puts(5 + 3)
+puts(12 - 6)
+puts(7 * 1)
+puts(10 / 2)
+puts(3 ** 1)
+puts(4 - 2 * 2)
+puts(3 ** (6 - 4))

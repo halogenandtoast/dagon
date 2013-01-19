@@ -1,6 +1,6 @@
 class Dagon::Ast::Generator
 prechigh
-  left EXPONENT
+  right EXPONENT
   left '*' '/'
   left '+' '-'
   left ':'
@@ -14,7 +14,7 @@ rule
 
   block: INDENT statements DEDENT { result = [:block, val[1]] }
 
-  statements: statements statement { result = [*val[0], val[1]] }
+  statements: statements statement { result.push val[1] }
             | statement { result = [val[0]] }
 
   statement: class_definition
@@ -34,15 +34,14 @@ rule
 
   method_definition: identifier ':' block { result = [:method_definition, val[0], val[2]] }
                    | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], val[2], val[5]]}
-                   | identifier LPAREN RPAREN ':' block { result = [:method_definition, val[0], [], val[4]] }
 
   assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
 
-  expression: expression '-' expression { result = [:subtraction, val[0], val[2]] }
-            | expression '+' expression { result = [:addition, val[0], val[2]] }
-            | expression '*' expression { result = [:multiplication, val[0], val[2]] }
-            | expression '/' expression { result = [:division, val[0], val[2]] }
-            | expression EXPONENT expression { result = [:exponentiation, val[0], val[2]] }
+  expression: expression '-' expression { result = call_on_object(val[0], val[1], val[2]) }
+            | expression '+' expression { result = call_on_object(val[0], val[1], val[2]) }
+            | expression '*' expression { result = call_on_object(val[0], val[1], val[2]) }
+            | expression '/' expression { result = call_on_object(val[0], val[1], val[2]) }
+            | expression EXPONENT expression { result = call_on_object(val[0], '**', val[2]) }
             | condition
 
   condition: expression '>' expression { result = call_on_object(val[0], val[1], val[2]) }
@@ -54,7 +53,8 @@ rule
            | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
-  list: expression { result = val }
+  list: { result = [] }
+      | expression { result = val }
       | list COMMA expression { result.push val[2] }
 
   term: identifier
@@ -72,8 +72,7 @@ rule
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
   method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]] }
-  method_call: identifier LPAREN RPAREN { result = [:call, val[0], [:args, []]] }
-             | identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
+  method_call: identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
 end
 
 ---- header
@@ -82,6 +81,7 @@ end
   def initialize(tokens, debug = false)
     @yydebug = debug
     @tokens = tokens
+    @line = 0
   end
 
   def parse
@@ -89,19 +89,22 @@ end
     self
   end
 
+  private
+  attr_accessor :tokens
   def next_token
-    tokens.shift
+    token = tokens.shift
+    if token
+      info = token.pop
+      @line = info[0]
+    end
+    token
+  end
+
+  def on_error error_token_id, error_value, value_stack
+    $stdout.puts "line #{@line+1}: syntax error, unexpected #{error_value}"
+    exit
   end
 
   def call_on_object(object, method, *args)
     [:call_on_object, object, [:call, [:identifier, method], [:args, [*args]]]]
   end
-
-  private
-  attr_accessor :tokens
-  def next_token
-    tokens.shift
-  end
-
-  private
-  attr_accessor :tokens
