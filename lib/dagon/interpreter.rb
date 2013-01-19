@@ -1,10 +1,17 @@
 require 'pry'
-%w(scope environment node statement program call identifier
-   expression operation assignment method dobject dinteger
-   block dclass dstring darray dfalse conditional_statement
-   dcondition while_statement).each do |file|
-    require_relative "interpreter/#{file}"
-   end
+CORE = %w(environment object class method integer block string array false scope)
+
+AST = %w(node statement program call identifier
+         expression operation assignment block
+         conditional_statement while_statement)
+
+CORE.each do |file|
+  require_relative "./core/#{file}"
+end
+
+AST.each do |file|
+  require_relative "./ast/#{file}"
+end
 
 module Dagon
   class Interpreter
@@ -13,8 +20,8 @@ module Dagon
     end
 
     def run
-      environment = Environment.instance
-      program = Program.new(@ast, environment.scope)
+      environment = Dagon::Core::Environment.instance
+      program = Dagon::Ast::Program.new(@ast, environment.scope)
       program.run
     end
   end

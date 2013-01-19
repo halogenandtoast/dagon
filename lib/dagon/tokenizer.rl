@@ -29,7 +29,7 @@
     comment;
     keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
     space;
-    string => { emit(:STRING, data, ts+1, te-1) };
+    string => { emit_string(data, ts, te) };
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
@@ -60,6 +60,13 @@ module Dagon
     def self.emit(name, data, start_char, end_char)
       handle_indents
       @tokens << [name, data[start_char...end_char]]
+      @column += end_char - start_char
+    end
+
+    def self.emit_string(data, start_char, end_char)
+      handle_indents
+      str = data[(start_char+1)...(end_char-1)].gsub(/\\(.)/) { $1 }
+      @tokens << [:STRING, str]
       @column += end_char - start_char
     end
 

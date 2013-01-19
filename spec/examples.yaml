@@ -54,8 +54,8 @@
   - "[[:IDENTIFIER, 'x'], [:ASSIGNMENT, ':'], [:LBRACKET, '['], [:STRING, 'string'], [:COMMA, ', '], [:INTEGER, '1'], [:COMMA, ', '], [:FLOAT, '4.2'], [:RBRACKET, ']']]"
   - "[:program, [[:assignment, [:identifier, 'x'], [:array, [:values, [[:string, 'string'], [:integer, 1], [:float, 4.2]]]]]]]"
 '"escaped \""':
-  - "[[:STRING, 'escaped \\\"']]"
-  - "[:program, [[:string, 'escaped \\\"']]]"
+  - "[[:STRING, 'escaped \"']]"
+  - "[:program, [[:string, 'escaped \"']]]"
 "#comment\n":
   - "[]"
   - "[:program, []]"
