@@ -3,12 +3,12 @@ module Dagon
     class Identifier < Dagon::Ast::Node
       def initialize ast, scope
         super
-        parse
+        compile
       end
       def lookup
         scope.lookup(to_sym)
       end
-      def parse
+      def compile
         expect :identifier
         @name = next_node
       end

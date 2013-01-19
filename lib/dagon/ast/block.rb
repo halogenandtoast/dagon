@@ -1,21 +1,17 @@
 module Dagon
   module Ast
     class Block < Dagon::Ast::Node
-      def initialize(ast, scope, variables=[])
-        super ast, scope
-        @variables = variables
+      def initialize ast, scope, args = []
+        super(ast, scope)
+        @args = args
       end
 
-      def reduce
+      def compile object_scope = nil
         expect :block
         statements = next_node
-        variables.shift
-        variables.map! { |_, name| name }
-        Dagon::Core::Block.new(statements, Dagon::Core::Scope.new({}, scope), variables)
+        object_scope ||= Dagon::Core::Scope.new({}, scope)
+        Dagon::Core::Block.new(statements, object_scope, @args)
       end
-
-      private
-      attr_accessor :variables
     end
   end
 end

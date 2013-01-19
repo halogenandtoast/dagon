@@ -25,7 +25,7 @@ module Dagon
         begin
           defines.fetch(name.to_sym) { @parent_scope.lookup(name) }
         rescue UndefinedError
-          error("Undefined variable or method #{name} for #{@object}")
+          error("Undefined variable or method #{name} for #<#{@object.class}:#{@object}>")
           raise
         end
       end
