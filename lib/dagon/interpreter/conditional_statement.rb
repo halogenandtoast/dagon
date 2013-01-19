@@ -4,7 +4,7 @@ module Dagon
       super
       expect :conditional_statement
       @branches = next_node.map do |type, condition, block|
-        [type, DCondition.new(condition, scope), Block.new(block, scope).reduce]
+        [type, DCondition.new(condition), Block.new(block, scope).reduce]
       end
     end
 
