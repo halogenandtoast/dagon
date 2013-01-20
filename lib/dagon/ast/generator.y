@@ -61,6 +61,7 @@ rule
       | literal
       | array
       | method_call
+      | object_call
       | method_call_on_object
 
   literal: FLOAT { result = [:float, val[0].to_f] }
@@ -71,8 +72,9 @@ rule
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
-  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], val[2]] }
+  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
   method_call: identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
+  object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, [:identifier, val[0]], [:args, val[2]]] }
 end
 
 ---- header
@@ -106,5 +108,5 @@ end
   end
 
   def call_on_object(object, method, *args)
-    [:call_on_object, object, [:call, [:identifier, method], [:args, args]]]
+    [:call_on_object, object, [:identifier, method], [:args, args]]
   end

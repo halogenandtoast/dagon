@@ -8,7 +8,9 @@ module Dagon
       end
 
       def define
-        dagon_class = Dagon::Core::Class.new(@name, @block, @scope)
+        dagon_class = Dagon::Core::Class.new(@name, @block, @scope.dup)
+        block = @block.compile dagon_class.binding
+        block.invoke
         @scope.define @name, dagon_class
       end
     end

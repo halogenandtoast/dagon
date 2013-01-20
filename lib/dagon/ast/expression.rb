@@ -1,7 +1,7 @@
 module Dagon
   module Ast
     class Expression < Node
-      def reduce
+      def compile
         type = next_node
         value = next_node
         case type
@@ -24,15 +24,17 @@ module Dagon
         when :false
           Dagon::Core::False.instance
         when :call
-          call = Dagon::Ast::Call.new([type, value, next_node], scope)
+          args = next_node[1].map { |arg| Expression.new(arg, scope) }
+          call = Dagon::Ast::Call.new([type, value, [:args, args]], scope)
           call.run
+        when :object_call
+          id = Identifier.new(value, scope)
+          id.lookup
         when :call_on_object
-          call_node = next_node
-          object = Expression.new(value, scope).reduce
-          if object.binding == nil
-            binding.pry
-          end
-          call = Call.new(call_node, object.binding)
+          method_id = next_node
+          args = next_node[1].map { |arg| Expression.new(arg, scope) }
+          object = Expression.new(value, scope).compile
+          call = Call.new([:call, method_id, [:args, args]], object.binding)
           call.run
         else
           error "Unknown type: #{type}"

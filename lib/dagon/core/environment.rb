@@ -30,7 +30,7 @@ module Dagon
         ast = Ast::Generator.new(tokens).parse.table
         statements = ast[1]
         statements.each do |statement|
-          Ast::Statement.new(statement, scope).reduce
+          Ast::Statement.new(statement, scope).compile
         end
       end
 

@@ -1,0 +1,6 @@
+Greeter:
+  greet(name):
+    puts("Hello " + name)
+
+greeter: Greeter()
+greeter.greet("wombat")

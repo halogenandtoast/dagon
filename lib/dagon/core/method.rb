@@ -10,7 +10,7 @@ module Dagon
         @block.call(*args)
       end
 
-      def reduce
+      def compile
         invoke
       end
     end
