@@ -1,0 +1,8 @@
+indent-block:
+  puts("indented")
+
+
+inline-block: { puts("inline") }
+
+indent-block()
+inline-block()

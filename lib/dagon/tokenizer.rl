@@ -18,6 +18,8 @@
   rparen = ')';
   lbracket = '[';
   rbracket = ']';
+  lbrace = '{';
+  rbrace = '}';
   comma = ', ';
   dot = '.';
   float = digit+ '.' digit+;
@@ -26,9 +28,8 @@
 
   main := |*
     newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += data[ts...te].lines.count; @column = 0; @check_indents = true };
-    comment;
+    comment { handle_indents };
     keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
-    space;
     string => { emit_string(data, ts, te) };
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
@@ -37,15 +38,17 @@
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
     indent => { @indent_count += 1; };
-    space => { emit(' ', data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
+    lbrace => { emit(:LBRACE, data, ts, te) };
+    rbrace => { emit(:RBRACE, data, ts, te) };
     lbracket => { emit(:LBRACKET, data, ts, te) };
     rbracket => { emit(:RBRACKET, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
     operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
     exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     comma => { emit(:COMMA, data, ts, te) };
+    space;
 
     any => { problem(data, ts, te) };
   *|;

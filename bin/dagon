@@ -32,7 +32,7 @@ tokens = tokenizer.tokenize program
 
 if options[:debug]
   puts "-" * 40 + " TOKENS " + "-" * 40
-  pp tokens.inspect
+  pp tokens
   puts "-" * 40 + "--------" + "-" * 40
 end
 
@@ -41,7 +41,7 @@ unless options[:only_tokens]
 
   if options[:debug]
     puts "-" * 40 + "- AST --" + "-" * 40
-    pp ast.inspect
+    pp ast
     puts "-" * 40 + "--------" + "-" * 40
   end
   interpreter = Dagon::Interpreter.new(ast)

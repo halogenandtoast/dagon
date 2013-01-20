@@ -5,7 +5,7 @@ module Dagon
       def initialize statements, scope, args = []
         @statements = statements
         @scope = scope
-        @args = args
+        @args = args.compact
       end
 
       def invoke *args
