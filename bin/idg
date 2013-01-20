@@ -1,9 +1,15 @@
 #!/usr/bin/env dagon
 
-print("idg:> ")
-line: gets
-while line != "exit"
-  print("=> ")
-  puts(eval(line, binding))
-  print("idg:> ")
-  line: gets
+Idg:
+  start:
+    print("idg:> ")
+    line: gets
+    while true
+      result: eval(line, binding)
+      print("=> ")
+      puts(result)
+      print("idg:> ")
+      line: gets
+
+idg: Idg()
+idg.start()

@@ -4,7 +4,7 @@ module Dagon
       def compile
         type = next_node
         value = next_node
-        case type
+        result = case type
         when :noop
         when :identifier
           id = Dagon::Ast::Identifier.new([type, value], scope).lookup
@@ -39,6 +39,8 @@ module Dagon
         else
           error "Unknown type: #{type}"
         end
+        reset
+        result
       end
     end
 

@@ -6,10 +6,17 @@ module Dagon
       def initialize ast, scope
         @ast = ast.dup
         @scope = scope
+        @node_stack = []
       end
 
       def next_node
-        ast.shift
+        node = ast.shift
+        @node_stack << node
+        node
+      end
+
+      def reset
+        @ast = @node_stack
       end
 
       def error string

@@ -9,6 +9,10 @@ module Dagon
         scope
       end
 
+      def exit
+        Kernel.exit
+      end
+
       def gets
         Dagon::Core::String.new($stdin.gets.chomp)
       end
@@ -29,9 +33,9 @@ module Dagon
         tokens = tokenizer.tokenize(string.value)
         ast = Ast::Generator.new(tokens).parse.table
         statements = ast[1]
-        statements.each do |statement|
+        statements.map do |statement|
           Ast::Statement.new(statement, scope).compile
-        end
+        end.last
       end
 
       def scope
