@@ -4,7 +4,8 @@ CORE = %w(environment object class method integer block string array true false 
 AST = %w(node statement program call identifier
          expression assignment block
          conditional_statement while_statement
-         condition constant class_definition)
+         condition constant class_definition
+         argument_list)
 
 CORE.each do |file|
   require_relative "./core/#{file}"

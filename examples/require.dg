@@ -1,1 +1,1 @@
-require("greeter.dg")
+require("greeter")

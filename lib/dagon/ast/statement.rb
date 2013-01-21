@@ -17,8 +17,8 @@ module Dagon
           assignment.define
         when :method_definition
           name = Dagon::Ast::Identifier.new(node[1], scope).to_sym
-          args = node[2][1].map { |arg| arg[1] }
-          block = Dagon::Ast::Block.new(node[3], scope, args).compile
+          argument_names = ArgumentList.new(node[2], scope).compile.map(&:to_sym)
+          block = Dagon::Ast::Block.new(node[3], scope, argument_names).compile
           scope.define_method(name, block)
         when :class_definition
           class_name = Dagon::Ast::Constant.new(node[1], scope).to_sym
