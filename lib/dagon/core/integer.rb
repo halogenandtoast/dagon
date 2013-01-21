@@ -28,6 +28,10 @@ module Dagon
           Dagon::Core::False.instance
         end
       end
+
+      def times &block
+        self.value.times &block
+      end
     end
   end
 end

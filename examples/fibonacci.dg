@@ -1,0 +1,13 @@
+fibonacci-imperative(n):
+  current: 0
+  next: 1
+
+  n.times
+    temp: next
+    next: next + current
+    current: temp
+
+  current
+
+
+puts(fibonacci-imperative(10))

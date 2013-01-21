@@ -25,6 +25,7 @@ rule
            | expression
            | conditional_statement
            | while_statement
+           | method_call_with_block
 
   while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
 
@@ -77,7 +78,9 @@ rule
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 
   method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
+                       | identifier DOT method_call_with_block { result = [:call_on_object, val[0], *(val[2][1..-1])] }
   method_call: identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
+  method_call_with_block: identifier block { result = [:call, val[0], [:args, []], val[1]] }
   object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, [:identifier, val[0]], [:args, val[2]]] }
 end
 

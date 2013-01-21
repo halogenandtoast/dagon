@@ -13,9 +13,9 @@ module Dagon
         assignments.each do |name, value|
           scope.define(name.to_sym, value)
         end
-        statements.each do |statement|
+        statements.map do |statement|
           Dagon::Ast::Statement.new(statement, scope).compile
-        end
+        end.last
       end
 
       def inspect

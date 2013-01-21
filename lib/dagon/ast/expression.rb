@@ -32,8 +32,12 @@ module Dagon
         when :call_on_object
           method_id = next_node
           args = next_node[1].map { |arg| Expression.new(arg, scope) }
+          block = next_node
+          if block
+            block = Dagon::Ast::Block.new(block, scope)
+          end
           object = Expression.new(value, scope).compile
-          call = Call.new([:call, method_id, [:args, args]], object.binding)
+          call = Call.new([:call, method_id, [:args, args], block], object.binding)
           call.run
         else
           error "Unknown type: #{type}"
