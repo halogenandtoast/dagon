@@ -1,0 +1,7 @@
+require("assertions")
+
+assert-equal("foo", "foo")
+assert-not-equal("foo", "bar")
+assert-equal("foo" + "bar", "foobar")
+
+puts("")

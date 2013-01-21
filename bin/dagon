@@ -20,6 +20,7 @@ end.parse!
 
 def read_program
   if ARGV[0]
+    $dagon_cwd = File.dirname(ARGV[0])
     File.read(ARGV[0])
   else
     STDIN.read

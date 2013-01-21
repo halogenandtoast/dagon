@@ -84,6 +84,7 @@ module Dagon
           (@last_indent_count - @indent_count).times do
             @tokens << [:DEDENT, "  ", [@line]]
           end
+          @last_indent_count = @indent_count
         end
       end
     end

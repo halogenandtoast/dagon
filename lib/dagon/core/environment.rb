@@ -33,6 +33,11 @@ module Dagon
         $stdout.print(*args.map(&:to_s))
       end
 
+      def require filename
+        contents = File.read("#{$dagon_cwd}/#{filename.value}.dg")
+        self.eval(Dagon::Core::String.new(contents))
+      end
+
       def eval *args
         string = args[0]
         eval_scope = args[1]
