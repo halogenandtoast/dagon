@@ -5,11 +5,10 @@ module Dagon
         type = next_node
         value = next_node
         result = case type
-        when :noop
         when :identifier
           id = Dagon::Ast::Identifier.new([type, value], scope).lookup
-          if id.is_a? Dagon::Core::Method
-            id.invoke
+          if id.is_a? ::Method
+            id.call
           else
             id
           end

@@ -5,6 +5,14 @@ module Dagon
     class Environment
       include Singleton
 
+      def initialize
+        @method_table = {}
+      end
+
+      def define_dagon_method name, code_block
+        @method_table[name] = ->(*args) { code_block.invoke(*args) }
+      end
+
       def binding
         scope
       end

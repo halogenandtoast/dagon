@@ -9,7 +9,7 @@ module Dagon
       def compile object_scope = nil
         expect :block
         statements = next_node
-        object_scope ||= Dagon::Core::Scope.new({}, scope)
+        object_scope ||= scope.dup
         Dagon::Core::Block.new(statements, object_scope, @args)
       end
     end

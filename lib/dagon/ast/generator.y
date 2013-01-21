@@ -36,8 +36,8 @@ rule
 
   method_definition: identifier ':' block { result = [:method_definition, val[0], [:args, []], val[2]] }
                    | identifier ASSIGNMENT inline_block { result = [:method_definition, val[0], [:args, []], val[2]] }
-                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], [:args, *val[2]], val[5]]}
-                   | identifier LPAREN list RPAREN ASSIGNMENT inline_block { result = [:method_definition, val[0], [:args, *val[2]], val[2]] }
+                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], [:args, val[2]], val[5]]}
+                   | identifier LPAREN list RPAREN ASSIGNMENT inline_block { result = [:method_definition, val[0], [:args, val[2]], val[2]] }
 
   assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
 
