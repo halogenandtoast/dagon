@@ -5,7 +5,7 @@ module Dagon
         expect :args
 
         @arguments = next_node
-        if @arguments.first.first == :assignment
+        if @arguments.any? && @arguments.first.first == :assignment
           named_argument_list
         else
           argument_list
