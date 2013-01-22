@@ -23,7 +23,7 @@ module Dagon
         when :false
           Dagon::Core::False.instance
         when :call
-          args = next_node[1].map { |arg| Expression.new(arg, scope) }
+          args = Arguments.new(next_node, scope).compile
           call = Dagon::Ast::Call.new([type, value, [:args, args]], scope)
           call.run
         when :object_call
@@ -31,7 +31,7 @@ module Dagon
           id.lookup
         when :call_on_object
           method_id = next_node
-          args = next_node[1].map { |arg| Expression.new(arg, scope) }
+          args = Arguments.new(next_node, scope).compile
           block = next_node
           if block
             block = Dagon::Ast::Block.new(block, scope)

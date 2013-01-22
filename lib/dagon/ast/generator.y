@@ -59,8 +59,10 @@ rule
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
   list: { result = [] }
-      | expression { result = val }
-      | list COMMA expression { result.push val[2] }
+      | list_member { result = val }
+      | list COMMA list_member { result.push val[2] }
+  list_member: expression { result = val[0] }
+             | assignment { result = val[0] }
 
   term: identifier
       | literal

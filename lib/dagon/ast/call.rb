@@ -3,9 +3,8 @@ module Dagon
     class Call < Dagon::Ast::Node
       def run
         expect :call
-
-        identifier = Dagon::Ast::Identifier.new(next_node, scope)
-        args = next_node[1].map { |node| node.compile }
+        identifier = Identifier.new(next_node, scope)
+        args = next_node[1]
         block = next_node
         method = identifier.lookup
         if block

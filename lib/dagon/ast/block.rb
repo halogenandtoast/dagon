@@ -1,6 +1,6 @@
 module Dagon
   module Ast
-    class Block < Dagon::Ast::Node
+    class Block < Node
       def initialize ast, scope, args = []
         super(ast, scope)
         @args = args

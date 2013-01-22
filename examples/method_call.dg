@@ -1,0 +1,9 @@
+tell(name, message):
+  print("Hey, ")
+  print(name)
+  print(": ")
+  print(message)
+  puts("!")
+
+tell("Caleb", "you're a hero")
+tell(message: "what's up", name: "Dagon")
