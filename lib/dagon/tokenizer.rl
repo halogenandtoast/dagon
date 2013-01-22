@@ -11,6 +11,7 @@
   constant = upper (alnum | '-')*;
   identifier = lower (lower | digit | '-')*;
   assignment = ': ';
+  arrow = '->';
   colon = ':';
   operator = ' + ' | ' - ' | ' * ' | ' / ' | ' = ' | ' != ' | ' < ' | ' > ' | ' <= ' | ' >= ';
   exponent = ' ** ';
@@ -34,6 +35,7 @@
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
+    arrow => { emit(:ARROW, data, ts, te) };
     colon => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
