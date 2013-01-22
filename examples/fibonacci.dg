@@ -2,7 +2,7 @@ fibonacci-imperative(n):
   current: 0
   next: 1
 
-  n.times
+  n.times ->
     temp: next
     next: next + current
     current: temp
