@@ -90,8 +90,9 @@ module Dagon
     end
 
     def self.problem(data, ts, te)
-      puts @tokens.inspect
-      raise "Oops {#{data[ts...-1]}}"
+      puts "Unexpected \"#{data[ts...te]}\" on line #{@line}\n" +
+            "#{@line}: #{@lines[@line]}"
+      exit(1)
     end
 
     def tokenize data
@@ -108,6 +109,8 @@ module Dagon
     end
 
     def self.tokenize(data)
+      @data = data
+      @lines = data.lines.to_a
       reset
       %% write init;
       eof = data.length
