@@ -1,0 +1,12 @@
+require("assertions")
+
+test-method:
+  "wombat"
+
+test-conditional-method:
+  if true
+    "wombat"
+
+assert-equal("wombat", test-method)
+assert-equal("wombat", test-conditional-method)
+puts("")

@@ -1,6 +1,6 @@
 require 'pry'
 CORE = %w(environment object class method integer block string array true false
-          scope)
+          scope void)
 
 AST = %w(node statement program call identifier expression assignment block
          conditional_statement while_statement condition constant

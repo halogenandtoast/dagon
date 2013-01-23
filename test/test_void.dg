@@ -1,0 +1,10 @@
+require("assertions")
+
+void-test:
+  if false
+    true
+
+assert-equal(void, void)
+assert-equal(void, void-test)
+
+puts("")

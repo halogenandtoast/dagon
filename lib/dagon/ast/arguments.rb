@@ -33,7 +33,12 @@ module Dagon
           if type == :assignment
             argument_type_error
           end
-          Expression.new(argument, scope).compile
+          return_value = Expression.new(argument, scope).compile
+          if return_value.is_a? Proc
+            return_value.call
+          else
+            return_value
+          end
         end
       end
 

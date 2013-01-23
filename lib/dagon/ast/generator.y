@@ -76,6 +76,7 @@ rule
          | STRING { result = [:string, val[0]] }
          | TRUE { result = [:true, true] }
          | FALSE { result = [:false, false] }
+         | VOID { result = [:void, nil] }
 
   identifier: IDENTIFIER { result = [:identifier, val[0]]}
 

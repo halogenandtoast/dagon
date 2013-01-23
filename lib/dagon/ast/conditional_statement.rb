@@ -12,6 +12,8 @@ module Dagon
             return block.invoke
           end
         end
+
+        return Dagon::Core::Void.instance
       end
     end
   end

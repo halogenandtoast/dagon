@@ -12,6 +12,8 @@ module Dagon
           else
             id
           end
+        when :void
+          Dagon::Core::Void.instance
         when :integer
           Dagon::Core::Integer.new(value)
         when :array
