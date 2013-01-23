@@ -9,10 +9,9 @@ if exists("b:current_syntax")
     finish
 endif
 
-echom "Our syntax highlighting code will go here."
-
 syntax keyword dagonConditional if elseif else while break
 syntax keyword dagonBoolean true false
+syntax keyword dagonKeyword void
 syntax keyword dagonFunction print puts
 syntax match dagonNumber '\d'
 syntax match dagonFloat '\d+\.\d+'
@@ -44,6 +43,3 @@ highlight link dagonOperator Operator
 highlight link dagonConstant Constant
 
 let b:current_syntax = "dagon"
-echom "Finished defining syntax"
-
-let b:current_syntax = "potion"
