@@ -24,7 +24,7 @@
   comma = ', ';
   dot = '.';
   float = digit+ '.' digit+;
-  integer = digit+;
+  integer = '-'? digit+;
   indent = "  ";
 
   main := |*
