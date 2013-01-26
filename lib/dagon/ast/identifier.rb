@@ -6,6 +6,9 @@ module Dagon
         compile
       end
       def lookup
+        if scope == nil
+          binding.pry
+        end
         scope.lookup(to_sym)
       end
       def compile

@@ -1,10 +1,10 @@
 module Dagon
   module Core
     class Object
-      attr_reader :value, :binding
+      attr_reader :value, :scope
       def initialize value
         @value = value
-        @binding = Dagon::Core::Scope.new(self)
+        @scope = Dagon::Core::Scope.new(self)
       end
 
       def to_s

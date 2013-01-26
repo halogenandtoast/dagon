@@ -1,0 +1,27 @@
+#!/usr/bin/env dagon
+require("../test/assertions")
+
+describe(descriptor, descriptions):
+  puts(descriptor)
+  descriptions.invoke()
+  puts("")
+  puts("")
+
+it(description, block):
+  puts(description)
+  block.invoke()
+  puts("")
+
+
+describe("String") ->
+  it("can be added to another string") ->
+    assert-equal("foo" + "bar", "foobar")
+    assert-equal("bar", "ba" + "r")
+  it("doesn't do much else, does it?") ->
+    assert-equal("foo", "foo")
+
+#   it "can be concatenated" ->
+#     s1: "hello "
+#     s2: "wombat"
+#     expect(s1 + s2).to == "hello wombat"
+

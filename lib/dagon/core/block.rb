@@ -3,8 +3,9 @@ module Dagon
     class Block < Dagon::Core::Object
       def initialize statements, scope, args = []
         @statements = statements
-        @scope = scope
+        @scope = Scope.new(self, scope)
         @args = args.compact
+        @value = ->(*args) { self.invoke(*args) }
       end
 
       def invoke(*args)
@@ -30,12 +31,12 @@ Invalid arguments:
       end
 
       def inspect
-        @statements.map(&:inspect)
+        "#<Block: #{@statements.map(&:inspect)}>"
       end
 
       private
 
-      attr_reader :scope, :statements
+      attr_reader :statements
     end
   end
 end

@@ -20,6 +20,8 @@ module Dagon
           Dagon::Core::Array.new(value)
         when :string
           Dagon::Core::String.new(value)
+        when :block
+          Dagon::Ast::Block.new([type, value], scope).compile
         when :true
           Dagon::Core::True.instance
         when :false
@@ -34,12 +36,8 @@ module Dagon
         when :call_on_object
           method_id = next_node
           args = Arguments.new(next_node, scope).compile
-          block = next_node
-          if block
-            block = Dagon::Ast::Block.new(block, scope)
-          end
           object = Expression.new(value, scope).compile
-          call = Call.new([:call, method_id, [:args, args], block], object.binding)
+          call = Call.new([:call, method_id, [:args, args]], object.scope)
           call.run
         else
           error "Unknown type: #{type}"

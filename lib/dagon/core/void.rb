@@ -9,6 +9,7 @@ module Dagon
       end
 
       def equal object
+        binding.pry
         if object.value == nil
           Dagon::Core::True.instance
         else
