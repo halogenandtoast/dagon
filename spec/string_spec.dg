@@ -1,0 +1,7 @@
+describe("String") ->
+  it("is equal to an identical string") ->
+    assert-equal("foo", "foo")
+  it("is not equal to a different string") ->
+    assert-not-equal("foo", "bar")
+  it("can be added to another string") ->
+    assert-equal("foo" + "bar", "foobar")

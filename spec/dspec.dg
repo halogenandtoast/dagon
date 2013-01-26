@@ -1,0 +1,10 @@
+describe(descriptor, descriptions):
+  puts(descriptor)
+  descriptions.invoke()
+  puts("")
+  puts("")
+
+it(description, block):
+  puts(description)
+  block.invoke()
+  puts("")

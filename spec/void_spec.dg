@@ -1,0 +1,9 @@
+void-test:
+  if false
+    true
+
+describe("Void") ->
+  it("is equal to itself") ->
+    assert-equal(void, void)
+  it("is returned from a function with a false conditional") ->
+    assert-equal(void, void-test)

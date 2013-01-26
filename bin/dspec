@@ -1,27 +1,22 @@
-#!/usr/bin/env dagon
-require("../test/assertions")
+#!/usr/bin/env ruby
 
-describe(descriptor, descriptions):
-  puts(descriptor)
-  descriptions.invoke()
-  puts("")
-  puts("")
+require './build/tokenizer'
+require './lib/dagon/interpreter'
+require './build/ast/generator'
 
-it(description, block):
-  puts(description)
-  block.invoke()
-  puts("")
+def read_program
+  $dagon_cwd = Dir.getwd
+  program = ""
+  ["spec/assertions.dg", "spec/dspec.dg", *Dir.glob('spec/*_spec.dg')].each do |file|
+    program << File.open(file, 'rb').read
+    program << "\n"
+  end
+  program
+end
 
-
-describe("String") ->
-  it("can be added to another string") ->
-    assert-equal("foo" + "bar", "foobar")
-    assert-equal("bar", "ba" + "r")
-  it("doesn't do much else, does it?") ->
-    assert-equal("foo", "foo")
-
-#   it "can be concatenated" ->
-#     s1: "hello "
-#     s2: "wombat"
-#     expect(s1 + s2).to == "hello wombat"
-
+program = read_program.chomp
+tokenizer = Dagon::Tokenizer.new
+tokens = tokenizer.tokenize program
+ast = Dagon::Ast::Generator.new(tokens, nil).parse.table
+interpreter = Dagon::Interpreter.new(ast)
+interpreter.run

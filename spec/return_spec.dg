@@ -1,0 +1,12 @@
+test-method:
+  "wombat"
+
+test-conditional-method:
+  if true
+    "wombat"
+
+describe("Return values") ->
+  it("returns the result of a one-line method") ->
+    assert-equal("wombat", test-method)
+  it("returns the result of a method with a conditional") ->
+    assert-equal("wombat", test-conditional-method)
