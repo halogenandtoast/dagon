@@ -7,10 +7,8 @@ prechigh
   nonassoc '>' '<' '>=' '<=' '=' '!='
 preclow
 rule
-  target: program { result = [:program, val[0]]}
-
   program: { result = [] }
-         | statements
+         | statements { result = RootNode.new(val[0]) }
 
   block: INDENT statements DEDENT { result = [:block, val[1]] }
 
@@ -78,7 +76,7 @@ rule
          | FALSE { result = [:false, false] }
          | VOID { result = [:void, nil] }
 
-  identifier: IDENTIFIER { result = [:identifier, val[0]]}
+  identifier: IDENTIFIER { result = [:identifier, val[0]] }
 
   method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
                        | identifier DOT method_call_with_block { result = [:call_on_object, val[0], *(val[2][1..-1])] }
@@ -87,11 +85,13 @@ rule
                         | method_call ARROW block { val[0][2][1] << val[2]; result = val[0] }
 
   object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, [:identifier, val[0]], [:args, val[2]]] }
-end
 
 ---- header
+NODES = %w(root_node)
+NODES.each { |node| require_relative "../../lib/dagon/ast/#{node}" }
+
 ---- inner
-  attr_accessor :table
+
   def initialize(tokens, debug = false)
     @yydebug = debug
     @tokens = tokens
@@ -99,8 +99,7 @@ end
   end
 
   def parse
-    @table = do_parse
-    self
+    do_parse
   end
 
   private

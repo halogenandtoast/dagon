@@ -1,35 +1,20 @@
 module Dagon
   module Ast
-    class NodeError < StandardError; end
     class Node
-      attr_reader :scope, :ast
-      def initialize ast, scope
-        @ast = ast.dup
-        @scope = scope
-        @node_stack = []
+      attr_reader :filename, :line_number
+      def initialize file_name, line_number
+        @filename = file_name
+        @line_number = line_number
       end
 
-      def next_node
-        node = ast.shift
-        @node_stack << node
-        node
-      end
-
-      def reset
-        @ast = @node_stack
+      def execute_list interpreter, nodes
+        nodes.map { |node| interpreter.evaluate(node) }.last
       end
 
       def error string
         scope.error string
       end
 
-      def expect *types
-        type = next_node
-        unless types.include? type
-          error "#{type} is not of type #{types.join(",")}"
-          raise Dagon::Ast::NodeError.new("")
-        end
-      end
     end
   end
 end

@@ -37,14 +37,5 @@ if options[:debug]
   puts "-" * 40 + "--------" + "-" * 40
 end
 
-unless options[:only_tokens]
-  ast = Dagon::Ast::Generator.new(tokens, options[:debug]).parse.table
-
-  if options[:debug]
-    puts "-" * 40 + "- AST --" + "-" * 40
-    pp ast
-    puts "-" * 40 + "--------" + "-" * 40
-  end
-  interpreter = Dagon::Interpreter.new(ast)
-  interpreter.run
-end
+tree = Dagon::Ast::Generator.new(tokens, options[:debug]).parse
+tree.evaluate
