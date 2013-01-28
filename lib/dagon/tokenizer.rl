@@ -59,23 +59,26 @@
 
 module Dagon
   class Tokenizer
-    %% write data;
-    # % fix syntax highlighting
 
-    def self.emit(name, data, start_char, end_char)
+    def initialize
+      %% write data;
+      # % fix syntax highlighting
+    end
+
+    def emit(name, data, start_char, end_char)
       handle_indents
       @tokens << [name, data[start_char...end_char], [@line]]
       @column += end_char - start_char
     end
 
-    def self.emit_string(data, start_char, end_char)
+    def emit_string(data, start_char, end_char)
       handle_indents
       str = data[(start_char+1)...(end_char-1)].gsub(/\\(.)/) { $1 }
       @tokens << [:STRING, str, [@line]]
       @column += end_char - start_char
     end
 
-    def self.handle_indents
+    def handle_indents
       if @check_indents
         @check_indents = false
         if @indent_count > @last_indent_count
@@ -91,17 +94,17 @@ module Dagon
       end
     end
 
-    def self.problem(data, ts, te)
+    def problem(data, ts, te)
       puts "Unexpected \"#{data[ts...te]}\" on line #{@line}\n" +
             "#{@line}: #{@lines[@line]}"
       exit(1)
     end
 
-    def tokenize data
-      self.class.tokenize(data)
+    def self.tokenize data
+      new.tokenize(data)
     end
 
-    def self.reset
+    def reset
       @line = 0
       @column = 0
       @tokens = []
@@ -110,7 +113,7 @@ module Dagon
       @check_indents = true
     end
 
-    def self.tokenize(data)
+    def tokenize(data)
       @data = data
       @lines = data.lines.to_a
       reset
