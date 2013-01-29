@@ -28,8 +28,9 @@ module Dagon
         if function = @function_table[function_name]
           frame = Frame.new(function_name)
           @stack.push frame
-          function.call self, frame, arguments
+          result = function.call self, frame, arguments
           @stack.pop
+          result
         else
           yield
         end

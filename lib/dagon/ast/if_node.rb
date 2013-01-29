@@ -12,7 +12,7 @@ module Dagon
         if @condition.evaluate interpreter
           execute_list interpreter, @true_statements
         else
-          execute_list interpreter, @false_statements
+          execute_list interpreter, @false_statements if @false_statements
         end
       end
     end

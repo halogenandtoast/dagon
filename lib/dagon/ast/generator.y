@@ -28,13 +28,14 @@ rule
   while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
 
   conditional_statement: IF condition block else_stmt { result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
-  else_stmt: ELSEIF condition block else_stmt{ result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
+  else_stmt: { result = nil }
+           | ELSEIF condition block else_stmt{ result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
            | ELSE block { result = val[1] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
-  method_definition: IDENTIFIER ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, nil, val[2])) }
-                   | IDENTIFIER ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, nil, val[2])) }
+  method_definition: IDENTIFIER ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, [], val[2])) }
+                   | IDENTIFIER ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, [], val[2])) }
                    | IDENTIFIER LPAREN list RPAREN ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
                    | IDENTIFIER LPAREN list RPAREN ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
 
@@ -73,9 +74,9 @@ rule
   literal: FLOAT { result = [:float, val[0].to_f] }
          | INTEGER { result = LiteralNode.new(nil, nil, val[0].to_i) }
          | STRING { result = StringNode.new(nil, nil, val[0]) }
-         | TRUE { result = [:true, true] }
-         | FALSE { result = [:false, false] }
-         | VOID { result = [:void, nil] }
+         | TRUE { result = LiteralNode.new(nil, nil, true) }
+         | FALSE { result = LiteralNode.new(nil, nil, false) }
+         | VOID { result = LiteralNode.new(nil, nil, nil) }
 
   method_call_on_object: IDENTIFIER DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
                        | IDENTIFIER DOT method_call_with_block { result = [:call_on_object, val[0], *(val[2][1..-1])] }

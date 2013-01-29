@@ -3,6 +3,9 @@ module Dagon
     class Function < Node
       def initialize filename, line_number, params, body
         super filename, line_number
+        if params == nil
+          binding.pry
+        end
         @params = params.map(&:variable_name) # params must be unwrapped
         @body = body
       end
