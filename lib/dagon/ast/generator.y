@@ -12,7 +12,7 @@ rule
 
   block: INDENT statements DEDENT { result = val[1] }
 
-  inline_block: LBRACE statement RBRACE { result = val[1] }
+  inline_block: LBRACE statement RBRACE { result = [val[1]] }
 
   statements: statements statement { result.push val[1] }
             | statement { result = [val[0]] }
