@@ -25,7 +25,7 @@ rule
            | while_statement
            | method_call_with_block
 
-  while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
+  while_statement: WHILE condition block { result = WhileNode.new(nil, nil, val[1], val[2]) }
 
   conditional_statement: IF condition block else_stmt { result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
   else_stmt: { result = nil }
@@ -85,7 +85,7 @@ rule
   object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, val[0], [:args, val[2]]] }
 
 ---- header
-NODES = %w(root_node core frame function_call_node function_definition_node function_node string_node kernel literal_node var_ref_node if_node assignment_node)
+NODES = %w(root_node core frame function_call_node function_definition_node function_node string_node kernel literal_node var_ref_node if_node assignment_node while_node)
 NODES.each { |node| require_relative "../../lib/dagon/ast/#{node}" }
 
 ---- inner
