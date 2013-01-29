@@ -2,17 +2,19 @@ module Dagon
   module Ast
     class Node
       attr_reader :filename, :line_number
-      def initialize file_name, line_number
-        @filename = file_name
+      def initialize filename, line_number
+        @filename = filename
         @line_number = line_number
       end
 
       def execute_list interpreter, nodes
-        nodes.map { |node| interpreter.evaluate(node) }.last
+        nodes.map do |node|
+          node.evaluate(interpreter)
+        end.last
       end
 
-      def error string
-        scope.error string
+      def dagon_error! string
+        raise DagonError, "Problem? #{string}"
       end
 
     end

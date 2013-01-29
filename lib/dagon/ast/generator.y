@@ -10,9 +10,9 @@ rule
   program: { result = [] }
          | statements { result = RootNode.new(val[0]) }
 
-  block: INDENT statements DEDENT { result = [:block, val[1]] }
+  block: INDENT statements DEDENT { result = val[1] }
 
-  inline_block: LBRACE statement RBRACE { result = [:block, [val[1]]] }
+  inline_block: LBRACE statement RBRACE { result = val[1] }
 
   statements: statements statement { result.push val[1] }
             | statement { result = [val[0]] }
@@ -27,18 +27,18 @@ rule
 
   while_statement: WHILE condition block { result = [:while_statement, val[1], val[2]] }
 
-  conditional_statement: IF condition block { result = [:conditional_statement, [[:if, val[1], val[2]]]] }
-                       | conditional_statement ELSEIF condition block { result[1] << [:elseif, val[2], val[3]] }
-                       | conditional_statement ELSE block { result[1] << [:else, [:true, true], val[2]] }
+  conditional_statement: IF condition block else_stmt { result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
+  else_stmt: ELSEIF condition block else_stmt{ result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
+           | ELSE block { result = val[1] }
 
   class_definition: CONSTANT ':' block { result = [:class_definition, [:constant, val[0]], val[2]] }
 
-  method_definition: identifier ':' block { result = [:method_definition, val[0], [:args, []], val[2]] }
-                   | identifier ASSIGNMENT inline_block { result = [:method_definition, val[0], [:args, []], val[2]] }
-                   | identifier LPAREN list RPAREN ':' block { result = [:method_definition, val[0], [:args, val[2]], val[5]]}
-                   | identifier LPAREN list RPAREN ASSIGNMENT inline_block { result = [:method_definition, val[0], [:args, val[2]], val[2]] }
+  method_definition: IDENTIFIER ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, nil, val[2])) }
+                   | IDENTIFIER ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, nil, val[2])) }
+                   | IDENTIFIER LPAREN list RPAREN ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
+                   | IDENTIFIER LPAREN list RPAREN ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
 
-  assignment: identifier ASSIGNMENT expression { result = [:assignment, val[0], val[2]] }
+  assignment: IDENTIFIER ASSIGNMENT expression { result = AssignmentNode.new(nil, nil, val[0], val[2]) }
 
   expression: expression '-' expression { result = call_on_object(val[0], val[1], val[2]) }
             | expression '+' expression { result = call_on_object(val[0], val[1], val[2]) }
@@ -51,7 +51,7 @@ rule
            | expression '<' expression { result = call_on_object(val[0], val[1], val[2]) }
            | expression '<=' expression { result = call_on_object(val[0], val[1], val[2]) }
            | expression '>=' expression { result = call_on_object(val[0], val[1], val[2]) }
-           | expression '=' expression { result = call_on_object(val[0], :equal, val[2]) }
+           | expression '=' expression { result = call_on_object(val[0], '==', val[2]) }
            | expression '!=' expression { result = call_on_object(val[0], :not_equal, val[2]) }
            | term
 
@@ -62,7 +62,8 @@ rule
   list_member: expression { result = val[0] }
              | assignment { result = val[0] }
 
-  term: identifier
+
+  term: IDENTIFIER { result = VarRefNode.new(nil, nil, val[0]) }
       | literal
       | array
       | method_call
@@ -70,24 +71,20 @@ rule
       | method_call_on_object
 
   literal: FLOAT { result = [:float, val[0].to_f] }
-         | INTEGER { result = [:integer, val[0].to_i] }
-         | STRING { result = [:string, val[0]] }
+         | INTEGER { result = LiteralNode.new(nil, nil, val[0].to_i) }
+         | STRING { result = StringNode.new(nil, nil, val[0]) }
          | TRUE { result = [:true, true] }
          | FALSE { result = [:false, false] }
          | VOID { result = [:void, nil] }
 
-  identifier: IDENTIFIER { result = [:identifier, val[0]] }
-
-  method_call_on_object: identifier DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
-                       | identifier DOT method_call_with_block { result = [:call_on_object, val[0], *(val[2][1..-1])] }
-  method_call: identifier LPAREN list RPAREN { result = [:call, val[0], [:args, val[2]]] }
-  method_call_with_block: identifier ARROW block { result = [:call, val[0], [:args, []], val[2]] }
-                        | method_call ARROW block { val[0][2][1] << val[2]; result = val[0] }
-
-  object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, [:identifier, val[0]], [:args, val[2]]] }
+  method_call_on_object: IDENTIFIER DOT method_call { result = [:call_on_object, val[0], *(val[2][1..-1])] }
+                       | IDENTIFIER DOT method_call_with_block { result = [:call_on_object, val[0], *(val[2][1..-1])] }
+  method_call: IDENTIFIER LPAREN list RPAREN { result = FunctionCallNode.new(nil, nil, val[0], val[2]) }
+  method_call_with_block: IDENTIFIER ARROW block { result = [:call, val[0], [:args, []], val[2]] }
+  object_call: CONSTANT LPAREN list RPAREN { result = [:object_call, val[0], [:args, val[2]]] }
 
 ---- header
-NODES = %w(root_node)
+NODES = %w(root_node core frame function_call_node function_definition_node function_node string_node kernel literal_node var_ref_node if_node)
 NODES.each { |node| require_relative "../../lib/dagon/ast/#{node}" }
 
 ---- inner
@@ -119,5 +116,5 @@ NODES.each { |node| require_relative "../../lib/dagon/ast/#{node}" }
   end
 
   def call_on_object(object, method, *args)
-    [:call_on_object, object, [:identifier, method], [:args, args]]
+    FunctionCallNode.new(nil, nil, method, [object] + args)
   end
