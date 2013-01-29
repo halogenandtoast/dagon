@@ -18,18 +18,20 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-def read_program
-  if ARGV[0]
-    $dagon_cwd = File.dirname(ARGV[0])
-    File.read(ARGV[0])
-  else
-    STDIN.read
-  end
+program = nil
+filename = nil
+
+if ARGV[0]
+  $dagon_cwd = File.dirname(ARGV[0])
+  program = File.read(ARGV[0])
+  filename = ARGV[0]
+else
+  program = STDIN.read
+  filename = '(stdin)'
 end
 
-program = read_program.chomp
 tokenizer = Dagon::Tokenizer.new
-tokens = tokenizer.tokenize program
+tokens = tokenizer.tokenize program, filename
 
 if options[:debug]
   puts "-" * 40 + " TOKENS " + "-" * 40

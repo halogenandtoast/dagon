@@ -100,8 +100,8 @@ module Dagon
       exit(1)
     end
 
-    def self.tokenize data
-      new.tokenize(data)
+    def self.tokenize data, filename
+      new.tokenize(data, filename)
     end
 
     def reset
@@ -113,7 +113,8 @@ module Dagon
       @check_indents = true
     end
 
-    def tokenize(data)
+    def tokenize(data, filename)
+      @filename = filename
       @data = data
       @lines = data.lines.to_a
       reset

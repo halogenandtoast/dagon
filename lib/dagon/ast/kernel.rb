@@ -5,9 +5,10 @@ module Dagon
     end
 
     def require file
-      program = File.read("#{$dagon_cwd}/#{file}.dg")
+      filename = "#{$dagon_cwd}/#{file}.dg"
+      program = File.read(filename)
       tokenizer = Dagon::Tokenizer.new
-      tokens = tokenizer.tokenize program
+      tokens = tokenizer.tokenize program, filename
       tree = Dagon::Ast::Generator.new(tokens).parse
       tree.evaluate(@core)
     end
