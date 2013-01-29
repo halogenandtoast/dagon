@@ -8,7 +8,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        interpreter.frame[@variable_name] = @value.evaluate(interpreter).evaluate(interpreter)
+        interpreter.frame[@variable_name] = @value.evaluate(interpreter)
       end
     end
   end
