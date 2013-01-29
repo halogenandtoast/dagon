@@ -53,7 +53,7 @@ rule
            | expression '<=' expression { result = call_on_object(val[0], val[1], val[2]) }
            | expression '>=' expression { result = call_on_object(val[0], val[1], val[2]) }
            | expression '=' expression { result = call_on_object(val[0], '==', val[2]) }
-           | expression '!=' expression { result = call_on_object(val[0], :not_equal, val[2]) }
+           | expression '!=' expression { result = call_on_object(val[0], val[1], val[2]) }
            | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
