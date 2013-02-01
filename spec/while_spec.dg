@@ -1,0 +1,7 @@
+describe("while") ->
+  it("executes until condition is false") ->
+    x: 0
+    while x < 5
+      x: x + 1
+
+    assert-equal(x, 5)
