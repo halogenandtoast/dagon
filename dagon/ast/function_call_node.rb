@@ -18,7 +18,7 @@ module Dagon
                  else
                    interpreter.frame.object
                  end
-        object.dagon_send @function_name, *arguments
+        object.dagon_send interpreter, @function_name, *arguments
       end
     end
   end

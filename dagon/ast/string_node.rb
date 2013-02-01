@@ -1,3 +1,5 @@
+require 'core/string'
+
 module Dagon
   module Ast
     class StringNode < Node
@@ -7,7 +9,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        @value.dup
+        Dagon::Core::DG_String_Class.new.dagon_send(interpreter, "new", @value)
       end
     end
   end

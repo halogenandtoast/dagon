@@ -20,9 +20,14 @@ module Dagon
         @klass.dagon_const_get(constant)
       end
 
-      def dagon_send name, *args
+      def dagon_send interpreter, name, *args
         method = @klass.get_method(name)
-        method.call(self, *args)
+        if method
+          method.call(interpreter, self, *args)
+        else
+          $stderr.puts "Something's rotten #{name}"
+          exit(1)
+        end
       end
 
       def set_instance_variable name, value

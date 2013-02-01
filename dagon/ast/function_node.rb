@@ -3,18 +3,16 @@ module Dagon
     class Function < Node
       def initialize filename, line_number, params, body
         super filename, line_number
-        if params == nil
-          binding.pry
-        end
         @params = params.map(&:variable_name) # params must be unwrapped
         @body = body
       end
 
-      def call(interpreter, frame, args)
+      def call(interpreter, object, *args)
         unless args.size == @params.size
           $stderr.puts "Wrong"
           exit(1)
         end
+        frame = interpreter.frame
         args.each_with_index do |arg, index|
           frame[@params[index]] = arg
         end

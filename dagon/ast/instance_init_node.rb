@@ -11,7 +11,7 @@ module Dagon
         arguments = @arguments.map { |argument| argument.evaluate interpreter }
         object = interpreter.frame.object
         klass = object.dagon_const_get(@klass_name)
-        klass.dagon_send(:new)
+        klass.dagon_send(interpreter, :new)
       end
     end
   end

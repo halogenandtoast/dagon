@@ -4,10 +4,17 @@ module Dagon
       attr_reader :name
       def initialize name = nil, parent = nil
         @constants = {}
-        @methods = {}
+        @methods = {
+          init: ->(vm, ref, *args) { },
+          puts: ->(vm, ref, *args) { puts args.map(&:to_s) }
+        }
         @class_ivars = {}
         @class_methods = {
-          new: ->(ref, *args) { obj = ref.dagon_allocate; obj }
+          new: ->(vm, ref, *args) {
+            obj = ref.dagon_allocate
+            obj.dagon_send(vm, "init", *args)
+            obj
+          }
         }
         @name = name || "Class"
         @parent = parent
@@ -37,12 +44,12 @@ module Dagon
         DG_Object.new(self)
       end
 
-      def dagon_send name, *args
+      def dagon_send interpreter, name, *args
         method = @class_methods[name.to_sym]
         if method
-          method.call(self, *args)
+          method.call(interpreter, self, *args)
         elsif @parent
-          @parent.dagon_send(name, *args)
+          @parent.dagon_send(interpreter, name, *args)
         else
           $stderr.puts "Undefined method #{name} for #{to_s}"
           exit(1)
