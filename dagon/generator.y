@@ -86,7 +86,7 @@ rule
 
 ---- header
 NODES = %w(root_node core frame function_call_node function_definition_node function_node string_node kernel literal_node var_ref_node if_node assignment_node while_node)
-NODES.each { |node| require_relative "../../lib/dagon/ast/#{node}" }
+NODES.each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner
 

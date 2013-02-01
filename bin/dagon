@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require './build/tokenizer'
-require './lib/dagon/interpreter'
-require './build/ast/generator'
+require './dagon/interpreter'
+require './build/scanner'
+require './build/parser'
 require 'pp'
 
 options = {}
