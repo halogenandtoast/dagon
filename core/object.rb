@@ -25,7 +25,7 @@ module Dagon
         if method
           method.call(interpreter, self, *args) || Dvoid
         else
-          $stderr.puts "Something's rotten #{name}"
+          $stderr.puts "Something's rotten #{@klass} #{name}"
           exit(1)
         end
       end

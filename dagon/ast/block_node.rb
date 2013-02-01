@@ -1,18 +1,16 @@
+require "core/block"
+
 module Dagon
   module AST
 
     class BlockNode < Node
-      def initialize filename, line_number, statements, frame
+      def initialize filename, line_number, statements
         super filename, line_number
         @statements = statements
-        @frame = frame
       end
 
       def evaluate interpreter
-        interpreter.push_frame @frame
-        result = execute_list interpreter, @statements
-        interpreter.pop_frame
-        result
+        Dagon::Core::DG_Block_Class.new.dagon_send(interpreter, "new", @statements, interpreter.frame)
       end
     end
   end

@@ -15,7 +15,7 @@ module Dagon
       def evaluate interpreter
         arguments = @arguments.map { |argument| argument.evaluate interpreter }
         if @block
-          arguments << BlockNode.new(@filename, @line_number, @block, interpreter.frame)
+          arguments << @block.evaluate(interpreter)
         end
         object = if @object
                    @object.evaluate interpreter

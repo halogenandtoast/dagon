@@ -1,10 +1,10 @@
 describe(descriptor, descriptions):
   puts(descriptor)
-  descriptions.invoke()
+  descriptions.call()
   puts("")
   puts("")
 
 it(description, block):
   puts(description)
-  block.invoke()
+  block.call()
   puts("")

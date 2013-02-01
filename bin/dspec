@@ -14,9 +14,10 @@ def run_tests
   tree = Dagon::Parser.parse(tokens, '(dspec)', false)
   tree.evaluate(vm)
   Dir.glob('spec/*_spec.dg').each do |file|
-    program << File.open(file, 'rb').read
-    program << "\n"
-    tokens = Dagon::Scanner.tokenize(program, file)
+    actual_program = program.dup
+    actual_program << File.open(file, 'rb').read
+    actual_program << "\n"
+    tokens = Dagon::Scanner.tokenize(actual_program, file)
     tree = Dagon::Parser.parse(tokens, file, false)
     tree.evaluate(vm)
   end

@@ -84,7 +84,7 @@ rule
   object_call: CONSTANT LPAREN list RPAREN optional_block { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
 
   optional_block: { result = nil }
-                | ARROW block { result = val[1] }
+                | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1]) }
 
 ---- header
 NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node)

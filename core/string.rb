@@ -17,12 +17,9 @@ module Dagon
     end
 
     class DG_String_Class < DG_Class
-      def initialize value = ""
+      def initialize
         super("String", Dagon::Core::DG_Class.new)
-        @class_methods[:new] = ->(vm, ref, *args) {
-          obj = DG_String.new(*args)
-          obj
-        }
+        @class_methods[:new] = ->(vm, ref, *args) { DG_String.new(*args) }
         boot
       end
 
