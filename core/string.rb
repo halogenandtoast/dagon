@@ -1,6 +1,7 @@
 module Dagon
   module Core
     class DG_String < DG_Object
+      attr_reader :value
       def initialize value
         @value = value
         @klass = DG_String_Class.new
@@ -11,7 +12,7 @@ module Dagon
       end
 
       def inspect
-        @value
+        %{"#{@value}"}
       end
     end
 
@@ -33,6 +34,16 @@ module Dagon
           left = ref.instance_variable_get("@value")
           right = other.instance_variable_get("@value")
           ref.klass.dagon_send(vm, :new, left + right)
+        }
+        add_method "=", ->(vm, ref, other) {
+          left = ref.instance_variable_get("@value")
+          right = other.instance_variable_get("@value")
+          left == right ? Dtrue : Dfalse
+        }
+        add_method "!=", ->(vm, ref, other) {
+          left = ref.instance_variable_get("@value")
+          right = other.instance_variable_get("@value")
+          left != right ? Dtrue : Dfalse
         }
       end
     end

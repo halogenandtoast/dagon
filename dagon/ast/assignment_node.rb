@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class AssignmentNode < Node
       def initialize filename, line_number, variable_name, value
         super filename, line_number

@@ -1,7 +1,7 @@
 require 'core/string'
 
 module Dagon
-  module Ast
+  module AST
     class StringNode < Node
       def initialize filename, line_number, string
         super filename, line_number

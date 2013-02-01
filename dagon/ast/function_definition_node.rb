@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class FunctionDefinitionNode < Node
       def initialize filename, line_number, function_name, function_object
         super filename, line_number

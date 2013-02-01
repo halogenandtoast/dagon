@@ -1,10 +1,10 @@
 module Dagon
-  module Ast
-    class ConditionalStatement < Dagon::Ast::Node
+  module AST
+    class ConditionalStatement < Dagon::AST::Node
       def compile
         expect :conditional_statement
         branches = next_node.map do |type, condition, block|
-          [type, Dagon::Ast::Condition.new(condition, scope), Dagon::Ast::Block.new(block, scope).compile]
+          [type, Dagon::AST::Condition.new(condition, scope), Dagon::AST::Block.new(block, scope).compile]
         end
 
         branches.each do |type, condition, block|

@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class WhileNode < Node
       def initialize filename, line_number, condition, statements
         super filename, line_number
@@ -8,7 +8,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        while @condition.evaluate interpreter
+        while @condition.evaluate(interpreter) == Dtrue
           execute_list interpreter, @statements
         end
       end

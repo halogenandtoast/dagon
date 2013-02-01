@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class Frame
       attr_reader :frame_name
       def initialize frame_name

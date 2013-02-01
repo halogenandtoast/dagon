@@ -2,7 +2,7 @@ require 'core/frame'
 require 'core/class'
 
 module Dagon
-  module Ast
+  module AST
     class ClassDefinitionNode < Node
       def initialize filename, line_number, class_name, statements
         super filename, line_number

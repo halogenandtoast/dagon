@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class Node
       attr_reader :filename, :line_number
       def initialize filename, line_number

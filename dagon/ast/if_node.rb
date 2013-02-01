@@ -1,5 +1,5 @@
 module Dagon
-  module Ast
+  module AST
     class IfNode < Node
       def initialize filename, line_number, condition, true_statements, false_statements
         super filename, line_number
@@ -9,7 +9,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        if @condition.evaluate interpreter
+        if @condition.evaluate(interpreter) == Dtrue
           execute_list interpreter, @true_statements
         else
           execute_list interpreter, @false_statements if @false_statements

@@ -1,13 +1,26 @@
 require "core/object"
 require "core/frame"
+require "core/true"
+require "core/false"
+require "core/void"
+
+Dtrue = Dagon::Core::True.instance
+Dfalse = Dagon::Core::False.instance
+Dvoid = Dagon::Core::Void.instance
+
+require "pry"
 
 module Dagon
   module Core
     class VM
+      attr_reader :globals
       def initialize main = nil
         @object = main || Dagon::Core::DG_Object.new
         @stack = []
         @stack.push Frame.new(@object, '(toplevel)')
+        @globals = {
+          "$dagon_cwd" => $dagon_cwd
+        }
       end
 
       def frame
@@ -29,7 +42,11 @@ module Dagon
       end
 
       def define_function name, block
-        @object.add_method name, block
+        if @object.respond_to? :add_method
+          @object.add_method name, block
+        else
+          @object.klass.add_method name, block
+        end
       end
 
     end

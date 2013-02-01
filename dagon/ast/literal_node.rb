@@ -1,5 +1,7 @@
+require 'core/integer'
+
 module Dagon
-  module Ast
+  module AST
     class LiteralNode < Node
       def initialize filename, line_number, literal
         super filename, line_number
@@ -7,7 +9,12 @@ module Dagon
       end
 
       def evaluate interpreter
-        @value
+        case @value.class.name
+        when "Fixnum" then Dagon::Core::DG_Integer_Class.new.instance(@value)
+        when "TrueClass" then Dtrue
+        when "FalseClass" then Dfalse
+        when "NilClass" then Dvoid
+        end
       end
     end
   end

@@ -5,7 +5,7 @@ Idg:
     print("idg:> ")
     line: gets
     while true
-      result: eval(line, binding)
+      result: eval(line)
       print("=> ")
       puts(result)
       print("idg:> ")

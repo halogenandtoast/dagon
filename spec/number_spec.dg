@@ -1,3 +1,18 @@
 describe("Numbers") ->
-  it("can be negative") ->
+  it("can be multiplied") ->
     assert-equal(-1 * -1, 1)
+
+  it("can be added") ->
+    assert-equal(1 + 5, 6)
+
+  it("can be subtracted") ->
+    assert-equal(1 - 5, -4)
+
+  it("can be divided") ->
+    assert-equal(6 / 3, 2)
+
+  it("can do interger division") ->
+    assert-equal(3 / 2, 1)
+
+  it("can be taken to a power") ->
+    assert-equal(2 ** 3, 8)

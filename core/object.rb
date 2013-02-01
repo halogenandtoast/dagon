@@ -23,7 +23,7 @@ module Dagon
       def dagon_send interpreter, name, *args
         method = @klass.get_method(name)
         if method
-          method.call(interpreter, self, *args)
+          method.call(interpreter, self, *args) || Dvoid
         else
           $stderr.puts "Something's rotten #{name}"
           exit(1)

@@ -58,7 +58,8 @@
 =end
 
 module Dagon
-  class Tokenizer
+  class Token < Struct.new(:data, :line); end
+  class Scanner
 
     def initialize
       %% write data;
@@ -67,14 +68,14 @@ module Dagon
 
     def emit(name, data, start_char, end_char)
       handle_indents
-      @tokens << [name, data[start_char...end_char], [@line]]
+      @tokens << [name, Token.new(data[start_char...end_char], @line)]
       @column += end_char - start_char
     end
 
     def emit_string(data, start_char, end_char)
       handle_indents
       str = data[(start_char+1)...(end_char-1)].gsub(/\\(.)/) { $1 }
-      @tokens << [:STRING, str, [@line]]
+      @tokens << [:STRING, Token.new(str, @line)]
       @column += end_char - start_char
     end
 
@@ -83,11 +84,11 @@ module Dagon
         @check_indents = false
         if @indent_count > @last_indent_count
           (@indent_count - @last_indent_count).times do
-            @tokens << [:INDENT, "  ", [@line]]
+            @tokens << [:INDENT, Token.new("  ", @line)]
           end
         elsif @indent_count < @last_indent_count
           (@last_indent_count - @indent_count).times do
-            @tokens << [:DEDENT, "  ", [@line]]
+            @tokens << [:DEDENT, Token.new("  ", @line)]
           end
           @last_indent_count = @indent_count
         end

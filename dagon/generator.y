@@ -1,4 +1,4 @@
-class Dagon::Ast::Generator
+class Dagon::Parser
 prechigh
   right EXPONENT
   left '*' '/'
@@ -8,7 +8,7 @@ prechigh
 preclow
 rule
   program: { result = [] }
-         | statements { result = RootNode.new(val[0]) }
+         | statements { result = AST::RootNode.new(val[0]) }
 
   block: INDENT statements DEDENT { result = val[1] }
 
@@ -25,35 +25,35 @@ rule
            | while_statement
            | method_call_with_block
 
-  while_statement: WHILE condition block { result = WhileNode.new(nil, nil, val[1], val[2]) }
+  while_statement: WHILE condition block { result = AST::WhileNode.new(@filename, nil, val[1], val[2]) }
 
-  conditional_statement: IF condition block else_stmt { result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
+  conditional_statement: IF condition block else_stmt { result = AST::IfNode.new(@filename, nil, val[1], val[2], val[3]) }
   else_stmt: { result = nil }
-           | ELSEIF condition block else_stmt{ result = IfNode.new(nil, nil, val[1], val[2], val[3]) }
+           | ELSEIF condition block else_stmt{ result = [AST::IfNode.new(@filename, nil, val[1], val[2], val[3])] }
            | ELSE block { result = val[1] }
 
-  class_definition: CONSTANT ':' block { result = ClassDefinitionNode.new(nil, nil, val[0], val[2]) }
+  class_definition: CONSTANT ':' block { result = AST::ClassDefinitionNode.new(@filename, nil, val[0].data, val[2]) }
 
-  method_definition: IDENTIFIER ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, [], val[2])) }
-                   | IDENTIFIER ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, [], val[2])) }
-                   | IDENTIFIER LPAREN list RPAREN ':' block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
-                   | IDENTIFIER LPAREN list RPAREN ASSIGNMENT inline_block { result = FunctionDefinitionNode.new(nil, nil, val[0], Function.new(nil, nil, val[2], val[5])) }
+  method_definition: IDENTIFIER ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, [], val[2])) }
+                   | IDENTIFIER ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, [], val[2])) }
+                   | IDENTIFIER LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, val[2], val[5])) }
+                   | IDENTIFIER LPAREN list RPAREN ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, val[2], val[5])) }
 
-  assignment: IDENTIFIER ASSIGNMENT expression { result = AssignmentNode.new(nil, nil, val[0], val[2]) }
+  assignment: IDENTIFIER ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, nil, val[0].data, val[2]) }
 
-  expression: expression '-' expression { result = call_on_object(val[0], val[1], val[2]) }
-            | expression '+' expression { result = call_on_object(val[0], val[1], val[2]) }
-            | expression '*' expression { result = call_on_object(val[0], val[1], val[2]) }
-            | expression '/' expression { result = call_on_object(val[0], val[1], val[2]) }
+  expression: expression '-' expression { result = call_on_object(val[0], '-', val[2]) }
+            | expression '+' expression { result = call_on_object(val[0], '+', val[2]) }
+            | expression '*' expression { result = call_on_object(val[0], '*', val[2]) }
+            | expression '/' expression { result = call_on_object(val[0], '/', val[2]) }
             | expression EXPONENT expression { result = call_on_object(val[0], '**', val[2]) }
             | condition
 
-  condition: expression '>' expression { result = call_on_object(val[0], val[1], val[2]) }
-           | expression '<' expression { result = call_on_object(val[0], val[1], val[2]) }
-           | expression '<=' expression { result = call_on_object(val[0], val[1], val[2]) }
-           | expression '>=' expression { result = call_on_object(val[0], val[1], val[2]) }
-           | expression '=' expression { result = call_on_object(val[0], '==', val[2]) }
-           | expression '!=' expression { result = call_on_object(val[0], val[1], val[2]) }
+  condition: expression '>' expression { result = call_on_object(val[0], '>', val[2]) }
+           | expression '<' expression { result = call_on_object(val[0], '<', val[2]) }
+           | expression '<=' expression { result = call_on_object(val[0], '<=', val[2]) }
+           | expression '>=' expression { result = call_on_object(val[0], '>=', val[2]) }
+           | expression '=' expression { result = call_on_object(val[0], '=', val[2]) }
+           | expression '!=' expression { result = call_on_object(val[0], '!=', val[2]) }
            | term
 
   array: LBRACKET list RBRACKET { result = [:array, [:values, val[1]]] }
@@ -64,33 +64,37 @@ rule
              | assignment { result = val[0] }
 
 
-  term: IDENTIFIER { result = VarRefNode.new(nil, nil, val[0]) }
+  term: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
       | literal
       | array
       | method_call
       | object_call
 
   literal: FLOAT { result = [:float, val[0].to_f] }
-         | INTEGER { result = LiteralNode.new(nil, nil, val[0].to_i) }
-         | STRING { result = StringNode.new(nil, nil, val[0]) }
-         | TRUE { result = LiteralNode.new(nil, nil, true) }
-         | FALSE { result = LiteralNode.new(nil, nil, false) }
-         | VOID { result = LiteralNode.new(nil, nil, nil) }
+         | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
+         | STRING { result = AST::StringNode.new(@filename, nil, val[0].data) }
+         | TRUE { result = AST::LiteralNode.new(@filename, nil, true) }
+         | FALSE { result = AST::LiteralNode.new(@filename, nil, false) }
+         | VOID { result = AST::LiteralNode.new(@filename, nil, nil) }
 
-  method_call: IDENTIFIER DOT IDENTIFIER { result = FunctionCallNode.new(nil, nil, VarRefNode.new(nil, nil, val[0]), val[2], []) }
-             | IDENTIFIER DOT IDENTIFIER LPAREN list RPAREN { result = FunctionCallNode.new(nil, nil, VarRefNode.new(nil, nil, val[0]), val[2], val[4]) }
-             | IDENTIFIER LPAREN list RPAREN { result = FunctionCallNode.new(nil, nil, nil, val[0], val[2]) }
+  method_call: IDENTIFIER DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), val[2].data, [], val[3]) }
+             | IDENTIFIER DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), val[2].data, val[4], val[6]) }
+             | IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].data, val[2], val[4]) }
 
-  object_call: CONSTANT LPAREN list RPAREN { result = InstanceInitNode.new(nil, nil, val[0], val[2]) }
+  object_call: CONSTANT LPAREN list RPAREN optional_block { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
+
+  optional_block: { result = nil }
+                | ARROW block { result = val[1] }
 
 ---- header
-NODES = %w(root_node function_call_node function_definition_node function_node string_node kernel literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node)
+NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node)
 NODES.each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner
 
-  def initialize(tokens, debug = false)
+  def initialize(tokens, filename, debug = false)
     @yydebug = debug
+    @filename = filename
     @tokens = tokens
     @line = 0
   end
@@ -99,22 +103,21 @@ NODES.each { |node| require_relative "../dagon/ast/#{node}" }
     do_parse
   end
 
+  def self.parse(tokens, filename, debug = false)
+    new(tokens, filename, debug).parse
+  end
+
   private
   attr_accessor :tokens
   def next_token
-    token = tokens.shift
-    if token
-      info = token.pop
-      @line = info[0]
-    end
-    token
+    tokens.shift
   end
 
   def on_error error_token_id, error_value, value_stack
-    $stderr.puts "line #{@line+1}: syntax error, unexpected #{error_value.inspect}", value_stack.inspect
+    $stderr.puts "line #{@filename}:#{@line+1}: syntax error, unexpected #{error_value.data.inspect}", value_stack.inspect
     exit
   end
 
   def call_on_object(object, method, *args)
-    FunctionCallNode.new(nil, nil, object, method, args)
+    AST::FunctionCallNode.new(@filename, nil, object, method, args, nil)
   end
