@@ -1,0 +1,57 @@
+module Dagon
+  module Core
+    class DG_Class
+      attr_reader :name
+      def initialize name = nil, parent = nil
+        @constants = {}
+        @methods = {}
+        @class_ivars = {}
+        @class_methods = {
+          new: ->(ref, *args) { obj = ref.dagon_allocate; obj }
+        }
+        @name = name || "Class"
+        @parent = parent
+      end
+
+      def dagon_const_get constant
+        @constants[constant.to_sym]
+      end
+
+      def dagon_const_set constant, value
+        @constants[constant.to_sym] = value
+      end
+
+      def add_class_method name, block
+        @class_methods[name.to_sym] = block
+      end
+
+      def add_method name, block
+        @methods[name.to_sym] = block
+      end
+
+      def get_method name
+        @methods[name.to_sym]
+      end
+
+      def dagon_allocate
+        DG_Object.new(self)
+      end
+
+      def dagon_send name, *args
+        method = @class_methods[name.to_sym]
+        if method
+          method.call(self, *args)
+        elsif @parent
+          @parent.dagon_send(name, *args)
+        else
+          $stderr.puts "Undefined method #{name} for #{to_s}"
+          exit(1)
+        end
+      end
+
+      def to_s
+        @name
+      end
+    end
+  end
+end

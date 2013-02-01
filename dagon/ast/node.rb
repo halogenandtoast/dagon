@@ -9,6 +9,9 @@ module Dagon
 
       def execute_list interpreter, nodes
         nodes.map do |node|
+          if node.is_a? Array
+            binding.pry
+          end
           node.evaluate(interpreter)
         end.last
       end
