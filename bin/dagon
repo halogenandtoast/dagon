@@ -23,15 +23,18 @@ end.parse!
 program = nil
 filename = nil
 
+vm = Dagon::Core::VM.new
 if ARGV[0]
-  $dagon_cwd = File.dirname(ARGV[0])
-  program = File.read(ARGV[0])
   filename = ARGV[0]
+  program = File.read(filename)
+  path = File.dirname(File.join(Dir.getwd, filename))
+  vm.add_load_path path
 else
-  program = STDIN.read
   filename = '(stdin)'
+  program = STDIN.read
+  vm.add_load_path Dir.getwd
 end
 
 tokens = Dagon::Scanner.tokenize(program, filename)
 tree = Dagon::Parser.parse(tokens, filename, options[:debug])
-tree.evaluate
+tree.evaluate(vm)

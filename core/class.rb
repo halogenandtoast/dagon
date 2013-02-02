@@ -17,11 +17,12 @@ module Dagon
           },
           require: ->(vm, ref, *args) {
             filename = args[0]
-            dir = vm.globals["$dagon_cwd"]
-            program = File.read("#{dir}/#{filename}.dg")
-            tokens = Dagon::Scanner.tokenize(program, filename)
-            tree = Dagon::Parser.parse(tokens, filename, false)
-            tree.evaluate(vm)
+            if vm.loaded? filename
+              Dfalse
+            else
+              vm.load_file filename
+              Dtrue
+            end
           }
         }
         @class_ivars = {}
