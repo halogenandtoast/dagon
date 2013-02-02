@@ -2,9 +2,9 @@ module Dagon
   module Core
     class DG_Integer < DG_Object
       attr_reader :value
-      def initialize value
+      def initialize value, klass
         @value = value
-        @klass = DG_Integer_Class.new
+        @klass = klass
       end
 
       def == other
@@ -24,18 +24,17 @@ module Dagon
       end
     end
 
-    class DG_Integer_Class < DG_Class
+    class DG_IntegerClass < DG_Class
       def initialize value = ""
         super("Integer", Dagon::Core::DG_Class.new)
-        @class_methods.delete(:new)
-        boot
       end
 
       def instance value
-        DG_Integer.new(value)
+        DG_Integer.new(value, self)
       end
 
       def boot
+        @class_methods.delete(:new)
         add_method "+", ->(vm, ref, other) {
           left = ref.value
           right = other.value

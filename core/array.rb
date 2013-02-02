@@ -2,9 +2,9 @@ module Dagon
   module Core
     class DG_Array < DG_Object
       attr_reader :list
-      def initialize list
+      def initialize list, klass
         @list = list
-        @klass = DG_Array_Class.new
+        @klass = klass
       end
 
       def to_s
@@ -16,14 +16,13 @@ module Dagon
       end
     end
 
-    class DG_Array_Class < DG_Class
+    class DG_ArrayClass < DG_Class
       def initialize
         super("Array", Dagon::Core::DG_Class.new)
-        @class_methods[:new] = ->(vm, ref, *args) { DG_Array.new(*args) }
-        boot
       end
 
       def boot
+        @class_methods[:new] = ->(vm, ref, value) { DG_Array.new(value, self) }
         add_method "init", ->(vm, ref, value) {
           ref.instance_variable_set("@value", value)
         }
@@ -31,7 +30,10 @@ module Dagon
           ref.list[index.value]
         }
         add_method "+", ->(vm, ref, other) {
-          DG_Array.new(ref.list + other.list)
+          DG_Array.new(ref.list + other.list, self)
+        }
+        add_method "-", ->(vm, ref, other) {
+          DG_Array.new(ref.list - other.list, self)
         }
         add_method "=", ->(vm, ref, other) {
           ref.list == other.list ? Dtrue : Dfalse

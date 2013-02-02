@@ -8,3 +8,6 @@ describe("Array") ->
 
   it("can add arrays together") ->
     assert-equal([1, 2, 3] + [4], [1, 2, 3, 4])
+
+  it("can subtract arrays from each other") ->
+    assert-equal([1, 1, 2, 2, 3, 3, 4, 5] - [1, 2, 4], [3, 3, 5])

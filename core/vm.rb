@@ -1,12 +1,7 @@
-require "core/object"
-require "core/frame"
-require "core/true"
-require "core/false"
-require "core/void"
-
-Dtrue = Dagon::Core::True.instance
-Dfalse = Dagon::Core::False.instance
-Dvoid = Dagon::Core::Void.instance
+CORE = %w(object class array block false float frame integer string true void)
+CORE.each do |klass|
+  require "core/#{klass}"
+end
 
 require "pry"
 
@@ -21,6 +16,37 @@ module Dagon
         @stack = []
         @stack.push Frame.new(@object, '(toplevel)')
         @globals = {}
+        @classes = {}
+        boot_core
+      end
+
+      def boot_core
+        @classes["Array"] = DG_ArrayClass.new
+        @classes["Block"] = DG_BlockClass.new
+        @classes["False"] = DG_FalseClass.new
+        @classes["Float"] = DG_FloatClass.new
+        @classes["Integer"] = DG_IntegerClass.new
+        @classes["String"] = DG_StringClass.new
+        @classes["True"] = DG_TrueClass.new
+        @classes["Void"] = DG_VoidClass.new
+
+        unless Kernel.const_defined?("Dtrue")
+          Kernel.const_set("Dtrue", Dagon::Core::True.instance)
+        end
+        unless Kernel.const_defined?("Dfalse")
+          Kernel.const_set("Dfalse", Dagon::Core::False.instance)
+        end
+        unless Kernel.const_defined?("Dvoid")
+          Kernel.const_set("Dvoid", Dagon::Core::Void.instance)
+        end
+      end
+
+      def add_class name, object
+        @classes[name] = object
+      end
+
+      def get_class name
+        @classes[name]
       end
 
       def add_load_path path

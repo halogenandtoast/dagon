@@ -7,7 +7,7 @@ module Dagon
 
       def initialize
         @value = false
-        @klass = DG_False_Class.new
+        @klass = DG_FalseClass.new
       end
 
       def to_instance
@@ -19,14 +19,13 @@ module Dagon
       end
     end
 
-    class DG_False_Class < DG_Class
+    class DG_FalseClass < DG_Class
       def initialize
         super("False", Dagon::Core::DG_Class.new)
-        @class_methods.delete(:new)
-        boot
       end
 
       def boot
+        @class_methods.delete(:new)
         add_method '!@', ->(vm, ref) {
           Dtrue
         }

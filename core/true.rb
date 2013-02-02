@@ -6,7 +6,7 @@ module Dagon
       include Singleton
       def initialize
         @value = true
-        @klass = DG_True_Class.new
+        @klass = DG_TrueClass.new
       end
 
       def to_instance
@@ -18,14 +18,13 @@ module Dagon
       end
     end
 
-    class DG_True_Class < DG_Class
+    class DG_TrueClass < DG_Class
       def initialize
         super("True", Dagon::Core::DG_Class.new)
-        @class_methods.delete(:new)
-        boot
       end
 
       def boot
+        @class_methods.delete(:new)
         add_method '!@', ->(vm, ref) {
           Dfalse
         }

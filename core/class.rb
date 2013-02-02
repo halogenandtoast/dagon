@@ -35,6 +35,11 @@ module Dagon
         }
         @name = name || "Class"
         @parent = parent
+        boot
+      end
+
+      def boot
+        # noop
       end
 
       def dagon_const_get constant

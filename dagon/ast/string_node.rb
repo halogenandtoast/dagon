@@ -9,7 +9,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        Dagon::Core::DG_String_Class.new.dagon_send(interpreter, "new", @value)
+        interpreter.get_class("String").dagon_send(interpreter, "new", @value)
       end
     end
   end

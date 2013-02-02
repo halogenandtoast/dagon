@@ -10,7 +10,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        Dagon::Core::DG_Block_Class.new.dagon_send(interpreter, "new", @statements, interpreter.frame)
+        interpreter.get_class("Block").dagon_send(interpreter, "new", @statements, interpreter.frame)
       end
     end
   end

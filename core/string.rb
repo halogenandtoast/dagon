@@ -2,9 +2,9 @@ module Dagon
   module Core
     class DG_String < DG_Object
       attr_reader :value
-      def initialize value
+      def initialize value, klass
         @value = value
-        @klass = DG_String_Class.new
+        @klass = klass
       end
 
       def == other
@@ -20,14 +20,13 @@ module Dagon
       end
     end
 
-    class DG_String_Class < DG_Class
+    class DG_StringClass < DG_Class
       def initialize
         super("String", Dagon::Core::DG_Class.new)
-        @class_methods[:new] = ->(vm, ref, *args) { DG_String.new(*args) }
-        boot
       end
 
       def boot
+        @class_methods[:new] = ->(vm, ref, args) { DG_String.new(args, self) }
         add_method "init", ->(vm, ref, value) {
           ref.instance_variable_set("@value", value)
         }
