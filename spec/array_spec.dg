@@ -5,3 +5,6 @@ describe("Array") ->
   it("can be accessed") ->
     array: [1, 2, 3]
     assert-equal(array[0], 1)
+
+  it("can add arrays together") ->
+    assert-equal([1, 2, 3] + [4], [1, 2, 3, 4])

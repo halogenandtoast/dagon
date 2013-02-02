@@ -25,9 +25,13 @@ module Dagon
         if method
           method.call(interpreter, self, *args) || Dvoid
         else
-          $stderr.puts "Something's rotten #{@klass} #{name}"
+          $stderr.puts "undefined method '#{name}' for #{self.to_instance}"
           exit(1)
         end
+      end
+
+      def to_instance
+        "#<#{@klass}>"
       end
 
       def set_instance_variable name, value

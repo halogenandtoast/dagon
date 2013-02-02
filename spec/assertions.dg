@@ -1,11 +1,16 @@
 assert(expression):
   if expression
     print(".")
+    true
   else
     print("F")
+    false
 
 assert-equal(lhs, rhs):
-  assert(lhs = rhs)
+  if !assert(lhs = rhs)
+    print(lhs)
+    print(" is not equal to ")
+    print(rhs)
 
 assert-not-equal(lhs, rhs):
   assert(lhs != rhs)

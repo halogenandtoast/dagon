@@ -22,6 +22,7 @@
   lbrace = '{';
   rbrace = '}';
   comma = ', ';
+  bang = '!';
   dot = '.';
   float = digit+ '.' digit+;
   integer = '-'? digit+;
@@ -47,6 +48,7 @@
     lbracket => { emit(:LBRACKET, data, ts, te) };
     rbracket => { emit(:RBRACKET, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
+    bang => { emit('!', data, ts, te) };
     operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
     exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     comma => { emit(:COMMA, data, ts, te) };

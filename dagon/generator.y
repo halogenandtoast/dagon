@@ -1,6 +1,7 @@
 class Dagon::Parser
 prechigh
   right EXPONENT
+  right '!'
   left '*' '/'
   left '+' '-'
   left ':'
@@ -69,6 +70,7 @@ rule
       | array
       | method_call
       | object_call
+      | '!' term { result = AST::UnaryFunctionCallNode.new(@filename, nil, val[1], val[0].data) }
 
   literal: FLOAT { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
@@ -88,7 +90,7 @@ rule
                 | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1]) }
 
 ---- header
-NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node)
+NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node unary_function_call_node)
 NODES.each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

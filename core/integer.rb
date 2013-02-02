@@ -11,6 +11,10 @@ module Dagon
         @value
       end
 
+      def to_instance
+        @value
+      end
+
       def inspect
         @value
       end
