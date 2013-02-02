@@ -1,3 +1,5 @@
+require("spec/assertions")
+
 describe(descriptor, descriptions):
   puts(descriptor)
   descriptions.call()

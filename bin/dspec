@@ -8,8 +8,7 @@ require 'core/vm'
 
 def run_tests files
   vm = Dagon::Core::VM.new
-  vm.add_load_path Dir.getwd
-  program = %{require("spec/assertions")\nrequire("spec/dspec")\n}
+  program = %{require("spec/dspec")\n}
   tokens = Dagon::Scanner.tokenize(program, '(dspec)')
   tree = Dagon::Parser.parse(tokens, '(dspec)', false)
   tree.evaluate(vm)
@@ -25,8 +24,8 @@ def run_tests files
   end
 end
 
-files = if ARGV[0]
-          [ARGV[0]]
+files = if !ARGV.empty?
+          ARGV
         else
           Dir.glob('spec/*_spec.dg')
         end

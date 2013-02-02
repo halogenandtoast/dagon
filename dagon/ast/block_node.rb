@@ -1,4 +1,4 @@
-require "core/block"
+require 'core/block'
 
 module Dagon
   module AST
