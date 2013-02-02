@@ -34,7 +34,7 @@ module Dagon
           DG_Array.new(ref.list + other.list)
         }
         add_method "=", ->(vm, ref, other) {
-          ref.list == other.list
+          ref.list == other.list ? Dtrue : Dfalse
         }
       end
     end

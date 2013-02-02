@@ -7,6 +7,10 @@ module Dagon
         @klass = DG_Float_Class.new
       end
 
+      def == other
+        value == other.value
+      end
+
       def to_s
         @value
       end
