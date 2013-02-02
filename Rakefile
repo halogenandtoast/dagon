@@ -10,12 +10,12 @@ namespace :build do
 
   namespace :debug do
     task :parser do
-      `racc -g -v -O build/parser.output -o build/parser.rb dagon/generator.y`
+      `racc -g -v -O build/parser.output -o build/parser.rb dagon/parser.y`
     end
   end
 end
 
-desc "Build tokenizer and AST generator"
+desc "Build scanner and parser"
 task build: %w{build:scanner build:parser}
 task debug: %w{build:scanner build:debug:parser}
 
@@ -26,13 +26,13 @@ task :clean do
   end
 end
 
-file "build/parser.rb" => "dagon/generator.y" do
+file "build/parser.rb" => "dagon/parser.y" do
   `mkdir -p build/`
-  `racc -g -o build/parser.rb dagon/generator.y`
+  `racc -g -o build/parser.rb dagon/parser.y`
 end
-file "build/scanner.rb" => "dagon/tokenizer.rl" do
+file "build/scanner.rb" => "dagon/scanner.rl" do
   `mkdir -p build/`
-  `ragel -R dagon/tokenizer.rl -o build/scanner.rb`
+  `ragel -R dagon/scanner.rl -o build/scanner.rb`
 end
 
 task test: :default do
