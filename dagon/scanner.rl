@@ -9,7 +9,7 @@
   string = '"' ( [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline;
   constant = upper (alnum | '-')*;
-  identifier = lower (lower | digit | '-')*;
+  identifier = '-'? lower (lower | digit | '-')*;
   assignment = ': ';
   arrow = '->';
   colon = ':';
