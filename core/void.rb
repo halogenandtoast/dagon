@@ -12,6 +12,14 @@ module Dagon
         ""
       end
 
+      def value # TODO: determine if there is a better way than this for checking equality
+        nil
+      end
+
+      def to_instance
+        "void"
+      end
+
       def inspect
         "void"
       end

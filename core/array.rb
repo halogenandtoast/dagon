@@ -33,10 +33,15 @@ module Dagon
           DG_Array.new(ref.list + other.list, self)
         }
         add_method "-", ->(vm, ref, other) {
-          DG_Array.new(ref.list - other.list, self)
+          result = ref.list.reject { |item| other.list.include?(item) }
+          DG_Array.new(result, self)
         }
         add_method "=", ->(vm, ref, other) {
           ref.list == other.list ? Dtrue : Dfalse
+        }
+        add_method "compact", ->(vm, ref) {
+          result = ref.list.reject{ |item| item == Dvoid }
+          DG_Array.new(result, self)
         }
       end
     end

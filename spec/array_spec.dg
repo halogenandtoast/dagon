@@ -11,3 +11,6 @@ describe("Array") ->
 
   it("can subtract arrays from each other") ->
     assert-equal([1, 1, 2, 2, 3, 3, 4, 5] - [1, 2, 4], [3, 3, 5])
+
+  it("can compact") ->
+    assert-equal([1, void, 2].compact, [1, 2])
