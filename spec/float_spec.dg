@@ -1,0 +1,15 @@
+require("assertions")
+require("dspec")
+
+describe("Float") ->
+  it("is equal to an identical float") ->
+    assert-equal(1.2, 1.2)
+
+  it("addable") ->
+    assert-equal(1.2 + 0.8, 2.0)
+
+  it("subtractable") ->
+    assert-equal(1.2 - 0.2, 1.0)
+
+  it("can compare to integers") ->
+    assert-equal(2.0, 2)

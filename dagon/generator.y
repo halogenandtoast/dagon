@@ -70,7 +70,7 @@ rule
       | method_call
       | object_call
 
-  literal: FLOAT { result = [:float, val[0].to_f] }
+  literal: FLOAT { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
          | STRING { result = AST::StringNode.new(@filename, nil, val[0].data) }
          | TRUE { result = AST::LiteralNode.new(@filename, nil, true) }
