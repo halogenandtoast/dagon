@@ -4,9 +4,8 @@ describe(descriptor, descriptions):
   puts(descriptor)
   descriptions.call()
   puts("")
-  puts("")
 
 it(description, block):
-  puts(description)
+  print(description)
   block.call()
   puts("")
