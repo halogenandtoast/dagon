@@ -68,7 +68,11 @@ module Dagon
 
     def emit(name, data, start_char, end_char)
       handle_indents
-      @tokens << [name, Token.new(data[start_char...end_char], @line)]
+      if @tokens.last && @tokens.last[0] == :IDENTIFIER && name == :LBRACKET
+        @tokens << ['[', Token.new(data[start_char...end_char], @line)]
+      else
+        @tokens << [name, Token.new(data[start_char...end_char], @line)]
+      end
       @column += end_char - start_char
     end
 
