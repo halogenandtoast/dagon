@@ -10,3 +10,9 @@ describe("String") ->
 
   it("knows it's length") ->
     assert-equal("foo".length, 3)
+
+  it("can convert to an Integer") ->
+    assert-equal("12".to-i, 12)
+
+  it("can convert to a Float") ->
+    assert-equal("12.5".to-f, 12.5)

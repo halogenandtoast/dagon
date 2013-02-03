@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame integer string true void)
+CORE = %w(object class array block false float frame integer string true void hash)
 CORE.each do |klass|
   require "core/#{klass}"
 end

@@ -42,6 +42,12 @@ module Dagon
         add_method 'length', ->(vm, ref) {
           vm.get_class("Integer").instance(ref.value.length)
         }
+        add_method 'to-i', ->(vm, ref) {
+          vm.get_class("Integer").instance(ref.value.to_i)
+        }
+        add_method 'to-f', ->(vm, ref) {
+          vm.get_class("Float").instance(ref.value.to_f)
+        }
       end
     end
   end
