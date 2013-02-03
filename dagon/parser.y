@@ -13,8 +13,6 @@ rule
 
   block: INDENT statements DEDENT { result = val[1] }
 
-  inline_block: LBRACE statement RBRACE { result = [val[1]] }
-
   statements: statements statement { result.push val[1] }
             | statement { result = [val[0]] }
 
@@ -58,8 +56,8 @@ rule
 
   hash: LBRACE hash_list RBRACE { result = AST::HashNode.new(@filename, nil, val[1]) }
   hash_list: { result = [] }
-           | hash_member { result = val[0] }
-           | hash_list COMMA hash_member { result = val[0] }
+           | hash_member { result = val }
+           | hash_list COMMA hash_member { result << val }
   hash_member: assignment { result = val[0] }
 
   array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, nil, val[1]) }
@@ -90,20 +88,23 @@ rule
 
 
   method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, [], val[2])) }
-                   | method_name ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, [], val[2])) }
                    | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, val[2], val[5])) }
-                   | method_name LPAREN list RPAREN ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, val[2], val[5])) }
 
-  method_call: term DOT method_name optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, [], val[3]) }
-             | term DOT method_name LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, val[4], val[6]) }
-             | method_name LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].variable_name, val[2], val[4]) }
+  method_call: term DOT method_name lambda { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, [], val[3]) }
+             | term DOT method_name LPAREN list RPAREN lambda { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, val[4], val[6]) }
+             | method_name LPAREN list RPAREN lambda { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].variable_name, val[2], val[4]) }
              | term '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, val[0], '[]', [val[2]], nil) }
 
-  object_call: CONSTANT LPAREN list RPAREN optional_block { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
+  object_call: CONSTANT LPAREN list RPAREN lambda { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
 
-  optional_block: { result = nil }
-                | ARROW LPAREN list RPAREN block { result = AST::BlockNode.new(@filename, nil, val[4], val[2]) }
-                | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1], []) }
+  multiline_lambda: ARROW LPAREN list RPAREN block { result = AST::BlockNode.new(@filename, nil, val[4], val[2]) }
+                  | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1], []) }
+
+  singleline_lambda: ARROW LPAREN list RPAREN LBRACE statement RBRACE { result = AST::BlockNode.new(@filename, nil, [val[5]], val[2]) }
+                   | ARROW LBRACE statement RBRACE { result = AST::BlockNode.new(@filename, nil, [val[2]], []) }
+  lambda: { result = nil }
+        | multiline_lambda { result = val[0] }
+        | singleline_lambda { result = val[0] }
 
 ---- header
 %w(
