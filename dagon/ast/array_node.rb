@@ -10,7 +10,7 @@ module Dagon
 
       def evaluate interpreter
         evaluated_list = @list.map { |item| item.evaluate(interpreter) }
-        interpreter.get_class("Array").dagon_send(interpreter, "new", evaluated_list)
+        interpreter.get_class("Array").dagon_new(interpreter, evaluated_list)
       end
     end
   end

@@ -9,7 +9,7 @@ module Dagon
       end
 
       def evaluate(interpreter)
-        Dagon::Core::DG_HashClass.new.dagon_send(interpreter, "new", @assignments)
+        interpreter.get_class("Hash").dagon_new(interpreter, @assignments)
       end
     end
   end

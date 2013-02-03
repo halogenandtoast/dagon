@@ -16,7 +16,12 @@ module Dagon
 
         object = interpreter.frame.object
         klass = object.dagon_const_get(@klass_name)
-        klass.dagon_send(interpreter, :new)
+        if klass.respond_to? :dagon_new
+          klass.dagon_new(interpreter, *arguments)
+        else
+          $stderr.puts "Cannot initialize object of type #{@klass_name}"
+          exit(1)
+        end
       end
     end
   end

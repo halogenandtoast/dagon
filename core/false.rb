@@ -16,12 +16,12 @@ module Dagon
     end
 
     class DG_FalseClass < DG_Class
+      undef :dagon_new
       def initialize
         super("False", Dagon::Core::DG_Class.new)
       end
 
       def boot
-        @class_methods.delete(:new)
         add_method '!@', ->(vm, ref) {
           Dtrue
         }
@@ -31,7 +31,7 @@ module Dagon
         add_method '&&', ->(vm, ref, other) { Dfalse }
         add_method '||', ->(vm, ref, other) { other }
         add_method '^', ->(vm, ref, other) { other }
-        add_method 'to-s', ->(vm, ref) { vm.get_class("String").dagon_send(vm, "new", "false") }
+        add_method 'to-s', ->(vm, ref) { vm.get_class("String").dagon_new(vm, "false") }
       end
     end
   end

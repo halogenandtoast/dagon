@@ -21,6 +21,8 @@ module Dagon
     end
 
     class DG_FloatClass < DG_Class
+      undef :dagon_new
+
       def initialize value = ""
         super("Float", Dagon::Core::DG_Class.new)
       end
@@ -30,7 +32,6 @@ module Dagon
       end
 
       def boot
-        @class_methods.delete(:new)
         add_method "+", ->(vm, ref, other) {
           left = ref.value
           right = other.value

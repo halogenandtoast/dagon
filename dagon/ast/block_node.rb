@@ -12,7 +12,7 @@ module Dagon
 
       def evaluate interpreter
         arguments = @arguments.map(&:variable_name)
-        interpreter.get_class("Block").dagon_send(interpreter, "new", @statements, interpreter.frame, arguments)
+        interpreter.get_class("Block").dagon_new(interpreter, @statements, interpreter.frame, arguments)
       end
     end
   end

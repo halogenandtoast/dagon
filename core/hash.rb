@@ -33,7 +33,6 @@ module Dagon
       end
 
       def boot
-        @class_methods[:new] = ->(vm, ref, assignments) { DG_Hash.new(assignments, self) }
 
         add_method "=", ->(vm, ref, other) do
           ref.hash == other.hash ? Dtrue : Dfalse
@@ -42,6 +41,10 @@ module Dagon
         add_method "!=", ->(vm, ref, other) do
           ref.hash != other.hash ? Dtrue : Dfalse
         end
+      end
+
+      def dagon_new interpreter, assignments
+        DG_Hash.new(assignments, self)
       end
     end
   end

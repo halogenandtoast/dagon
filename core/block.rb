@@ -20,7 +20,6 @@ module Dagon
       end
 
       def boot
-        @class_methods[:new] = ->(_, _, statements, frame, arguments) { DG_Block.new(statements, frame, arguments, self) }
         add_method "call", ->(vm, instance, *args) do
           frame = instance.frame.dup
           instance.arguments.each_with_index { |variable_name, index| frame[variable_name] = args[index] }
@@ -29,6 +28,10 @@ module Dagon
           vm.pop_frame
           result
         end
+      end
+
+      def dagon_new interpreter, statements, frame, arguments
+        DG_Block.new(statements, frame, arguments, self)
       end
     end
   end

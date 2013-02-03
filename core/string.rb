@@ -26,12 +26,11 @@ module Dagon
       end
 
       def boot
-        @class_methods[:new] = ->(vm, ref, args) { DG_String.new(args, self) }
         add_method "init", ->(vm, ref, value) {
           ref.instance_variable_set("@value", value)
         }
         add_method "+", ->(vm, ref, other) {
-          ref.klass.dagon_send(vm, :new, ref.value + other.value)
+          dagon_new(vm, ref.value + other.value)
         }
         add_method "=", ->(vm, ref, other) {
           ref.value == other.value ? Dtrue : Dfalse
@@ -48,6 +47,10 @@ module Dagon
         add_method 'to-f', ->(vm, ref) {
           vm.get_class("Float").instance(ref.value.to_f)
         }
+      end
+
+      def dagon_new interpreter, string = ""
+        DG_String.new(string, self)
       end
     end
   end

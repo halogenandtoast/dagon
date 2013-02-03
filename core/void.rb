@@ -22,12 +22,12 @@ module Dagon
     end
 
     class DG_VoidClass < DG_Class
+      undef :dagon_new
       def initialize
         super("Void", Dagon::Core::DG_Class.new)
       end
 
       def boot
-        @class_methods.delete(:new)
         add_method "=", ->(vm, ref, other) {
           ref == other ? Dtrue : Dfalse
         }

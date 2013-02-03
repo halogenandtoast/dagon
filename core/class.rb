@@ -5,12 +5,12 @@ module Dagon
       def initialize name = nil, parent = nil
         @constants = {}
         @methods = {
-          methods: ->(vm, ref, *args) { vm.get_class("Array").dagon_send(vm, "new", @methods.keys) },
+          methods: ->(vm, ref, *args) { vm.get_class("Array").dagon_new(vm, @methods.keys) },
           init: ->(vm, ref, *args) { },
           exit: ->(vm, ref, *args) { exit(0) },
           puts: ->(vm, ref, *args) { puts *args.map(&:to_s) },
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
-          gets: ->(vm, ref, *args) { vm.get_class("String").dagon_send(vm, "new", $stdin.gets) },
+          gets: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, $stdin.gets) },
           eval: ->(vm, ref, *args) {
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)')
             tree = Dagon::Parser.parse(tokens, '(eval)', false)
@@ -29,17 +29,18 @@ module Dagon
         @class_ivars = {}
         @class_methods = {
           methods: ->(vm, ref) {
-            vm.get_class("Array").dagon_send(vm, "new", ref.class_methods.keys)
+            vm.get_class("Array").dagon_new(vm, ref.class_methods.keys)
           },
-          new: ->(vm, ref, *args) {
-            obj = ref.dagon_allocate
-            obj.dagon_send(vm, "init", *args)
-            obj
-          }
         }
         @name = name || "Class"
         @parent = parent
         boot
+      end
+
+      def dagon_new
+        obj = ref.dagon_allocate
+        obj.dagon_send(vm, "init", *args)
+        obj
       end
 
       def boot
@@ -77,7 +78,7 @@ module Dagon
         elsif @parent
           @parent.dagon_send(interpreter, name, *args)
         else
-          $stderr.puts "Undefined method #{name} for #{to_s}"
+          $stderr.puts "undefined method #{name} for #{to_s}"
           exit(1)
         end
       end
