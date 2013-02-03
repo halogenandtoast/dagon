@@ -83,7 +83,7 @@ rule
   method_call: term DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, [], val[3]) }
              | term DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, val[4], val[6]) }
              | IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].data, val[2], val[4]) }
-             | IDENTIFIER '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), '[]', [val[2]], nil) }
+             | term '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, val[0], '[]', [val[2]], nil) }
 
   object_call: CONSTANT LPAREN list RPAREN optional_block { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
 
