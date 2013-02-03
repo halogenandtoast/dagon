@@ -9,10 +9,6 @@ module Dagon
         @klass = DG_TrueClass.new
       end
 
-      def to_instance
-        "true:True"
-      end
-
       def inspect
         "true"
       end

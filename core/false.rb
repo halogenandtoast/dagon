@@ -10,10 +10,6 @@ module Dagon
         @klass = DG_FalseClass.new
       end
 
-      def to_instance
-        "false:False"
-      end
-
       def inspect
         "false"
       end

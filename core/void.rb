@@ -16,10 +16,6 @@ module Dagon
         nil
       end
 
-      def to_instance
-        "void"
-      end
-
       def inspect
         "void"
       end

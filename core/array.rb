@@ -10,10 +10,6 @@ module Dagon
       def to_s
         "["+@list.map(&:to_s).join(", ")+"]"
       end
-
-      def to_instance
-        "#{to_s}:Array"
-      end
     end
 
     class DG_ArrayClass < DG_Class
