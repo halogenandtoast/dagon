@@ -15,7 +15,7 @@ describe("Array") ->
   it("can compact") ->
     assert-equal([1, void, 2].compact, [1, 2])
 
-  it("knowns it's length") ->
+  it("knows it's length") ->
     assert-equal([1, 2, 3].length, 3)
 
   it("can iterate over the array") ->
