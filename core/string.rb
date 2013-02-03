@@ -31,19 +31,16 @@ module Dagon
           ref.instance_variable_set("@value", value)
         }
         add_method "+", ->(vm, ref, other) {
-          left = ref.instance_variable_get("@value")
-          right = other.instance_variable_get("@value")
-          ref.klass.dagon_send(vm, :new, left + right)
+          ref.klass.dagon_send(vm, :new, ref.value + other.value)
         }
         add_method "=", ->(vm, ref, other) {
-          left = ref.instance_variable_get("@value")
-          right = other.instance_variable_get("@value")
-          left == right ? Dtrue : Dfalse
+          ref.value == other.value ? Dtrue : Dfalse
         }
         add_method "!=", ->(vm, ref, other) {
-          left = ref.instance_variable_get("@value")
-          right = other.instance_variable_get("@value")
-          left != right ? Dtrue : Dfalse
+          ref.value != other.value ? Dtrue : Dfalse
+        }
+        add_method 'length', ->(vm, ref) {
+          vm.get_class("Integer").instance(ref.value.length)
         }
       end
     end
