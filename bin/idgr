@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..")
+
+require 'readline'
+require './build/scanner'
+require './build/parser'
+
+vm = Dagon::Core::VM.new
+filename = '(stdin)'
+while line = Readline.readline('idg:> ', true)
+  tokens = Dagon::Scanner.tokenize(line, filename)
+  tree = Dagon::Parser.parse(tokens, line, false)
+  puts "=> #{tree.evaluate(vm)}"
+end
+

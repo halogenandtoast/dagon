@@ -66,6 +66,7 @@ rule
   method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
 
   term: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
+      | CONSTANT { result = AST::ConstantRefNode.new(@filename, nil, val[0].data) }
       | literal
       | array
       | method_call
@@ -95,7 +96,7 @@ rule
                 | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1]) }
 
 ---- header
-NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node unary_function_call_node)
+NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node unary_function_call_node constant_ref_node)
 NODES.each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

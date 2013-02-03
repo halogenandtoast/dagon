@@ -8,7 +8,7 @@ module Dagon
       end
 
       def to_s
-        "["+@list.map(&:to_instance).join(", ")+"]"
+        "["+@list.map(&:to_s).join(", ")+"]"
       end
 
       def to_instance
@@ -22,7 +22,13 @@ module Dagon
       end
 
       def boot
-        @class_methods[:new] = ->(vm, ref, value) { DG_Array.new(value, self) }
+        @class_methods[:new] = ->(vm, ref, value = []) {
+          if value.is_a? DG_Array
+            DG_Array.new(value.list, self)
+          else
+            DG_Array.new(value, self)
+          end
+        }
         add_method "init", ->(vm, ref, value) {
           ref.instance_variable_set("@value", value)
         }
@@ -42,6 +48,9 @@ module Dagon
         add_method "compact", ->(vm, ref) {
           result = ref.list.reject{ |item| item == Dvoid }
           DG_Array.new(result, self)
+        }
+        add_method "length", ->(vm, ref) {
+          vm.get_class("Integer").instance(ref.list.length)
         }
       end
     end

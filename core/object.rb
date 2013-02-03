@@ -16,6 +16,10 @@ module Dagon
         klass
       end
 
+      def dagon_const_set constant, value
+        @klass.dagon_const_set(constant, value)
+      end
+
       def dagon_const_get constant
         @klass.dagon_const_get(constant)
       end
