@@ -56,10 +56,11 @@ rule
            | unary_expression
            | term
 
-  hash: LBRACE hash_members RBRACE { result = AST::HashNode.new(@filename, nil, val[1]) }
-  hash_members: { result = [] }
-              | assignment { result = val }
-              | hash_members COMMA assignment { result.push val[2] }
+  hash: LBRACE hash_list RBRACE { result = AST::HashNode.new(@filename, nil, val[1]) }
+  hash_list: { result = [] }
+           | hash_member { result = val[0] }
+           | hash_list COMMA hash_member { result = val[0] }
+  hash_member: assignment { result = val[0] }
 
   array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, nil, val[1]) }
   list: { result = [] }
