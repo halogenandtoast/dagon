@@ -103,7 +103,7 @@ module Dagon
 
     def problem(data, ts, te)
       puts "Unexpected \"#{data[ts...te]}\" on line #{@line}\n" +
-            "#{@line}: #{@lines[@line]}"
+            "#{@line}: #{@lines[@line-1]}"
       exit(1)
     end
 
