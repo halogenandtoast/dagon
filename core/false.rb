@@ -30,6 +30,8 @@ module Dagon
         }
         add_method '&&', ->(vm, ref, other) { Dfalse }
         add_method '||', ->(vm, ref, other) { other }
+        add_method '^', ->(vm, ref, other) { other }
+        add_method 'to-s', ->(vm, ref) { vm.get_class("String").dagon_send(vm, "new", "false") }
       end
     end
   end
