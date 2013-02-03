@@ -70,7 +70,7 @@ rule
       | array
       | method_call
       | object_call
-      | '!' term
+      | '!' term { result = AST::UnaryFunctionCallNode.new(@filename, nil, val[1], "!") }
 
   literal: FLOAT { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
@@ -79,7 +79,7 @@ rule
          | FALSE { result = AST::LiteralNode.new(@filename, nil, false) }
          | VOID { result = AST::LiteralNode.new(@filename, nil, nil) }
 
-  method_call: IDENTIFIER DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), val[2].data, [], val[3]) }
+  method_call: term DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, [], val[3]) }
              | IDENTIFIER DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), val[2].data, val[4], val[6]) }
              | IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].data, val[2], val[4]) }
              | IDENTIFIER '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), '[]', [val[2]], nil) }
@@ -90,7 +90,7 @@ rule
                 | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1]) }
 
 ---- header
-NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node)
+NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node unary_function_call_node)
 NODES.each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner
