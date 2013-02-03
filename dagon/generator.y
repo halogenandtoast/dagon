@@ -34,12 +34,8 @@ rule
 
   class_definition: CONSTANT ':' block { result = AST::ClassDefinitionNode.new(@filename, nil, val[0].data, val[2]) }
 
-  method_definition: IDENTIFIER ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, [], val[2])) }
-                   | IDENTIFIER ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, [], val[2])) }
-                   | IDENTIFIER LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, val[2], val[5])) }
-                   | IDENTIFIER LPAREN list RPAREN ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].data, AST::Function.new(@filename, nil, val[2], val[5])) }
 
-  assignment: IDENTIFIER ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, nil, val[0].data, val[2]) }
+  assignment: method_name ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, nil, val[0].variable_name, val[2]) }
 
   expression: expression '-' expression { result = call_on_object(val[0], '-', val[2]) }
             | expression '+' expression { result = call_on_object(val[0], '+', val[2]) }
@@ -67,6 +63,8 @@ rule
              | assignment { result = val[0] }
 
 
+  method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
+
   term: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
       | literal
       | array
@@ -80,9 +78,15 @@ rule
          | FALSE { result = AST::LiteralNode.new(@filename, nil, false) }
          | VOID { result = AST::LiteralNode.new(@filename, nil, nil) }
 
-  method_call: term DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, [], val[3]) }
-             | term DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, val[4], val[6]) }
-             | IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].data, val[2], val[4]) }
+
+  method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, [], val[2])) }
+                   | method_name ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, [], val[2])) }
+                   | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, val[2], val[5])) }
+                   | method_name LPAREN list RPAREN ASSIGNMENT inline_block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, val[2], val[5])) }
+
+  method_call: term DOT method_name optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, [], val[3]) }
+             | term DOT method_name LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].variable_name, val[4], val[6]) }
+             | method_name LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].variable_name, val[2], val[4]) }
              | term '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, val[0], '[]', [val[2]], nil) }
 
   object_call: CONSTANT LPAREN list RPAREN optional_block { result = AST::InstanceInitNode.new(@filename, nil, val[0].data, val[2], val[4]) }
