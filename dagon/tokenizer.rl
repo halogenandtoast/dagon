@@ -112,7 +112,7 @@ module Dagon
     end
 
     def reset
-      @line = 0
+      @line = 1
       @column = 0
       @tokens = []
       @indent_count = 0

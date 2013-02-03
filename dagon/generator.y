@@ -1,7 +1,7 @@
 class Dagon::Parser
 prechigh
   right EXPONENT
-  right '!'
+  left '!'
   left '*' '/'
   left '+' '-'
   left ':'
@@ -24,7 +24,6 @@ rule
            | expression
            | conditional_statement
            | while_statement
-           | method_call_with_block
 
   while_statement: WHILE condition block { result = AST::WhileNode.new(@filename, nil, val[1], val[2]) }
 
@@ -49,12 +48,15 @@ rule
             | expression EXPONENT expression { result = call_on_object(val[0], '**', val[2]) }
             | condition
 
+  unary_expression: '!' expression { result = AST::UnaryFunctionCallNode.new(@filename, nil, val[1], "!") }
+
   condition: expression '>' expression { result = call_on_object(val[0], '>', val[2]) }
            | expression '<' expression { result = call_on_object(val[0], '<', val[2]) }
            | expression '<=' expression { result = call_on_object(val[0], '<=', val[2]) }
            | expression '>=' expression { result = call_on_object(val[0], '>=', val[2]) }
            | expression '=' expression { result = call_on_object(val[0], '=', val[2]) }
            | expression '!=' expression { result = call_on_object(val[0], '!=', val[2]) }
+           | unary_expression
            | term
 
   array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, nil, val[1]) }
@@ -70,7 +72,6 @@ rule
       | array
       | method_call
       | object_call
-      | '!' term { result = AST::UnaryFunctionCallNode.new(@filename, nil, val[1], "!") }
 
   literal: FLOAT { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
@@ -80,7 +81,7 @@ rule
          | VOID { result = AST::LiteralNode.new(@filename, nil, nil) }
 
   method_call: term DOT IDENTIFIER optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, [], val[3]) }
-             | IDENTIFIER DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), val[2].data, val[4], val[6]) }
+             | term DOT IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, val[0], val[2].data, val[4], val[6]) }
              | IDENTIFIER LPAREN list RPAREN optional_block { result = AST::FunctionCallNode.new(@filename, nil, nil, val[0].data, val[2], val[4]) }
              | IDENTIFIER '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, nil, AST::VarRefNode.new(@filename, nil, val[0].data), '[]', [val[2]], nil) }
 
@@ -117,7 +118,7 @@ NODES.each { |node| require_relative "../dagon/ast/#{node}" }
   end
 
   def on_error error_token_id, error_value, value_stack
-    $stderr.puts "line #{@filename}:#{@line+1}: syntax error, unexpected #{error_value.data.inspect}", value_stack.inspect
+    $stderr.puts "#{@filename}:#{error_value.line}: syntax error, unexpected #{error_value.data.inspect}", value_stack.inspect
     exit
   end
 

@@ -36,5 +36,9 @@ else
 end
 
 tokens = Dagon::Scanner.tokenize(program, filename)
+if options[:only_tokens]
+  pp tokens
+  exit(1)
+end
 tree = Dagon::Parser.parse(tokens, filename, options[:debug])
 tree.evaluate(vm)
