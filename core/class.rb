@@ -9,7 +9,7 @@ module Dagon
           exit: ->(vm, ref, *args) { exit(0) },
           puts: ->(vm, ref, *args) { puts *args.map(&:to_s) },
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
-          gets: ->(vm, ref, *args) { DG_String.new($stdin.gets) },
+          gets: ->(vm, ref, *args) { vm.get_class("String").dagon_send(vm, "new", $stdin.gets) },
           eval: ->(vm, ref, *args) {
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)')
             tree = Dagon::Parser.parse(tokens, '(eval)', false)
