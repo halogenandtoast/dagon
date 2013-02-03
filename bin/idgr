@@ -11,6 +11,6 @@ filename = '(stdin)'
 while line = Readline.readline('idg:> ', true)
   tokens = Dagon::Scanner.tokenize(line, filename)
   tree = Dagon::Parser.parse(tokens, line, false)
-  puts "=> #{tree.evaluate(vm)}"
+  puts "=> #{tree.evaluate(vm).to_s}"
 end
 
