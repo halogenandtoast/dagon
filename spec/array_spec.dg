@@ -17,3 +17,10 @@ describe("Array") ->
 
   it("knowns it's length") ->
     assert-equal([1, 2, 3].length, 3)
+
+  it("can iterate over the array") ->
+    array: [1, 2, 3]
+    x: 0
+    array.each ->(i)
+      x: x + i
+    assert-equal(x, 6)

@@ -1,11 +1,16 @@
 module Dagon
   module Core
     class DG_Block < DG_Object
-      attr_accessor :statements, :frame
-      def initialize(statements, frame, klass)
+      attr_accessor :statements, :frame, :arguments
+      def initialize(statements, frame, arguments, klass)
         @statements = statements
         @frame = frame
         @klass = klass
+        @arguments = arguments
+      end
+
+      def arity
+        @arguments.length
       end
     end
 
@@ -15,8 +20,10 @@ module Dagon
       end
 
       def boot
-        @class_methods[:new] = ->(_, _, statements, frame) { DG_Block.new(statements, frame, self) }
-        add_method "call", ->(vm, instance) do
+        @class_methods[:new] = ->(_, _, statements, frame, arguments) { DG_Block.new(statements, frame, arguments, self) }
+        add_method "call", ->(vm, instance, *args) do
+          frame = instance.frame.dup
+          instance.arguments.each_with_index { |variable_name, index| frame[variable_name] = args[index] }
           vm.push_frame(instance.frame)
           result = instance.statements.map { |statement| statement.evaluate(vm) }.last
           vm.pop_frame

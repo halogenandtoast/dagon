@@ -1,2 +1,6 @@
 MyClass:
   x: 5
+
+s: String.new("Hello")
+
+puts(s)
