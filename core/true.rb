@@ -24,6 +24,11 @@ module Dagon
         add_method '!@', ->(vm, ref) {
           Dfalse
         }
+        add_method '=', ->(vm, ref, other) {
+          ref == other ? Dtrue : Dfalse
+        }
+        add_method '&&', ->(vm, ref, other) { other }
+        add_method '||', ->(vm, ref, other) { Dtrue }
       end
     end
   end

@@ -1,0 +1,36 @@
+describe("Booleans") ->
+  it("!true is false") ->
+    assert-equal(!true, false)
+
+  it("!false is true") ->
+    assert-equal(!false, true)
+
+  it("!!false is false") ->
+    assert-equal(!!false, false)
+
+  it("!!true is true") ->
+    assert-equal(!!true, true)
+
+  it("true && true") ->
+    assert-equal(true && true, true)
+
+  it("true && false") ->
+    assert-equal(true && false, false)
+
+  it("false && true") ->
+    assert-equal(false && true, false)
+
+  it("false && false") ->
+    assert-equal(false && false, false)
+
+  it("true || true") ->
+    assert-equal(true || true, true)
+
+  it("true || false") ->
+    assert-equal(true || false, true)
+
+  it("false || true") ->
+    assert-equal(false || true, true)
+
+  it("false || false") ->
+    assert-equal(false || false, false)
