@@ -27,6 +27,7 @@
   float = digit+ '.' digit+;
   integer = '-'? digit+;
   indent = "  ";
+  at = "@";
 
   main := |*
     newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += data[ts...te].lines.count; @column = 0; @check_indents = true };
@@ -49,6 +50,7 @@
     rbracket => { emit(:RBRACKET, data, ts, te) };
     dot => { emit(:DOT, data, ts, te) };
     bang => { emit('!', data, ts, te) };
+    at => { emit('@', data, ts, te) };
     operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
     exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     comma => { emit(:COMMA, data, ts, te) };
@@ -80,7 +82,7 @@ module Dagon
 
     def emit_string(data, start_char, end_char)
       handle_indents
-      str = data[(start_char+1)...(end_char-1)].gsub(/\\(.)/) { $1 }
+      str = data[(start_char+1)...(end_char-1)].gsub(/(\\.)/) { eval(%{"#{$1}"}) }
       @tokens << [:STRING, Token.new(str, @line)]
       @column += end_char - start_char
     end

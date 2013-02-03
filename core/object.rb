@@ -27,15 +27,15 @@ module Dagon
       def dagon_send interpreter, name, *args
         method = @klass.get_method(name)
         if method
-          method.call(interpreter, self, *args) || Dvoid
+          frame = Frame.new(self, self)
+          interpreter.push_frame frame
+          return_value = method.call(interpreter, self, *args) || Dvoid
+          interpreter.pop_frame
+          return_value
         else
           $stderr.puts "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
           exit(1)
         end
-      end
-
-      def to_instance
-        "#<#{@klass}>"
       end
 
       def set_instance_variable name, value

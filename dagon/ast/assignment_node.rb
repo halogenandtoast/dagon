@@ -8,7 +8,11 @@ module Dagon
       end
 
       def evaluate interpreter
-        interpreter.frame[@variable_name] = @value.evaluate(interpreter)
+        if @variable_name =~ /^@/
+          interpreter.frame.object.set_instance_variable(@variable_name, @value.evaluate(interpreter))
+        else
+          interpreter.frame[@variable_name] = @value.evaluate(interpreter)
+        end
       end
     end
   end

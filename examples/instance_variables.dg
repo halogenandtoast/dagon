@@ -1,0 +1,11 @@
+Foo:
+  init:
+    @wombat: "wombat"
+  to-s:
+    @wombat
+  to-foo:
+    @foo
+
+foo: Foo()
+puts(foo.to-s())
+puts(foo.to-foo())
