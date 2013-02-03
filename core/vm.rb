@@ -25,6 +25,7 @@ module Dagon
         current_object.dagon_const_set("Block", DG_BlockClass.new)
         current_object.dagon_const_set("False", DG_FalseClass.new)
         current_object.dagon_const_set("Float", DG_FloatClass.new)
+        current_object.dagon_const_set("Hash", DG_HashClass.new)
         current_object.dagon_const_set("Integer", DG_IntegerClass.new)
         current_object.dagon_const_set("String", DG_StringClass.new)
         current_object.dagon_const_set("True", DG_TrueClass.new)
@@ -105,7 +106,7 @@ module Dagon
           Dtrue
         else
           error "No such file or directory - #{filename.value}\n" +
-          "Searched: \n" + 
+          "Searched: \n" +
           @load_paths.map{ |path| " #{path}"}.join("\n")
         end
       end

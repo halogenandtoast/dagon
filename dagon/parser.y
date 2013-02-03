@@ -56,6 +56,11 @@ rule
            | unary_expression
            | term
 
+  hash: LBRACE hash_members RBRACE { result = AST::HashNode.new(@filename, nil, val[1]) }
+  hash_members: { result = [] }
+              | assignment { result = val }
+              | hash_members COMMA assignment { result.push val[2] }
+
   array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, nil, val[1]) }
   list: { result = [] }
       | list_member { result = val }
@@ -71,6 +76,7 @@ rule
       | CONSTANT { result = AST::ConstantRefNode.new(@filename, nil, val[0].data) }
       | literal
       | array
+      | hash
       | method_call
       | object_call
 
@@ -99,8 +105,12 @@ rule
                 | ARROW block { result = AST::BlockNode.new(@filename, nil, val[1], []) }
 
 ---- header
-NODES = %w(node root_node function_call_node function_definition_node function_node string_node literal_node var_ref_node if_node assignment_node while_node class_definition_node instance_init_node block_node array_node unary_function_call_node constant_ref_node instance_var_ref_node)
-NODES.each { |node| require_relative "../dagon/ast/#{node}" }
+%w(
+  node root_node function_call_node function_definition_node function_node
+  string_node literal_node var_ref_node if_node assignment_node while_node
+  class_definition_node instance_init_node block_node hash_node array_node
+  unary_function_call_node constant_ref_node instance_var_ref_node
+).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner
 

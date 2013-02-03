@@ -1,0 +1,6 @@
+describe("Hash") ->
+  it("can be empty") ->
+    assert-equal({}, {})
+  it("can have keys with values") ->
+    assert-not-equal({ foo: "bar" }, {})
+  puts { foo: "bar" }
