@@ -21,15 +21,15 @@ module Dagon
       end
 
       def boot_core
-        current_object.dagon_const_set("Array", DG_ArrayClass.new)
-        current_object.dagon_const_set("Block", DG_BlockClass.new)
-        current_object.dagon_const_set("False", DG_FalseClass.new)
-        current_object.dagon_const_set("Float", DG_FloatClass.new)
-        current_object.dagon_const_set("Hash", DG_HashClass.new)
-        current_object.dagon_const_set("Integer", DG_IntegerClass.new)
-        current_object.dagon_const_set("String", DG_StringClass.new)
-        current_object.dagon_const_set("True", DG_TrueClass.new)
-        current_object.dagon_const_set("Void", DG_VoidClass.new)
+        add_class("Array", DG_ArrayClass.new)
+        add_class("Block", DG_BlockClass.new)
+        add_class("False", DG_FalseClass.new)
+        add_class("Float", DG_FloatClass.new)
+        add_class("Hash", DG_HashClass.new)
+        add_class("Integer", DG_IntegerClass.new)
+        add_class("String", DG_StringClass.new)
+        add_class("True", DG_TrueClass.new)
+        add_class("Void", DG_VoidClass.new)
 
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
@@ -46,8 +46,8 @@ module Dagon
         @stack[0].object
       end
 
-      def add_class name, object
-        current_object.dagon_const_set(name, object)
+      def add_class name, klass
+        current_object.dagon_const_set(name, klass)
       end
 
       def get_class name
