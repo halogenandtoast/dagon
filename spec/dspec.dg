@@ -6,6 +6,11 @@ describe(descriptor, descriptions):
   puts("")
 
 it(description, block):
+  success: block.call()
+  if success
+    print("\e[32m")
+  else
+    print("\e[31m")
+  print("- ")
   print(description)
-  block.call()
-  puts("")
+  puts("\e[0m")

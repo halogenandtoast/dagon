@@ -82,7 +82,8 @@ module Dagon
 
     def emit_string(data, start_char, end_char)
       handle_indents
-      str = data[(start_char+1)...(end_char-1)].gsub(/(\\.)/) { eval(%{"#{$1}"}) }
+      str = data[(start_char+1)...(end_char-1)]
+      str = eval("\"#{str}\"") # ...
       @tokens << [:STRING, Token.new(str, @line)]
       @column += end_char - start_char
     end
