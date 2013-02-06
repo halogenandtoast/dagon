@@ -107,17 +107,21 @@ module Dagon
         nil
       end
 
-      def load_file filename
-        path = find_file_path(filename.value)
+      def load_file dstring_filename
+        self.load_dg(dstring_filename.value)
+      end
+
+      def load_dg file
+        path = find_file_path(file)
         if path
           @required_files << path
           program = File.read(path)
-          tokens = Dagon::Scanner.tokenize(program, filename)
-          tree = Dagon::Parser.parse(tokens, filename, false)
+          tokens = Dagon::Scanner.tokenize(program, file)
+          tree = Dagon::Parser.parse(tokens, file, false)
           tree.evaluate(self)
           Dtrue
         else
-          error "No such file or directory - #{filename.value}\n" +
+          error "No such file or directory - #{file}\n" +
           "Searched: \n" +
           @load_paths.map{ |path| " #{path}"}.join("\n")
         end

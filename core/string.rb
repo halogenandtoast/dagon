@@ -32,6 +32,9 @@ module Dagon
         add_method "+", ->(vm, ref, other) {
           dagon_new(vm, ref.value + other.value)
         }
+        add_method "concat", ->(vm, ref, other) {
+          dagon_new(vm, ref.value + other.value)
+        }
         add_method "=", ->(vm, ref, other) {
           ref.value == other.value ? Dtrue : Dfalse
         }

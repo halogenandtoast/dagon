@@ -92,6 +92,9 @@ module Dagon
             block.evaluate vm
           end
         }
+        add_method "to-s", ->(vm, ref) {
+          vm.get_class("String").dagon_new(ref.value)
+        }
       end
     end
   end

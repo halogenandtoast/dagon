@@ -86,10 +86,15 @@ rule
   literal: FLOAT { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, nil, val[0].data.to_i) }
          | STRING { result = AST::StringNode.new(@filename, nil, val[0].data) }
+         | dstring
          | TRUE { result = AST::LiteralNode.new(@filename, nil, true) }
          | FALSE { result = AST::LiteralNode.new(@filename, nil, false) }
          | VOID { result = AST::LiteralNode.new(@filename, nil, nil) }
 
+  dstring: DSTRING_BEGIN dstring_contents DSTRING_END { result = AST::DStringNode.new(@filename, nil, val[1]) }
+
+  dstring_contents: dstring_contents expression { result.push(val[1]) }
+                  | expression { result = [val[0]] }
 
   method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, [], val[2])) }
                    | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, nil, val[0].variable_name, AST::Function.new(@filename, nil, val[2], val[5])) }
@@ -116,6 +121,7 @@ rule
   string_node literal_node var_ref_node if_node assignment_node while_node
   class_definition_node instance_init_node block_node hash_node array_node
   unary_function_call_node constant_ref_node instance_var_ref_node
+  dstring_node
 ).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

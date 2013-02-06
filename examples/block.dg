@@ -2,7 +2,7 @@ indent-block:
   puts("indented")
 
 
-inline-block: { puts("inline") }
+inline-block: -> { puts("inline") }
 
 indent-block()
 inline-block()

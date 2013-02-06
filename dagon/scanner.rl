@@ -6,7 +6,7 @@
   newline = "\r"? "\n" | "\r";
   newlines = newline+;
   keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'void';
-  string = '"' ( [^"\\] | /\\./ )* '"';
+  string = '"' ( /#{[^}]*}/ | [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline;
   constant = upper (alnum | '-')*;
   identifier = '-'? lower (lower | digit | '-')*;
@@ -33,7 +33,7 @@
     newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += data[ts...te].lines.count; @column = 0; @check_indents = true };
     comment { handle_indents };
     keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
-    string => { emit_string(data, ts, te) };
+    string => { parse_string(data, ts, te) };
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
@@ -61,6 +61,9 @@
 }%%
 =end
 
+require 'stringio'
+require 'dagon/string_tokenizer'
+
 module Dagon
   class Token < Struct.new(:data, :line); end
   class Scanner
@@ -80,11 +83,10 @@ module Dagon
       @column += end_char - start_char
     end
 
-    def emit_string(data, start_char, end_char)
+    def parse_string(data, start_char, end_char)
       handle_indents
-      str = data[(start_char+1)...(end_char-1)]
-      str = eval("\"#{str}\"") # ...
-      @tokens << [:STRING, Token.new(str, @line)]
+      tokens = StringTokenizer.new(data, start_char, end_char).tokenize
+      @tokens += tokens
       @column += end_char - start_char
     end
 

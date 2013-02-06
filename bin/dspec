@@ -6,28 +6,36 @@ require './build/scanner'
 require './build/parser'
 require 'core/vm'
 
-def run_tests files
-  vm = Dagon::Core::VM.new
-  program = %{require("spec/dspec")\n}
-  tokens = Dagon::Scanner.tokenize(program, '(dspec)')
-  tree = Dagon::Parser.parse(tokens, '(dspec)', false)
-  tree.evaluate(vm)
-  files.each do |file|
-    path = File.dirname(File.join(Dir.getwd, file))
-    vm.add_load_path path
-    actual_program = program.dup
-    actual_program << File.open(file, 'rb').read
-    actual_program << "\n"
-    tokens = Dagon::Scanner.tokenize(actual_program, file)
-    tree = Dagon::Parser.parse(tokens, file, false)
-    tree.evaluate(vm)
+def spec_files
+  if !ARGV.empty?
+    ARGV
+  else
+    Dir.glob('spec/*_spec.dg')
   end
 end
 
-files = if !ARGV.empty?
-          ARGV
-        else
-          Dir.glob('spec/*_spec.dg')
-        end
+class DSpecRunner
+  def initialize spec_files
+    @spec_files = spec_files
+    @vm = Dagon::Core::VM.new
+  end
 
-run_tests(files)
+  def run_tests
+    vm.load_dg("spec/dspec")
+    run_spec_files
+  end
+
+  private
+  attr_reader :spec_files, :vm
+
+  def run_spec_files
+    spec_files.each do |file|
+      path = File.dirname(File.join(Dir.getwd, file))
+      vm.add_load_path path
+      vm.load_dg(file.gsub(/\.dg$/, ''))
+    end
+  end
+end
+
+runner = DSpecRunner.new(spec_files)
+runner.run_tests

@@ -16,3 +16,24 @@ describe("String") ->
 
   it("can convert to a Float") ->
     assert-equal("12.5".to-f, 12.5)
+
+  it("can interpolate a string") ->
+    x: 5
+    string: "x: #{x}"
+    assert-equal(string, "x: 5")
+
+  it("can interpolate a expression in a string") ->
+    x: 5
+    string: "x: #{x * 5}"
+    assert-equal(string, "x: 25")
+
+  it("can interpolate with a string inside") ->
+    string: "#{"wombat"}"
+    assert-equal(string, "wombat")
+
+  it("can escape like a baswss") ->
+    assert-equal("\n", "
+")
+
+  it("can still run other tests after what just happened") ->
+    assert-equal(1, 1)
