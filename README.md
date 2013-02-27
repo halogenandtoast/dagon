@@ -84,3 +84,7 @@ print():
 name: # value
 another-name: # value
 ```
+
+## License
+
+Dagon is released under the [MIT License](http://opensource.org/licenses/MIT)
