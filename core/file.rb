@@ -10,6 +10,12 @@ module Dagon
 
       def boot
         super
+        add_class_method "dirname", ->(vm, ref, file_path) {
+          vm.get_class("String").dagon_new(vm, File.dirname(file_path.value))
+        }
+        add_class_method "join", ->(vm, ref, *paths) {
+          vm.get_class("String").dagon_new(vm, File.join(paths.map(&:value)))
+        }
       end
 
       def dagon_new interpreter, name, mode
