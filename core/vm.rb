@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame integer string true void hash)
+CORE = %w(object class array block false float frame integer string true void hash io file)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -33,6 +33,9 @@ module Dagon
         add_class("Void", DG_VoidClass.new)
 
         dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
+
+        add_class("IO", DG_IOClass.new)
+        add_class("File", DG_FileClass.new(self))
 
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
