@@ -37,6 +37,10 @@ module Dagon
         add_class("IO", DG_IOClass.new)
         add_class("File", DG_FileClass.new(self))
 
+        dg_const_set("STDIN", get_class("IO").dagon_new(self, STDIN))
+        dg_const_set("STDOUT", get_class("IO").dagon_new(self, STDOUT))
+        dg_const_set("STDERR", get_class("IO").dagon_new(self, STDERR))
+
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
         end
