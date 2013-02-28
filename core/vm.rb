@@ -17,6 +17,7 @@ module Dagon
         @stack.push Frame.new(@object, '(toplevel)')
         @globals = {}
         @classes = {}
+        @arguments = []
         boot_core
       end
 
@@ -31,6 +32,8 @@ module Dagon
         add_class("True", DG_TrueClass.new)
         add_class("Void", DG_VoidClass.new)
 
+        dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
+
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
         end
@@ -42,12 +45,21 @@ module Dagon
         end
       end
 
+      def set_arguments arguments
+        values = arguments.map { |arg| get_class("String").dagon_new(self, arg) }
+        dg_const_set("ARGV", get_class("Array").dagon_new(self, values))
+      end
+
       def current_object
         @stack[0].object
       end
 
+      def dg_const_set(name, value)
+        current_object.dagon_const_set(name, value)
+      end
+
       def add_class name, klass
-        current_object.dagon_const_set(name, klass)
+        dg_const_set(name, klass)
       end
 
       def get_class name

@@ -1,0 +1,2 @@
+ARGV.each ->(arg)
+  puts(arg)

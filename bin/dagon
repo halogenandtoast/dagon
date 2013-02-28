@@ -24,6 +24,7 @@ program = nil
 filename = nil
 
 vm = Dagon::Core::VM.new
+vm.set_arguments(ARGV)
 if ARGV[0]
   filename = ARGV[0]
   program = File.read(filename)
