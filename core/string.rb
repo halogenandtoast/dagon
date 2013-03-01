@@ -47,6 +47,9 @@ module Dagon
         add_method 'to-f', ->(vm, ref) {
           vm.get_class("Float").instance(ref.value.to_f)
         }
+        add_method 'inspect', ->(vm, ref) {
+          vm.get_class("String").dagon_new(vm, ref.value.inspect)
+        }
       end
 
       def dagon_new interpreter, string = ""

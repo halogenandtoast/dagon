@@ -11,6 +11,7 @@ module Dagon
           puts: ->(vm, ref, *args) { puts *args.map(&:to_s) },
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
           gets: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, $stdin.gets) },
+          system: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, Kernel.send(:`, *args.map(&:to_s))) },
           eval: ->(vm, ref, *args) {
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)')
             tree = Dagon::Parser.parse(tokens, '(eval)', false)
