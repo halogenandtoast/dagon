@@ -1,9 +1,9 @@
 module Dagon
   module Core
     class DG_IO < DG_Object
-      attr_reader :fd
-      def initialize fd, klass
-        @fd = fd
+      attr_reader :file_descriptor
+      def initialize file_descriptor, klass
+        @file_descriptor = file_descriptor
         @klass = klass
       end
 
@@ -18,11 +18,11 @@ module Dagon
       end
 
       def boot
-        add_method "init", ->(vm, ref, fd) {
-          ref.instance_variable_set("@fd", fd)
+        add_method "init", ->(vm, ref, file_descriptor) {
+          ref.instance_variable_set("@file_descriptor", file_descriptor)
         }
         add_method "read", ->(vm, ref) {
-          vm.get_class("String").dagon_new(vm, ref.fd.read)
+          vm.get_class("String").dagon_new(vm, ref.file_descriptor.read)
         }
       end
 
