@@ -38,8 +38,8 @@ module Dagon
         boot
       end
 
-      def dagon_new
-        obj = ref.dagon_allocate
+      def dagon_new(vm, *args)
+        obj = dagon_allocate
         obj.dagon_send(vm, "init", *args)
         obj
       end

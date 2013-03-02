@@ -11,7 +11,7 @@ module Dagon
 
       def evaluate interpreter
         if variable_name[0] == "@"
-          interpreter.frame.object.set_instance_variable(variable_name, value.evaluate(interpreter))
+          interpreter.frame.object.set_instance_variable(variable_name, variable_value.evaluate(interpreter))
         else
           interpreter.frame[variable_name] = variable_value.evaluate(interpreter)
         end
