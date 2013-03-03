@@ -22,6 +22,7 @@ module Dagon
       end
 
       def boot_core
+        add_class("Class", DG_Class.new)
         add_class("Array", DG_ArrayClass.new)
         add_class("Block", DG_BlockClass.new)
         add_class("False", DG_FalseClass.new)

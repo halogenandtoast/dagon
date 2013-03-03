@@ -1,7 +1,7 @@
 module Dagon
   module Core
     class DG_Class
-      attr_reader :name, :class_methods
+      attr_reader :name, :class_methods, :parent
       def initialize name = nil, parent = nil
         @constants = {}
         @methods = {
@@ -32,9 +32,15 @@ module Dagon
           methods: ->(vm, ref) {
             vm.get_class("Array").dagon_new(vm, ref.class_methods.keys)
           },
+          superclass: ->(vm, ref) {
+            vm.get_class(ref.parent.name)
+          }
+        }
+        @class_methods["=".to_sym] = ->(vm, ref, other_class) {
+          ref == other_class ? Dtrue : Dfalse
         }
         @name = name || "Class"
-        @parent = parent
+        @parent = parent || self
         boot
       end
 
@@ -76,7 +82,7 @@ module Dagon
         method = @class_methods[name.to_sym]
         if method
           method.call(interpreter, self, *args) || Dvoid
-        elsif @parent
+        elsif @parent != self
           @parent.dagon_send(interpreter, name, *args)
         else
           $stderr.puts "undefined method #{name} for #{to_s}"

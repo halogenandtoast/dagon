@@ -1,4 +1,7 @@
 describe(File) ->
+  it("is a type of io") ->
+    assert-equal(File.superclass, IO)
+
   it("knows the dirname of a file") ->
     dirname: File.dirname("/dev/null")
     assert-equal("/dev", dirname)

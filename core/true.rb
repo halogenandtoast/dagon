@@ -12,6 +12,10 @@ module Dagon
       def inspect
         "true"
       end
+
+      def to_s
+        "true"
+      end
     end
 
     class DG_TrueClass < DG_Class
