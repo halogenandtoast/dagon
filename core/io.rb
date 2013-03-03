@@ -31,6 +31,9 @@ module Dagon
         add_method "write", ->(vm, ref, string) {
           ref.io.write(string.value)
         }
+        add_method "puts", ->(vm, ref, string) {
+          ref.io.puts(string.value)
+        }
         add_method "close", ->(vm, ref) {
           ref.io.close
         }

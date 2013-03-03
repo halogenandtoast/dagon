@@ -9,3 +9,10 @@ assert-equal(lhs, rhs):
 
 assert-not-equal(lhs, rhs):
   -assert(lhs != rhs)
+
+assert-raises(block, message):
+  begin ->
+    block.call
+    -assert(false) # we should not have gotten here
+  rescue(Error) ->(e)
+    assert-equal(e.message, message)

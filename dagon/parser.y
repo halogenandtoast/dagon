@@ -23,6 +23,13 @@ rule
            | expression
            | conditional_statement
            | while_statement
+           | begin_block
+
+  begin_block: BEGIN multiline_lambda rescue_block { result = AST::BeginBlockNode.new(@filename, nil, val[1], val[2]) }
+
+  rescue_block: {}
+              | RESCUE LPAREN list RPAREN multiline_lambda { result = AST::RescueBlockNode.new(@filename, nil, val[4], val[2]) }
+              | RESCUE multiline_lambda { result = AST::RescueBlockNode.new(@filename, nil, val[1], nil) }
 
   while_statement: WHILE condition block { result = AST::WhileNode.new(@filename, nil, val[1], val[2]) }
 
@@ -121,7 +128,7 @@ rule
   string_node literal_node var_ref_node if_node assignment_node while_node
   class_definition_node instance_init_node block_node hash_node array_node
   unary_function_call_node constant_ref_node instance_var_ref_node
-  dstring_node
+  dstring_node begin_block_node rescue_block_node
 ).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

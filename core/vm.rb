@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame integer string true void hash io file)
+CORE = %w(object class array block false float frame integer string true void hash io file error)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -25,6 +25,7 @@ module Dagon
         add_class("Class", DG_Class.new)
         add_class("Array", DG_ArrayClass.new)
         add_class("Block", DG_BlockClass.new)
+        add_class("Error", DG_ErrorClass.new)
         add_class("False", DG_FalseClass.new)
         add_class("Float", DG_FloatClass.new)
         add_class("Hash", DG_HashClass.new)
@@ -38,9 +39,19 @@ module Dagon
         add_class("IO", DG_IOClass.new)
         add_class("File", DG_FileClass.new(self))
 
-        dg_const_set("STDIN", get_class("IO").dagon_new(self, get_class("Integer").instance(STDIN.fileno)))
-        dg_const_set("STDOUT", get_class("IO").dagon_new(self, get_class("Integer").instance(STDOUT.fileno)))
-        dg_const_set("STDERR", get_class("IO").dagon_new(self, get_class("Integer").instance(STDERR.fileno)))
+        stdin = get_class("IO").dagon_new(self, get_class("Integer").instance(STDIN.fileno))
+        stdout = get_class("IO").dagon_new(self, get_class("Integer").instance(STDOUT.fileno))
+        stderr = get_class("IO").dagon_new(self, get_class("Integer").instance(STDERR.fileno))
+
+        dg_const_set("STDIN", stdin)
+        dg_global_set("$stdin", stdin)
+
+        dg_const_set("STDOUT", stdout)
+        dg_global_set("$stdout", stdout)
+
+        dg_const_set("STDERR", stderr)
+        dg_global_set("$stderr", stderr)
+
 
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
@@ -66,6 +77,14 @@ module Dagon
         current_object.dagon_const_set(name, value)
       end
 
+      def dg_global_set(name, value)
+        @globals[name] = value
+      end
+
+      def dg_global_get(name)
+        @globals[name]
+      end
+
       def add_class name, klass
         dg_const_set(name, klass)
       end
@@ -84,6 +103,12 @@ module Dagon
         @stack.last
       end
 
+      def frame_eval frame, &block
+        push_frame frame
+        block.call
+        pop_frame
+      end
+
       def push_frame frame
         @stack.push frame
         @object = frame.object
@@ -91,7 +116,11 @@ module Dagon
 
       def pop_frame
         @stack.pop
-        @object = frame.object
+        @object = if frame
+                    frame.object
+                  else
+                    nil
+                  end
       end
 
       def dagon_define_class name, parent
@@ -137,6 +166,25 @@ module Dagon
 
       def loaded? filename
         @required_files.include? filename
+      end
+
+      def can_rescue?(error_instance)
+        frame.can_rescue?(error_instance.klass)
+      end
+
+      def dg_raise(error)
+        until frame == nil || can_rescue?(error)
+          pop_frame
+        end
+        if frame == nil
+          dg_global_get("$stderr").dagon_send(self, "puts", error.message)
+        else
+          frame.rescue_from(self, error)
+        end
+      end
+
+      def add_error_to_catch(error, block)
+        frame.add_error_to_catch(error, block)
       end
 
       def error message

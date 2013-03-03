@@ -5,7 +5,7 @@
   machine new_parser;
   newline = "\r"? "\n" | "\r";
   newlines = newline+;
-  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'void';
+  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'void' | 'begin' | 'rescue';
   string = '"' ( /#{[^}]*}/ | [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline;
   constant = upper (alnum | '-')*;
