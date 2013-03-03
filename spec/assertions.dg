@@ -12,7 +12,7 @@ assert-not-equal(lhs, rhs):
 
 assert-raises(block, message):
   begin ->
-    block.call
-    -assert(false) # we should not have gotten here
+    block.call()
+    -assert(false)
   rescue(Error) ->(e)
     assert-equal(e.message, message)

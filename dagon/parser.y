@@ -42,6 +42,7 @@ rule
 
 
   assignment: method_name ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, nil, val[0].variable_name, val[2]) }
+            | method_name ASSIGNMENT multiline_lambda { result = AST::AssignmentNode.new(@filename, nil, val[0].variable_name, val[2]) }
             | '@' method_name ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, nil, "@#{val[1].variable_name}", val[3]) }
 
   expression: expression '-' expression { result = call_on_object(val[0], '-', val[2]) }

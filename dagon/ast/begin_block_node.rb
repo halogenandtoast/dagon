@@ -10,7 +10,8 @@ module Dagon
 
       def evaluate interpreter
         current_object = interpreter.current_object
-        frame = Dagon::Core::Frame.new(current_object, "begin")
+        local_variables = interpreter.frame.local_variables
+        frame = Dagon::Core::Frame.new(current_object, "begin", local_variables)
         interpreter.frame_eval(frame) do
           if @rescue_block
             @rescue_block.evaluate(interpreter)
