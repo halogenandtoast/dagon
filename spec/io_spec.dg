@@ -1,0 +1,12 @@
+describe(IO) ->
+  it("has a fileno") ->
+    assert-equal(STDIN.fileno, 0)
+
+  it("can read, write, and close pipes") ->
+    pipes: IO.pipe
+    read: pipes[0]
+    write: pipes[1]
+    write.write("Wombat")
+    write.close
+    value: read.read
+    assert-equal(value, "Wombat")
