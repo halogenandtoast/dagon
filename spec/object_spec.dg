@@ -1,4 +1,4 @@
-describe(Object) ->
+describe("Object") ->
   it("holds instance variables") ->
     Wombat:
       init:

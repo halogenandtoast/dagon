@@ -1,0 +1,7 @@
+describe(File) ->
+  it("knows the dirname of a file") ->
+    dirname: File.dirname("/dev/null")
+    assert-equal("/dev", dirname)
+
+  it("can join file names together") ->
+    assert-equal("a/b", File.join("a", "b"))
