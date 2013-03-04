@@ -28,10 +28,9 @@ module Dagon
         method = @klass.get_method(name)
         if method
           frame = Frame.new(self, self)
-          interpreter.push_frame frame
-          return_value = method.call(interpreter, self, *args) || Dvoid
-          interpreter.pop_frame
-          return_value
+          interpreter.frame_eval frame do
+            method.call(interpreter, self, *args) || Dvoid
+          end
         else
           $stderr.puts "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
           exit(1)

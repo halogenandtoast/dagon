@@ -23,10 +23,9 @@ module Dagon
                    interpreter.frame.object
                  end
         frame = Dagon::Core::Frame.new(object, @function_name)
-        interpreter.push_frame frame
-        result = object.dagon_send interpreter, @function_name, *arguments
-        interpreter.pop_frame
-        result
+        interpreter.frame_eval frame do
+          object.dagon_send interpreter, @function_name, *arguments
+        end
       end
     end
   end

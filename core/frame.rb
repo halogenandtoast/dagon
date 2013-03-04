@@ -9,6 +9,15 @@ module Dagon
         @catch_all_errors = false
         @rescue_block = nil
         @errors_to_catch = {}
+        @popped = false
+      end
+
+      def pop
+        @popped = true
+      end
+
+      def popped?
+        @popped
       end
 
       def local_variable? name
@@ -32,12 +41,15 @@ module Dagon
       end
 
       def rescue_from(vm, error)
+        result = Dvoid
         if @catch_all_errors
-          @rescue_block.dagon_send(vm, "call", error)
+          result = @rescue_block.dagon_send(vm, "call", error)
         else
           block = @errors_to_catch[error.klass]
-          block.evaluate(vm).dagon_send(vm, "call", error)
+          result = block.evaluate(vm).dagon_send(vm, "call", error)
         end
+        pop
+        result
       end
 
       def add_error_to_catch(error, block)

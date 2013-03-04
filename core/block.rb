@@ -20,14 +20,19 @@ module Dagon
       end
 
       def boot
-        add_method "call", ->(vm, instance, *args) do
+        add_method "call", ->(vm, instance, *args) {
           frame = instance.frame.dup
           instance.arguments.each_with_index { |variable_name, index| frame[variable_name] = args[index] }
-          vm.push_frame(instance.frame)
-          result = instance.statements.map { |statement| statement.evaluate(vm) }.last
-          vm.pop_frame
-          result
-        end
+          vm.frame_eval(frame) {
+            return_value = nil
+            instance.statements.map { |statement|
+              unless frame.popped?
+                return_value = statement.evaluate(vm)
+              end
+            }
+            return_value
+          }
+        }
       end
 
       def dagon_new interpreter, statements, frame, arguments

@@ -69,6 +69,15 @@ module Dagon
         dg_const_set("ARGV", get_class("Array").dagon_new(self, values))
       end
 
+      def frame_eval current_frame, &block
+        push_frame current_frame
+        result = block.call
+        if frame == current_frame
+          pop_frame
+        end
+        result
+      end
+
       def current_object
         @stack[0].object
       end
@@ -103,18 +112,13 @@ module Dagon
         @stack.last
       end
 
-      def frame_eval frame, &block
-        push_frame frame
-        block.call
-        pop_frame
-      end
-
       def push_frame frame
         @stack.push frame
         @object = frame.object
       end
 
       def pop_frame
+        frame.pop
         @stack.pop
         @object = if frame
                     frame.object

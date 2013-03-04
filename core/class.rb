@@ -5,6 +5,7 @@ module Dagon
       def initialize name = nil, parent = nil
         @constants = {}
         @methods = {
+          pry: ->(vm, ref, *args) { vm.pry },
           methods: ->(vm, ref, *args) { vm.get_class("Array").dagon_new(vm, @methods.keys) },
           init: ->(vm, ref, *args) { },
           exit: ->(vm, ref, *args) { exit(0) },
