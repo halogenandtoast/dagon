@@ -48,7 +48,7 @@ module Dagon
           block = @errors_to_catch[error.klass]
           result = block.evaluate(vm).dagon_send(vm, "call", error)
         end
-        pop
+        pop # this is a pretty naive solution, we need something better but not sure what
         result
       end
 

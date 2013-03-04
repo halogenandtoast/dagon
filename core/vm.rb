@@ -182,6 +182,7 @@ module Dagon
         end
         if frame == nil
           dg_global_get("$stderr").dagon_send(self, "puts", error.message)
+          exit(1)
         else
           frame.rescue_from(self, error)
         end
