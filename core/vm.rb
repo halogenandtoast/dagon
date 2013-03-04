@@ -12,12 +12,13 @@ module Dagon
       def initialize main = nil
         @load_paths = [File.expand_path(".")]
         @required_files = []
-        @object = main || Dagon::Core::DG_Object.new
         @stack = []
-        @stack.push Frame.new(@object, '(toplevel)')
+        @top_object = main || Dagon::Core::DG_Object.new
+        @stack.push Frame.new(@top_object, '(toplevel)')
         @globals = {}
         @classes = {}
         @arguments = []
+        @catch_all_errors = false
         boot_core
       end
 
@@ -79,7 +80,7 @@ module Dagon
       end
 
       def current_object
-        @stack[0].object
+        frame.object
       end
 
       def dg_const_set(name, value)
@@ -99,7 +100,7 @@ module Dagon
       end
 
       def get_class name
-        current_object.dagon_const_get(name)
+        @top_object.dagon_const_get(name)
       end
 
       def add_load_path path
@@ -114,24 +115,22 @@ module Dagon
 
       def push_frame frame
         @stack.push frame
-        @object = frame.object
       end
 
       def pop_frame
         frame.pop
         @stack.pop
-        @object = frame.object
       end
 
       def dagon_define_class name, parent
-        @object.dagon_define_class name, parent
+        current_object.dagon_define_class name, parent
       end
 
       def define_function name, block
-        if @object.respond_to? :add_method
-          @object.add_method name, block
+        if current_object.respond_to? :add_method
+          current_object.add_method name, block
         else
-          @object.klass.add_method name, block
+          current_object.klass.add_method name, block
         end
       end
 
@@ -177,11 +176,20 @@ module Dagon
           pop_frame
         end
         if frame == nil
-          dg_global_get("$stderr").dagon_send(self, "puts", error.message)
-          exit(1)
+          dg_global_get("$stderr").dagon_send(self, "puts", error.printable_error(self))
+          unless @catch_all_errors
+            exit(1)
+          else
+            @stack.push Frame.new(@top_object, '(toplevel)')
+            nil
+          end
         else
           frame.rescue_from(self, error)
         end
+      end
+
+      def catch_all_errors
+        @catch_all_errors = true
       end
 
       def add_error_to_catch(error, block)
@@ -189,8 +197,9 @@ module Dagon
       end
 
       def error message
-        $stderr.puts message
-        exit(1)
+        error_string = get_class("String").dagon_new(self, message)
+        error = get_class("Error").dagon_new(self, error_string)
+        dg_raise(error)
       end
     end
   end

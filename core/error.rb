@@ -8,7 +8,11 @@ module Dagon
       end
 
       def to_s
-        @message
+        "#{@klass}: #{@message}"
+      end
+
+      def printable_error(vm)
+        vm.get_class("String").dagon_new(vm, to_s)
       end
     end
 
@@ -19,6 +23,9 @@ module Dagon
 
       def boot
         add_method "message", ->(vm, ref) {
+          ref.message
+        }
+        add_method "to-s", ->(vm, ref) {
           ref.message
         }
         add_class_method "raise", ->(vm, ref, message="") {

@@ -32,8 +32,7 @@ module Dagon
             method.call(interpreter, self, *args) || Dvoid
           end
         else
-          $stderr.puts "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
-          exit(1)
+          interpreter.error "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
         end
       end
 

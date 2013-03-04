@@ -7,10 +7,14 @@ require './build/scanner'
 require './build/parser'
 
 vm = Dagon::Core::VM.new
+vm.catch_all_errors
 filename = '(stdin)'
 while line = Readline.readline('idg:> ', true)
   tokens = Dagon::Scanner.tokenize(line, filename)
   tree = Dagon::Parser.parse(tokens, line, false)
-  puts "=> #{tree.evaluate(vm).to_s}"
+  value = tree.evaluate(vm)
+  if value
+    puts "=> #{value.to_s}"
+  end
 end
 
