@@ -32,7 +32,9 @@ module Dagon
             method.call(interpreter, self, *args) || Dvoid
           end
         else
-          interpreter.error "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
+          error_message = "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
+          error = interpreter.get_class("NoMethodError").dagon_new(interpreter, error_message)
+          interpreter.dg_raise(error)
         end
       end
 

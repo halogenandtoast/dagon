@@ -38,5 +38,11 @@ module Dagon
         DG_Error.new(value, self)
       end
     end
+
+    class DG_NoMethodErrorClass < DG_ErrorClass
+      def initialize
+        super("NoMethodError")
+      end
+    end
   end
 end

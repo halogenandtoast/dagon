@@ -35,6 +35,8 @@ module Dagon
         add_class("True", DG_TrueClass.new)
         add_class("Void", DG_VoidClass.new)
 
+        add_class("NoMethodError", DG_NoMethodErrorClass.new)
+
         dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
 
         add_class("IO", DG_IOClass.new)
