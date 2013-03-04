@@ -56,7 +56,7 @@
     comma => { emit(:COMMA, data, ts, te) };
     space;
 
-    any => { problem(data, ts, te) };
+    any => { problem(data, ts, te); fbreak; };
   *|;
 }%%
 =end
@@ -107,13 +107,24 @@ module Dagon
     end
 
     def problem(data, ts, te)
-      puts "Unexpected \"#{data[ts...te]}\" on line #{@line}\n" +
+      message = "Unexpected \"#{data[ts...te]}\" on line #{@line}\n" +
             "#{@line}: #{@lines[@line-1]}"
-      exit(1)
+      @data = ""
+      @eof = -1
+      if @error_handler
+        @error_handler.call(message)
+      else
+        $stderr.puts message
+        exit(1)
+      end
     end
 
-    def self.tokenize data, filename
-      new.tokenize(data, filename)
+    def self.tokenize data, filename, &error_handler
+      new.tokenize(data, filename, &error_handler)
+    end
+
+    def eof
+      @eof
     end
 
     def reset
@@ -125,13 +136,14 @@ module Dagon
       @check_indents = true
     end
 
-    def tokenize(data, filename)
+    def tokenize(data, filename, &error_handler)
       @filename = filename
       @data = data
       @lines = data.lines.to_a
+      @error_handler = error_handler if block_given?
       reset
       %% write init;
-      eof = data.length
+      @eof = data.length
       %% write exec;
       @check_indents = true
       if @indent_count != 0

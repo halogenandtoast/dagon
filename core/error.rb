@@ -44,5 +44,17 @@ module Dagon
         super("NoMethodError")
       end
     end
+
+    class DG_ArgumentErrorClass < DG_ErrorClass
+      def initialize
+        super("ArgumentError")
+      end
+    end
+
+    class DG_SyntaxErrorClass < DG_ErrorClass
+      def initialize
+        super("SyntaxError")
+      end
+    end
   end
 end

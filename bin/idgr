@@ -10,8 +10,17 @@ vm = Dagon::Core::VM.new
 vm.catch_all_errors
 filename = '(stdin)'
 while line = Readline.readline('idg:> ', true)
-  tokens = Dagon::Scanner.tokenize(line, filename)
-  tree = Dagon::Parser.parse(tokens, line, false)
+  failed = false
+  tokens = Dagon::Scanner.tokenize(line, filename) do |error|
+    vm.error("SyntaxError", error)
+    failed = true
+  end
+  next if failed
+  tree = Dagon::Parser.parse(tokens, line, false) do |error, stack|
+    vm.error("SyntaxError", error)
+    failed = true
+  end
+  next if failed
   value = tree.evaluate(vm)
   if value
     puts "=> #{value.to_s}"

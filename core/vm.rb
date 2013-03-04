@@ -36,6 +36,8 @@ module Dagon
         add_class("Void", DG_VoidClass.new)
 
         add_class("NoMethodError", DG_NoMethodErrorClass.new)
+        add_class("ArgumentError", DG_ArgumentErrorClass.new)
+        add_class("SyntaxError", DG_SyntaxErrorClass.new)
 
         dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
 
@@ -198,9 +200,8 @@ module Dagon
         frame.add_error_to_catch(error, block)
       end
 
-      def error message
-        error_string = get_class("String").dagon_new(self, message)
-        error = get_class("Error").dagon_new(self, error_string)
+      def error klass, message
+        error = get_class(klass).dagon_new(self, message)
         dg_raise(error)
       end
     end

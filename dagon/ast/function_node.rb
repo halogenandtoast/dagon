@@ -9,8 +9,7 @@ module Dagon
 
       def call(interpreter, object, *args)
         unless args.size == @params.size
-          $stderr.puts "Wrong"
-          exit(1)
+          interpreter.error("ArgumentError", "wrong number of arguments (#{args.size} for #{@params.size})")
         end
         frame = interpreter.frame
         args.each_with_index do |arg, index|

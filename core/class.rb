@@ -85,8 +85,7 @@ module Dagon
         elsif @parent != self
           @parent.dagon_send(interpreter, name, *args)
         else
-          $stderr.puts "undefined method #{name} for #{to_s}"
-          exit(1)
+          interpreter.error("NoMethodError", "undefined method #{name} for #{to_s}")
         end
       end
 

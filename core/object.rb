@@ -33,8 +33,7 @@ module Dagon
           end
         else
           error_message = "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
-          error = interpreter.get_class("NoMethodError").dagon_new(interpreter, error_message)
-          interpreter.dg_raise(error)
+          interpreter.error("NoMethodError", error_message)
         end
       end
 

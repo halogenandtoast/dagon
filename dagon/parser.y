@@ -134,19 +134,20 @@ rule
 
 ---- inner
 
-  def initialize(tokens, filename, debug = false)
+  def initialize(tokens, filename, debug = false, &error_handler)
     @yydebug = debug
     @filename = filename
     @tokens = tokens
     @line = 0
+    @error_handler = error_handler if block_given?
   end
 
   def parse
     do_parse
   end
 
-  def self.parse(tokens, filename, debug = false)
-    new(tokens, filename, debug).parse
+  def self.parse(tokens, filename, debug = false, &on_error)
+    new(tokens, filename, debug, &on_error).parse
   end
 
   private
@@ -156,8 +157,13 @@ rule
   end
 
   def on_error error_token_id, error_value, value_stack
-    $stderr.puts "#{@filename}:#{error_value.line}: syntax error, unexpected #{error_value.data.inspect}", value_stack.inspect
-    exit
+    message = "#{@filename}:#{error_value.line}: syntax error, unexpected #{error_value.data.inspect}"
+    if @error_handler
+      @error_handler.call(message, value_stack)
+    else
+      $stderr.puts message, value_stack.inspect
+      exit
+    end
   end
 
   def call_on_object(object, method, *args)
