@@ -120,11 +120,7 @@ module Dagon
       def pop_frame
         frame.pop
         @stack.pop
-        @object = if frame
-                    frame.object
-                  else
-                    nil
-                  end
+        @object = frame.object
       end
 
       def dagon_define_class name, parent
