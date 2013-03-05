@@ -83,6 +83,8 @@ rule
   method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
 
   term: '@' IDENTIFIER { result = AST::InstanceVarRefNode.new(@filename, nil, "@#{val[1].data}") }
+      | '$' IDENTIFIER { result = AST::GlobalVarRefNode.new(@filename, nil, "$#{val[1].data}") }
+      | '$' CONSTANT { result = AST::GlobalVarRefNode.new(@filename, nil, "$#{val[1].data}") }
       | IDENTIFIER { result = AST::VarRefNode.new(@filename, nil, val[0].data) }
       | CONSTANT { result = AST::ConstantRefNode.new(@filename, nil, val[0].data) }
       | literal
@@ -129,7 +131,7 @@ rule
   string_node literal_node var_ref_node if_node assignment_node while_node
   class_definition_node instance_init_node block_node hash_node array_node
   unary_function_call_node constant_ref_node instance_var_ref_node
-  dstring_node begin_block_node rescue_block_node
+  dstring_node begin_block_node rescue_block_node global_var_ref_node
 ).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

@@ -10,6 +10,7 @@ module Dagon
     class VM
       attr_reader :globals
       def initialize main = nil
+        $runtime = self
         @load_paths = [File.expand_path(".")]
         @required_files = []
         @stack = []
@@ -56,6 +57,8 @@ module Dagon
 
         dg_const_set("STDERR", stderr)
         dg_global_set("$stderr", stderr)
+
+        dg_global_set("$LOAD_PATH", get_class("Array").dagon_new(self, @load_paths))
 
 
         unless Kernel.const_defined?("Dtrue")

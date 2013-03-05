@@ -38,6 +38,12 @@ module Dagon
           result = ref.list.reject{ |item| item == Dvoid }
           DG_Array.new(result, self)
         }
+        add_method 'unshift', ->(vm, ref, object) {
+          ref.list.unshift(object)
+        }
+        add_method 'empty', ->(vm, ref) {
+          ref.list.empty? ? Dtrue : Dfalse
+        }
         add_method 'length', ->(vm, ref) {
           vm.get_class('Integer').instance(ref.list.length)
         }
