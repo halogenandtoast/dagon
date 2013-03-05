@@ -40,6 +40,7 @@ module Dagon
         add_class("NoMethodError", DG_NoMethodErrorClass.new)
         add_class("ArgumentError", DG_ArgumentErrorClass.new)
         add_class("SyntaxError", DG_SyntaxErrorClass.new)
+        add_class("LoadError", DG_LoadErrorClass.new)
 
         dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
 
@@ -144,8 +145,8 @@ module Dagon
 
       def find_file_path filename
         @load_paths.each do |path|
-          if File.exists? File.join(path, "#{filename}.dg")
-            return File.join(path, "#{filename}.dg")
+          if File.exists? File.join(path, filename)
+            return File.join(path, filename)
           end
         end
         nil
@@ -159,13 +160,14 @@ module Dagon
         path = find_file_path(file)
         if path
           @required_files << path
+          vm = VM.new(@top_object)
           program = File.read(path)
           tokens = Dagon::Scanner.tokenize(program, file)
           tree = Dagon::Parser.parse(tokens, file, false)
-          tree.evaluate(self)
+          tree.evaluate(vm)
           Dtrue
         else
-          error "No such file or directory - #{file}\n" +
+          error "LoadError", "No such file or directory - #{file}\n" +
           "Searched: \n" +
           @load_paths.map{ |path| " #{path}"}.join("\n")
         end

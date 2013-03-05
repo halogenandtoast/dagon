@@ -41,6 +41,9 @@ module Dagon
         add_method 'unshift', ->(vm, ref, object) {
           ref.list.unshift(object)
         }
+        add_method 'shift', ->(vm, ref) {
+          ref.list.shift
+        }
         add_method 'empty', ->(vm, ref) {
           ref.list.empty? ? Dtrue : Dfalse
         }

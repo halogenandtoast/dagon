@@ -17,7 +17,7 @@ module Dagon
             tree = Dagon::Parser.parse(tokens, '(eval)', false)
             tree.evaluate(vm)
           },
-          require: ->(vm, ref, *args) {
+          load: ->(vm, ref, *args) {
             filename = args[0]
             if vm.loaded? filename
               Dfalse
@@ -25,6 +25,10 @@ module Dagon
               vm.load_file filename
               Dtrue
             end
+          },
+          require: ->(vm, ref, *args) {
+            filename = vm.get_class("String").dagon_new(vm, "#{args[0]}.dg")
+            @methods[:load].call(vm, ref, filename)
           }
         }
         @class_ivars = {}

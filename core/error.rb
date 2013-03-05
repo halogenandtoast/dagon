@@ -56,5 +56,11 @@ module Dagon
         super("SyntaxError")
       end
     end
+
+    class DG_LoadErrorClass < DG_ErrorClass
+      def initialize
+        super("LoadError")
+      end
+    end
   end
 end

@@ -1,6 +1,3 @@
-require("assertions")
-require("dspec")
-
 describe("Array") ->
   it("can be accessed") ->
     array: [1, 2, 3]

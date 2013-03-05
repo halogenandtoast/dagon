@@ -1,41 +1,26 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env dagon
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..")
+require("spec/dspec")
+require("spec/assertions")
 
-require './build/scanner'
-require './build/parser'
-require 'core/vm'
+ARGV.shift
 
-def spec_files
-  if !ARGV.empty?
-    ARGV
+spec-files:
+  if ARGV.empty
+    Dir.glob("spec/*_spec.dg")
   else
-    Dir.glob('spec/*_spec.dg')
-  end
-end
+    ARGV
 
-class DSpecRunner
-  def initialize spec_files
-    @spec_files = spec_files
-    @vm = Dagon::Core::VM.new
-  end
+DSpecRunner:
+  init(spec-files):
+    @spec-files: spec-files
 
-  def run_tests
-    vm.load_dg("spec/dspec")
-    run_spec_files
-  end
+  run-tests:
+    run-spec-files
 
-  private
-  attr_reader :spec_files, :vm
+  run-spec-files:
+    @spec-files.each ->(file)
+      load(file)
 
-  def run_spec_files
-    spec_files.each do |file|
-      path = File.dirname(File.join(Dir.getwd, file))
-      vm.add_load_path path
-      vm.load_dg(file.gsub(/\.dg$/, ''))
-    end
-  end
-end
-
-runner = DSpecRunner.new(spec_files)
-runner.run_tests
+runner: DSpecRunner(spec-files)
+runner.run-tests()
