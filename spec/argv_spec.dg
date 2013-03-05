@@ -1,7 +1,4 @@
 describe("ARGV") ->
-  it("starts as an empty array") ->
-    assert-equal(ARGV, [])
-
   it("contains arguments passed in") ->
     output: system("dagon examples/argv_example.dg hello world")
     assert-equal(output, "examples/argv_example.dg\nhello\nworld\n")

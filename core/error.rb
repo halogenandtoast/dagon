@@ -62,5 +62,11 @@ module Dagon
         super("LoadError")
       end
     end
+
+    class DG_NameErrorClass < DG_ErrorClass
+      def initialize
+        super("NameError")
+      end
+    end
   end
 end

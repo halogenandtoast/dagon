@@ -21,6 +21,7 @@ module Dagon
         @arguments = []
         @catch_all_errors = false
         boot_core
+        set_arguments(ARGV)
       end
 
       def boot_core
@@ -41,6 +42,7 @@ module Dagon
         add_class("ArgumentError", DG_ArgumentErrorClass.new)
         add_class("SyntaxError", DG_SyntaxErrorClass.new)
         add_class("LoadError", DG_LoadErrorClass.new)
+        add_class("NameError", DG_NameErrorClass.new)
 
         dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
 
@@ -96,6 +98,15 @@ module Dagon
         current_object.dagon_const_set(name, value)
       end
 
+      def dg_const_get(name)
+        @stack.reverse.each do |frame|
+          if const = frame.object.dagon_const_get(name)
+            return const
+          end
+        end
+        error "NameError", "uninitialized constant #{name}"
+      end
+
       def dg_global_set(name, value)
         @globals[name] = value
       end
@@ -145,8 +156,9 @@ module Dagon
 
       def find_file_path filename
         @load_paths.each do |path|
-          if File.exists? File.join(path, filename)
-            return File.join(path, filename)
+          file_path = File.join(path, filename)
+          if File.exists? file_path
+            return file_path
           end
         end
         nil
