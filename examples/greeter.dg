@@ -1,6 +1,8 @@
 Greeter:
-  greet(name):
-    puts("Hello " + name)
+  init(name):
+    @name: name
+  salute:
+    puts("Hello #{@name}!")
 
-greeter: Greeter()
-greeter.greet("wombat")
+greeter: Greeter("wombat")
+greeter.salute

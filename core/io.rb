@@ -8,6 +8,32 @@ module Dagon
         @klass = klass
       end
 
+      def write_string string
+        @io.write(string.value)
+      end
+
+      def write_array array
+        array.list.each do |item|
+          dg_puts(item)
+        end
+      end
+
+      def dg_puts *args
+        args.each do |arg|
+          if arg.class == DG_String
+            write_string(arg)
+          elsif arg.class == DG_Array
+            write_array(arg)
+            next
+          else
+            value = arg.to_s
+            @io.write(value)
+          end
+          @io.puts
+        end
+        Dvoid
+      end
+
       def to_s
         case @file_descriptor.value
         when 0 then "#<IO:<STDIN>>"
@@ -29,10 +55,10 @@ module Dagon
           ref.instance_variable_set("@file_descriptor", file_descriptor)
         }
         add_method "write", ->(vm, ref, string) {
-          ref.io.write(string.value)
+          ref.write_string(string)
         }
-        add_method "puts", ->(vm, ref, string) {
-          ref.io.puts(string.value)
+        add_method "puts", ->(vm, ref, *args) {
+          ref.dg_puts(*args)
         }
         add_method "close", ->(vm, ref) {
           ref.io.close

@@ -1,0 +1,3 @@
+cities: ["London", "Oslo", "Paris", "Amsterdam", "Berlin"]
+visited: ["Berlin", "Oslo"]
+puts("I still need to visit the following cities", cities - visited)

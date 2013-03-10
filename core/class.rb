@@ -8,7 +8,7 @@ module Dagon
           methods: ->(vm, ref, *args) { vm.get_class("Array").dagon_new(vm, @methods.keys) },
           init: ->(vm, ref, *args) { },
           exit: ->(vm, ref, *args) { exit(0) },
-          puts: ->(vm, ref, *args) { puts *args.map(&:to_s) },
+          puts: ->(vm, ref, *args) { vm.dg_const_get("STDOUT").dagon_send(vm, "puts", *args) },
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
           gets: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, $stdin.gets) },
           system: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, Kernel.send(:`, *args.map(&:to_s))) },
