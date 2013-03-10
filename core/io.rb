@@ -54,8 +54,8 @@ module Dagon
         add_method "init", ->(vm, ref, file_descriptor) {
           ref.instance_variable_set("@file_descriptor", file_descriptor)
         }
-        add_method "write", ->(vm, ref, string) {
-          ref.write_string(string)
+        add_method "write", ->(vm, ref, value) {
+          ref.io.write(value.to_s)
         }
         add_method "puts", ->(vm, ref, *args) {
           ref.dg_puts(*args)

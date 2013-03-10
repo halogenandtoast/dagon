@@ -7,17 +7,34 @@ describe(IO) ->
     write.close
     read.read
 
+  io-write(value):
+    pipes: IO.pipe
+    read: pipes[0]
+    write: pipes[1]
+    write.write(value)
+    write.close
+    read.read
+
   it("has a fileno") ->
     assert-equal(STDIN.fileno, 0)
 
   it("can puts strings") ->
     assert-equal(io-puts("Wombat"), "Wombat\n")
 
+  it("can write strings") ->
+    assert-equal(io-write("Wombat"), "Wombat")
+
   it("can puts numbers") ->
     assert-equal(io-puts(1), "1\n")
 
+  it("can write numbers") ->
+    assert-equal(io-write(1), "1")
+
   it("can print arrays") ->
     assert-equal(io-puts([1, 2, 3]), "1\n2\n3\n")
+
+  it("can write arrays") ->
+    assert-equal(io-write([1, 2, 3]), "[1, 2, 3]")
 
   it("can puts multple values") ->
     pipes: IO.pipe
