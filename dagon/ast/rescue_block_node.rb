@@ -13,7 +13,7 @@ module Dagon
             interpreter.add_error_to_catch(dagon_error, @block)
           end
         else
-          interpreter.catch_all_errors(@block)
+          interpreter.rescue_from_all_errors(@block.evaluate(interpreter))
         end
       end
     end

@@ -4,7 +4,9 @@ module Dagon
   module Core
     class Void < DG_Object
       include Singleton
+      attr_reader :value
       def initialize
+        @value = nil
         @klass = DG_VoidClass.new
       end
 

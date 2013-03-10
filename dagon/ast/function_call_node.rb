@@ -24,7 +24,12 @@ module Dagon
                  end
         frame = Dagon::Core::Frame.new(object, @function_name)
         interpreter.frame_eval frame do
-          object.dagon_send interpreter, @function_name, *arguments
+          if object
+            object.dagon_send interpreter, @function_name, *arguments
+          else
+            $stderr.puts "Could not call #{@function_name} on nil"
+            exit(1)
+          end
         end
       end
     end

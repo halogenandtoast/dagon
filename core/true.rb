@@ -3,6 +3,7 @@ require 'singleton'
 module Dagon
   module Core
     class True < DG_Object
+      attr_reader :value
       include Singleton
       def initialize
         @value = true

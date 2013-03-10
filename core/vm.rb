@@ -8,10 +8,10 @@ require "pry"
 module Dagon
   module Core
     class VM
-      attr_reader :globals, :top_object
+      attr_reader :globals, :top_object, :load_paths
       def initialize main = nil
         $runtime = self
-        @load_paths = [File.expand_path(".")]
+        @load_paths = [File.expand_path("."), File.join(File.dirname(__FILE__), "..", "lib")]
         @required_files = []
         @stack = []
         @top_object = main || Dagon::Core::DG_Object.new
@@ -214,6 +214,10 @@ module Dagon
         @catch_all_errors = true
       end
 
+      def rescue_from_all_errors(block)
+        frame.catch_all_errors(block)
+      end
+
       def add_error_to_catch(error, block)
         frame.add_error_to_catch(error, block)
       end
@@ -221,6 +225,10 @@ module Dagon
       def error klass, message
         error = get_class(klass).dagon_new(self, message)
         dg_raise(error)
+      end
+
+      def is_truthy object
+        object != Dfalse && object != Dvoid
       end
     end
   end

@@ -8,7 +8,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        interpreter.current_object.dagon_const_get(@constant_name)
+        interpreter.dg_const_get(@constant_name)
       end
     end
   end

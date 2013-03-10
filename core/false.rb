@@ -4,6 +4,7 @@ module Dagon
   module Core
     class False < DG_Object
       include Singleton
+      attr_reader :value
 
       def initialize
         @value = false

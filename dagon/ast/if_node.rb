@@ -9,7 +9,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        if @condition.evaluate(interpreter) == Dtrue
+        if interpreter.is_truthy(@condition.evaluate(interpreter))
           execute_list interpreter, @true_statements
         else
           execute_list interpreter, @false_statements if @false_statements
