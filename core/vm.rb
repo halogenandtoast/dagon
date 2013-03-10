@@ -90,6 +90,13 @@ module Dagon
         result
       end
 
+      def top_level_eval &block
+        above = @stack.pop(@stack.length - 1)
+        result = block.call
+        @stack += above
+        result
+      end
+
       def current_object
         frame.object
       end

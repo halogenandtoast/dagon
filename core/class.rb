@@ -21,7 +21,9 @@ module Dagon
               vm.error("SyntaxError", error)
               return
             end
-            tree.evaluate(vm)
+            vm.top_level_eval do
+              tree.evaluate(vm)
+            end
           },
           load: ->(vm, ref, *args) {
             filename = args[0]
