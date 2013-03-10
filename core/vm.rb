@@ -222,12 +222,12 @@ module Dagon
         frame.add_error_to_catch(error, block)
       end
 
-      def error klass, message
+      def error(klass, message)
         error = get_class(klass).dagon_new(self, message)
         dg_raise(error)
       end
 
-      def is_truthy object
+      def is_truthy(object)
         object != Dfalse && object != Dvoid
       end
     end
