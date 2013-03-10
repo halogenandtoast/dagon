@@ -8,10 +8,6 @@ module Dagon
         @klass = klass
       end
 
-      def write_string string
-        @io.write(string.value)
-      end
-
       def write_array array
         array.list.each do |item|
           dg_puts(item)
@@ -21,7 +17,7 @@ module Dagon
       def dg_puts *args
         args.each do |arg|
           if arg.class == DG_String
-            write_string(arg)
+            @io.write(arg.value)
           elsif arg.class == DG_Array
             write_array(arg)
             next
