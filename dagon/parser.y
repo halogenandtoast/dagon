@@ -9,7 +9,7 @@ prechigh
   nonassoc '>' '<' '>=' '<=' '=' '!='
 preclow
 rule
-  program: { result = [] }
+  program: { result = AST::RootNode.new([]) }
          | statements { result = AST::RootNode.new(val[0]) }
 
   block: INDENT statements DEDENT { result = val[1] }
