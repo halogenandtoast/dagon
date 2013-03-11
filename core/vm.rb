@@ -8,7 +8,7 @@ require "pry"
 module Dagon
   module Core
     class VM
-      attr_reader :globals, :top_object, :load_paths
+      attr_reader :globals, :top_object, :load_paths, :stack
       def initialize main = nil
         $runtime = self
         @load_paths = [File.expand_path("."), File.join(File.dirname(__FILE__), "..", "lib")]
@@ -91,10 +91,8 @@ module Dagon
       end
 
       def top_level_eval &block
-        above = @stack.pop(@stack.length - 1)
-        result = block.call
-        @stack += above
-        result
+        frame = @stack[0].dup
+        frame_eval frame, &block
       end
 
       def current_object

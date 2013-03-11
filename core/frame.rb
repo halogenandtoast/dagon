@@ -1,7 +1,8 @@
 module Dagon
   module Core
     class Frame
-      attr_reader :object, :frame_name, :local_variables
+      attr_accessor :frame_name
+      attr_reader :object, :local_variables
       def initialize object, frame_name, local_variables = {}
         @object = object
         @frame_name = frame_name
@@ -46,7 +47,7 @@ module Dagon
           result = @rescue_block.dagon_send(vm, "call", error)
         else
           block = @errors_to_catch[error.klass]
-          result = block.evaluate(vm).dagon_send(vm, "call", error)
+          result = block.dagon_send(vm, "call", error)
         end
         pop # this is a pretty naive solution, we need something better but not sure what
         result

@@ -3,9 +3,10 @@ require "core/class"
 module Dagon
   module Core
     class DG_Object
-      attr_reader :klass
+      attr_reader :klass, :value
       def initialize klass = nil
         @ivars = {}
+        @value = self
         @klass = klass || DG_Class.new
       end
 

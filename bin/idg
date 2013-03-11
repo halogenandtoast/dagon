@@ -7,18 +7,15 @@ Idg:
     Readline.readline("idg:> ", true)
 
   start:
-    continue: true
-    while continue
+    while true
       line: read-line
-      if line
-        begin ->
+      begin ->
+        if line != ""
           result: eval(line)
           print("=> ")
           puts(result.inspect)
-        rescue ->(e)
-          puts(e.message)
-      else
-        continue: false
+      rescue ->(e)
+        puts(e.message)
 
 idg: Idg()
 idg.start()
