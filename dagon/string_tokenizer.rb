@@ -39,6 +39,7 @@ module Dagon
               program << program_char
             end
             @tokens += Scanner.tokenize(program, '(streval)')
+            @tokens.pop # POP NEWLINE
           else
             io.ungetc(next_char)
             actual_string << current_char

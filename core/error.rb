@@ -1,14 +1,16 @@
 module Dagon
   module Core
     class DG_Error < DG_Object
-      attr_reader :message
-      def initialize message, klass
+      attr_reader :message, :filename, :line_number
+      def initialize filename, line_number, message, klass
+        @filename = filename
+        @line_number = line_number
         @message = message
         @klass = klass
       end
 
       def to_s
-        "#{@klass}: #{@message}"
+        "#{filename}:#{line_number} #{@message} (#{@klass})"
       end
 
       def printable_error(vm)
@@ -35,7 +37,7 @@ module Dagon
       end
 
       def dagon_new interpreter, value
-        DG_Error.new(value, self)
+        DG_Error.new(interpreter.filename, interpreter.line_number, value, self)
       end
     end
 

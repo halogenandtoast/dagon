@@ -2,3 +2,5 @@ begin ->
   Error.raise("Wombat core failure")
 rescue(Error) ->(e)
   puts("Rescued safely from #{e.message}")
+
+wombat

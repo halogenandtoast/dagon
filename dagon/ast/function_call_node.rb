@@ -13,6 +13,7 @@ module Dagon
       end
 
       def evaluate interpreter
+        interpreter.notify(self)
         arguments = @arguments.map { |argument| argument.evaluate interpreter }
         if @block
           arguments << @block.evaluate(interpreter)

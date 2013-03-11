@@ -3,11 +3,10 @@
 =begin
 %%{
   machine new_parser;
-  newline = "\r"? "\n" | "\r";
-  newlines = newline+;
+  newline = ("\r"? "\n" | "\r") %{ @last_was_newline = true };
   keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'void' | 'begin' | 'rescue';
   string = '"' ( /#{[^}]*}/ | [^"\\] | /\\./ )* '"';
-  comment = '#' (any - newline)* newline;
+  comment = '#' (any - newline)* newline %{ @line += 1 };
   constant = upper (alnum | '_')*;
   identifier = '-'? lower (lower | digit | '-')*;
   assignment = ': ';
@@ -26,13 +25,14 @@
   dot = '.';
   float = digit+ '.' digit+;
   integer = '-'? digit+;
-  indent = "  ";
+  indent = "  "+;
   at = "@";
   dollar = "$";
 
   main := |*
-    newlines { @last_indent_count = @indent_count; @indent_count = 0; @line += data[ts...te].lines.count; @column = 0; @check_indents = true };
-    comment { handle_indents };
+    comment;
+    indent => { indent(data, ts, te) };
+    newline => { newline; @line += 1 };
     keyword => { emit(data[ts...te].upcase.to_sym, data, ts, te) };
     string => { parse_string(data, ts, te) };
     constant => { emit(:CONSTANT, data, ts, te) };
@@ -42,7 +42,6 @@
     colon => { emit(':', data, ts, te) };
     float => { emit(:FLOAT, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
-    indent => { @indent_count += 1; };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };
     lbrace => { emit(:LBRACE, data, ts, te) };
@@ -67,7 +66,15 @@ require 'stringio'
 require 'dagon/string_tokenizer'
 
 module Dagon
-  class Token < Struct.new(:data, :line); end
+  class Token < Struct.new(:data, :line)
+    def to_s
+      data.inspect
+    end
+
+    def inspect
+      data.inspect
+    end
+  end
   class Scanner
 
     def initialize
@@ -75,8 +82,54 @@ module Dagon
       # % fix syntax highlighting
     end
 
+    def newline
+      if !@tokens.empty? && @tokens.last[0] != :NEWLINE
+        @tokens << [:NEWLINE, Token.new("\n", @line)]
+      end
+    end
+
+    def pop_newlines
+      while @tokens.last && @tokens.last[0] == :NEWLINE
+        @tokens.pop
+      end
+    end
+
+    def indent data, ts, te
+      @last_was_newline = false
+      indent_count = (te - ts) / 2
+      if indent_count > @current_indents
+        pop_newlines
+        (indent_count - @current_indents).times do
+          @tokens << [:INDENT, Token.new("<indent>", @line)]
+        end
+      end
+      if @current_indents > indent_count
+        pop_newlines
+        newline
+        (@current_indents - indent_count).times do
+          @tokens << [:DEDENT, Token.new("<dedent>", @line)]
+          newline
+        end
+        newline
+      end
+      @current_indents = indent_count
+    end
+
     def emit(name, data, start_char, end_char)
-      handle_indents
+      if name == :ELSE || name == :ELSEIF
+        pop_newlines
+      end
+      if name == :RESCUE && @tokens.last && @tokens.last[0] == :NEWLINE
+        pop_newlines
+      end
+      if @last_was_newline
+        @current_indents.times do
+          @tokens << [:DEDENT, Token.new("<dedent>", @line)]
+          newline
+        end
+        @current_indents = 0
+      end
+      @last_was_newline = false
       if @tokens.last && @tokens.last[0] == :IDENTIFIER && name == :LBRACKET
         @tokens << ['[', Token.new(data[start_char...end_char], @line)]
       else
@@ -86,26 +139,11 @@ module Dagon
     end
 
     def parse_string(data, start_char, end_char)
-      handle_indents
+      @last_was_newline = false
       tokens = StringTokenizer.new(data, start_char, end_char).tokenize
       @tokens += tokens
       @column += end_char - start_char
-    end
-
-    def handle_indents
-      if @check_indents
-        @check_indents = false
-        if @indent_count > @last_indent_count
-          (@indent_count - @last_indent_count).times do
-            @tokens << [:INDENT, Token.new("  ", @line)]
-          end
-        elsif @indent_count < @last_indent_count
-          (@last_indent_count - @indent_count).times do
-            @tokens << [:DEDENT, Token.new("  ", @line)]
-          end
-          @last_indent_count = @indent_count
-        end
-      end
+      @last_was_newline = false
     end
 
     def problem(data, ts, te)
@@ -133,26 +171,30 @@ module Dagon
       @line = 1
       @column = 0
       @tokens = []
-      @indent_count = 0
-      @last_indent_count = 0
-      @check_indents = true
+      @indents = 0
     end
 
     def tokenize(data, filename, &error_handler)
+      @last_was_newline = false
       @filename = filename
       @data = data
+      @current_indents = 0
       @lines = data.lines.to_a
       @error_handler = error_handler if block_given?
       reset
-      %% write init;
       @eof = data.length
+      %% write init;
       %% write exec;
-      @check_indents = true
-      if @indent_count != 0
-        @last_indent_count = @indent_count
-        @indent_count = 0
+      while @tokens.last && @tokens.last[0] == :NEWLINE
+        @tokens.pop
       end
-      handle_indents
+      newline
+      if @current_indents > 0
+        @current_indents.times do
+          @tokens << [:DEDENT,  Token.new("<dedent>", @line)]
+          newline
+        end
+      end
       @tokens
     end
   end

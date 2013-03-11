@@ -12,6 +12,7 @@ module Dagon
         frame = interpreter.frame
         nodes.map do |node|
           unless frame.popped?
+            interpreter.notify(node)
             node.evaluate(interpreter)
           end
         end.last

@@ -8,6 +8,7 @@ module Dagon
       end
 
       def evaluate interpreter
+        interpreter.notify(self)
         if interpreter.frame.local_variable? @variable_name
           interpreter.frame[@variable_name]
         else

@@ -9,6 +9,10 @@ module Dagon
         @variable_value = value
       end
 
+      def inspect
+        "#{@variable_name} = #{@variable_value.inspect}\n"
+      end
+
       def evaluate interpreter
         if variable_name[0] == "@"
           interpreter.frame.object.set_instance_variable(variable_name, variable_value.evaluate(interpreter))

@@ -9,6 +9,7 @@ module Dagon
   module Core
     class VM
       attr_reader :globals, :top_object, :load_paths, :stack
+      attr_accessor :filename, :line_number
       def initialize main = nil
         $runtime = self
         @load_paths = [File.expand_path("."), File.join(File.dirname(__FILE__), "..", "lib")]
@@ -20,6 +21,8 @@ module Dagon
         @classes = {}
         @arguments = []
         @catch_all_errors = false
+        @filename = nil
+        @line_number = 0
         boot_core
         set_arguments(ARGV)
       end
@@ -258,6 +261,11 @@ module Dagon
 
       def literal(klass, native_value)
         get_class(klass).instance(native_value)
+      end
+
+      def notify(node)
+        @filename = node.filename
+        @line_number = node.line_number
       end
     end
   end
