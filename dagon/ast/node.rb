@@ -7,6 +7,7 @@ module Dagon
         @line_number = line_number
       end
 
+      # TODO: This should be reworked into the vm so we have more control
       def execute_list interpreter, nodes
         frame = interpreter.frame
         nodes.map do |node|

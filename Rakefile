@@ -26,6 +26,11 @@ task :clean do
   end
 end
 
+desc "See todos"
+task :todo do
+  system("grep -rInso 'TODO: \\(.\\+\\)' bin core dagon lib spec")
+end
+
 file "build/parser.rb" => "dagon/parser.y" do
   puts "Building parser"
   `mkdir -p build/`
