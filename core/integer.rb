@@ -93,7 +93,7 @@ module Dagon
           end
         }
         add_method "inspect", ->(vm, ref) {
-          ref.inspect
+          vm.string(ref.inspect)
         }
         add_method "to-s", ->(vm, ref) {
           vm.string(ref.value.to_s)

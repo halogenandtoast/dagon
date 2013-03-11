@@ -55,7 +55,7 @@ module Dagon
           vm.int(ref.list.length)
         }
         add_method 'inspect', ->(vm, ref) {
-          ref.inspect
+          vm.string(ref.inspect)
         }
         add_method 'each', ->(vm, ref, block) {
           ref.list.each do |item|

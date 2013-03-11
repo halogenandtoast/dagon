@@ -26,9 +26,6 @@ module Dagon
       end
 
       def boot
-        add_method "init", ->(vm, ref, value) {
-          ref.instance_variable_set("@value", value)
-        }
         add_method "+", ->(vm, ref, other) {
           dagon_new(vm, ref.value + other.value)
         }
