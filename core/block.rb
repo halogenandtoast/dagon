@@ -16,15 +16,15 @@ module Dagon
       def call(vm, *args)
         a_frame = frame.dup
         arguments.each_with_index { |variable_name, index| a_frame[variable_name] = args[index] }
-        vm.frame_eval(a_frame) {
+        vm.frame_eval(a_frame) do
           return_value = nil
-          statements.map { |statement|
+          statements.map do |statement|
             unless a_frame.popped?
               return_value = statement.evaluate(vm)
             end
-          }
+          end
           return_value
-        }
+        end
       end
     end
 
