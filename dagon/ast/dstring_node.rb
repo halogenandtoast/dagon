@@ -10,7 +10,7 @@ module Dagon
         strings = @value.map do |node|
           node.evaluate(interpreter).to_s
         end
-        interpreter.get_class("String").dagon_new(interpreter, strings.join)
+        interpreter.string(strings.join)
       end
     end
   end

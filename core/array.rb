@@ -52,7 +52,7 @@ module Dagon
           ref.list.empty? ? Dtrue : Dfalse
         }
         add_method 'length', ->(vm, ref) {
-          vm.get_class('Integer').instance(ref.list.length)
+          vm.int(ref.list.length)
         }
         add_method 'inspect', ->(vm, ref) {
           ref.inspect

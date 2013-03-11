@@ -35,7 +35,7 @@ module Dagon
         add_method '&&', ->(vm, ref, other) { other }
         add_method '||', ->(vm, ref, other) { Dtrue }
         add_method '^', ->(vm, ref, other) { other.dagon_send(vm, "!@") }
-        add_method 'to-s', ->(vm, ref) { vm.get_class("String").dagon_new(vm, "true") }
+        add_method 'to-s', ->(vm, ref) { vm.string("true") }
         add_method 'inspect', ->(vm, ref) { ref.inspect }
       end
     end

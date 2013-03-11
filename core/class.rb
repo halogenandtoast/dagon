@@ -6,13 +6,13 @@ module Dagon
         @constants = {}
         @methods = {
           inspect: ->(vm, ref, *args) { vm.string("#<#{name}>") },
-          methods: ->(vm, ref, *args) { vm.get_class("Array").dagon_new(vm, @methods.keys) },
+          methods: ->(vm, ref, *args) { vm.array(@methods.keys) },
           init: ->(vm, ref, *args) { },
           exit: ->(vm, ref, *args) { exit(0) },
           puts: ->(vm, ref, *args) { vm.dg_const_get("STDOUT").dagon_send(vm, "puts", *args) },
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
-          gets: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, $stdin.gets) },
-          system: ->(vm, ref, *args) { vm.get_class("String").dagon_new(vm, Kernel.send(:`, *args.map(&:to_s))) },
+          gets: ->(vm, ref, *args) { vm.string($stdin.gets) },
+          system: ->(vm, ref, *args) { vm.string(Kernel.send(:`, *args.map(&:to_s))) },
           eval: ->(vm, ref, *args) {
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)') do |error|
               vm.error("SyntaxError", error)
@@ -36,7 +36,7 @@ module Dagon
             end
           },
           require: ->(vm, ref, *args) {
-            filename = vm.get_class("String").dagon_new(vm, "#{args[0]}.dg")
+            filename = vm.string("#{args[0]}.dg")
             @methods[:load].call(vm, ref, filename)
           },
           :"require-ext" => ->(vm, ref, *args) {
@@ -58,7 +58,7 @@ module Dagon
         @class_ivars = {}
         @class_methods = {
           methods: ->(vm, ref) {
-            vm.get_class("Array").dagon_new(vm, ref.class_methods.keys)
+            vm.array(ref.class_methods.keys)
           },
           superclass: ->(vm, ref) {
             vm.get_class(ref.parent.name)

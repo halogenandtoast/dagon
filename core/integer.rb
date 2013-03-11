@@ -35,27 +35,27 @@ module Dagon
         add_method "+", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left + right)
+          instance(left + right)
         }
         add_method "-", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left - right)
+          instance(left - right)
         }
         add_method "*", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left * right)
+          instance(left * right)
         }
         add_method "/", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left / right)
+          instance(left / right)
         }
         add_method "**", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left ** right)
+          instance(left ** right)
         }
         add_method "=", ->(vm, ref, other) {
           left = ref.value
@@ -96,7 +96,7 @@ module Dagon
           ref.inspect
         }
         add_method "to-s", ->(vm, ref) {
-          vm.get_class("String").dagon_new(ref.value)
+          vm.string(ref.value.to_s)
         }
       end
     end

@@ -11,8 +11,8 @@ module Dagon
 
       def evaluate interpreter
         case @value.class.name
-        when "Fixnum" then interpreter.get_class("Integer").instance(@value)
-        when "Float" then interpreter.get_class("Float").instance(@value)
+        when "Fixnum" then interpreter.int(@value)
+        when "Float" then interpreter.float(@value)
         when "TrueClass" then Dtrue
         when "FalseClass" then Dfalse
         when "NilClass" then Dvoid

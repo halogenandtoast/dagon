@@ -42,16 +42,16 @@ module Dagon
           ref.value != other.value ? Dtrue : Dfalse
         }
         add_method 'length', ->(vm, ref) {
-          vm.get_class("Integer").instance(ref.value.length)
+          vm.int(ref.value.length)
         }
         add_method 'to-i', ->(vm, ref) {
-          vm.get_class("Integer").instance(ref.value.to_i)
+          vm.int(ref.value.to_i)
         }
         add_method 'to-f', ->(vm, ref) {
-          vm.get_class("Float").instance(ref.value.to_f)
+          vm.float(ref.value.to_f)
         }
         add_method 'inspect', ->(vm, ref) {
-          vm.get_class("String").dagon_new(vm, ref.value.inspect)
+          dagon_new(vm, ref.value.inspect)
         }
         add_method 'upcase', ->(vm, ref) {
           dagon_new(vm, ref.value.upcase)

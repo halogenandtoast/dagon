@@ -60,13 +60,13 @@ module Dagon
           ref.io.close
         }
         add_method "read", ->(vm, ref) {
-          vm.get_class("String").dagon_new(vm, ref.io.read)
+          vm.string(ref.io.read)
         }
         add_method "fileno", ->(vm, ref) {
-          vm.get_class("Integer").instance(ref.file_descriptor.value)
+          vm.int(ref.file_descriptor.value)
         }
         add_class_method "pipe", ->(vm, ref) {
-          vm.get_class("Array").dagon_new(vm, ::IO.pipe.map { |io| dagon_new(vm, vm.get_class("Integer").instance(io.fileno)) })
+          vm.array(::IO.pipe.map { |io| dagon_new(vm, vm.int(io.fileno)) })
         }
       end
 

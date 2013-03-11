@@ -35,27 +35,27 @@ module Dagon
         add_method "+", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left + right)
+          instance(left + right)
         }
         add_method "-", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left - right)
+          instance(left - right)
         }
         add_method "*", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left * right)
+          instance(left * right)
         }
         add_method "/", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left / right)
+          instance(left / right)
         }
         add_method "**", ->(vm, ref, other) {
           left = ref.value
           right = other.value
-          ref.klass.instance(left ** right)
+          instance(left ** right)
         }
         add_method "=", ->(vm, ref, other) {
           left = ref.value

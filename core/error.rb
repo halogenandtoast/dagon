@@ -12,7 +12,7 @@ module Dagon
       end
 
       def printable_error(vm)
-        vm.get_class("String").dagon_new(vm, to_s)
+        vm.string(to_s)
       end
     end
 

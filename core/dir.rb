@@ -16,7 +16,7 @@ module Dagon
         #   Dir.getwd
         #   # => "/Users/caleb/code/dagon"
         add_class_method "getwd", ->(vm, ref) {
-          vm.get_class("String").dagon_new(vm, Dir.getwd)
+          vm.string(Dir.getwd)
         }
 
         # glob(pattern) → Array
@@ -30,8 +30,8 @@ module Dagon
         # * Note that this pattern is not a regexp (it’s closer to a shell glob).
         # * Note that case sensitivity depends on your system, as does the order in which the results are returned.
         add_class_method "glob", ->(vm, ref, glob_path) {
-          paths = Dir.glob(glob_path.value).map { |path| vm.get_class("String").dagon_new(vm, path) }
-          vm.get_class("Array").dagon_new(vm, paths)
+          paths = Dir.glob(glob_path.value).map { |path| vm.string(path) }
+          vm.array(paths)
         }
       end
     end

@@ -7,7 +7,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        interpreter.get_class("String").dagon_new(interpreter, @value)
+        interpreter.string(@value)
       end
     end
   end

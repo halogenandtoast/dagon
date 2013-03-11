@@ -44,14 +44,14 @@ module Dagon
         add_class("LoadError", DG_LoadErrorClass.new)
         add_class("NameError", DG_NameErrorClass.new)
 
-        dg_const_set("ARGV", get_class("Array").dagon_new(self, []))
+        dg_const_set("ARGV", array([]))
 
         add_class("IO", DG_IOClass.new)
         add_class("File", DG_FileClass.new(self))
 
-        stdin = get_class("IO").dagon_new(self, get_class("Integer").instance(STDIN.fileno))
-        stdout = get_class("IO").dagon_new(self, get_class("Integer").instance(STDOUT.fileno))
-        stderr = get_class("IO").dagon_new(self, get_class("Integer").instance(STDERR.fileno))
+        stdin = from_native("IO", int(STDIN.fileno))
+        stdout = from_native("IO", int(STDOUT.fileno))
+        stderr = from_native("IO", int(STDERR.fileno))
 
         dg_const_set("STDIN", stdin)
         dg_global_set("$stdin", stdin)
@@ -62,7 +62,7 @@ module Dagon
         dg_const_set("STDERR", stderr)
         dg_global_set("$stderr", stderr)
 
-        dg_global_set("$LOAD_PATH", get_class("Array").dagon_new(self, @load_paths))
+        dg_global_set("$LOAD_PATH", array(@load_paths))
 
 
         unless Kernel.const_defined?("Dtrue")
@@ -77,8 +77,8 @@ module Dagon
       end
 
       def set_arguments arguments
-        values = arguments.map { |arg| get_class("String").dagon_new(self, arg) }
-        dg_const_set("ARGV", get_class("Array").dagon_new(self, values))
+        values = arguments.map { |arg| string(arg) }
+        dg_const_set("ARGV", array(values))
       end
 
       def frame_eval current_frame, &block
@@ -236,8 +236,28 @@ module Dagon
         object != Dfalse && object != Dvoid
       end
 
-      def string(ruby_string)
-        get_class("String").dagon_new(self, ruby_string)
+      def string(native_string)
+        from_native("String", native_string)
+      end
+
+      def array(native_array)
+        from_native("Array", native_array)
+      end
+
+      def int(native_int)
+        literal("Integer", native_int)
+      end
+
+      def float(native_float)
+        literal("Float", native_float)
+      end
+
+      def from_native(klass, native_value)
+        get_class(klass).dagon_new(self, native_value)
+      end
+
+      def literal(klass, native_value)
+        get_class(klass).instance(native_value)
       end
     end
   end
