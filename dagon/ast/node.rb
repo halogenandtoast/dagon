@@ -8,8 +8,11 @@ module Dagon
       end
 
       def execute_list interpreter, nodes
+        frame = interpreter.frame
         nodes.map do |node|
-          node.evaluate(interpreter)
+          unless frame.popped?
+            node.evaluate(interpreter)
+          end
         end.last
       end
 
