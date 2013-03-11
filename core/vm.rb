@@ -237,6 +237,10 @@ module Dagon
       def is_truthy(object)
         object != Dfalse && object != Dvoid
       end
+
+      def string(ruby_string)
+        get_class("String").dagon_new(self, ruby_string)
+      end
     end
   end
 end

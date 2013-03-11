@@ -14,7 +14,7 @@ Idg:
         begin ->
           result: eval(line)
           print("=> ")
-          puts(result)
+          puts(result.inspect)
         rescue ->(e)
           puts(e.message)
       else

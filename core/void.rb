@@ -30,9 +30,8 @@ module Dagon
       end
 
       def boot
-        add_method "=", ->(vm, ref, other) {
-          ref == other ? Dtrue : Dfalse
-        }
+        add_method "=", ->(vm, ref, other) { ref == other ? Dtrue : Dfalse }
+        add_method 'inspect', ->(vm, ref) { ref.inspect }
       end
     end
   end

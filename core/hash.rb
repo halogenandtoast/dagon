@@ -2,8 +2,8 @@ module Dagon
   module Core
     class DG_Hash < DG_Object
       attr_reader :hash
-      def initialize(assignments, klass)
-        @hash = convert_assignments_to_hash_values(assignments)
+      def initialize(hash, klass)
+        @hash = hash
         @klass = klass
       end
 
@@ -12,17 +12,15 @@ module Dagon
       end
 
       def inspect
-        hash.inspect
+        "{ " + key_value_pairs.join(", ") + " } "
       end
 
       private
 
-      def convert_assignments_to_hash_values(assignments)
-        hash = {}
-        assignments.each do |assignment|
-          hash[assignment.variable_name] = assignment.variable_value
+      def key_value_pairs
+        hash.map do |key, value|
+          "#{key.to_s}: #{value.inspect}"
         end
-        hash
       end
     end
 
@@ -33,18 +31,19 @@ module Dagon
       end
 
       def boot
-
         add_method "=", ->(vm, ref, other) do
           ref.hash == other.hash ? Dtrue : Dfalse
         end
-
         add_method "!=", ->(vm, ref, other) do
           ref.hash != other.hash ? Dtrue : Dfalse
         end
+        add_method 'inspect', ->(vm, ref) do
+          ref.inspect
+        end
       end
 
-      def dagon_new interpreter, assignments
-        DG_Hash.new(assignments, self)
+      def dagon_new interpreter, hash
+        DG_Hash.new(hash, self)
       end
     end
   end

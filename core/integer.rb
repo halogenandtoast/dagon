@@ -92,6 +92,9 @@ module Dagon
             block.call vm
           end
         }
+        add_method "inspect", ->(vm, ref) {
+          ref.inspect
+        }
         add_method "to-s", ->(vm, ref) {
           vm.get_class("String").dagon_new(ref.value)
         }

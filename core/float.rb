@@ -87,6 +87,9 @@ module Dagon
           right = other.value
           left <= right ? Dtrue : Dfalse
         }
+        add_method "inspect", ->(vm, ref) {
+          ref.inspect
+        }
       end
     end
   end

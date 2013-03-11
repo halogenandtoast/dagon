@@ -10,6 +10,10 @@ module Dagon
       def to_s
         '['+@list.map(&:to_s).join(', ')+']'
       end
+
+      def inspect
+        to_s
+      end
     end
 
     class DG_ArrayClass < DG_Class
@@ -49,6 +53,9 @@ module Dagon
         }
         add_method 'length', ->(vm, ref) {
           vm.get_class('Integer').instance(ref.list.length)
+        }
+        add_method 'inspect', ->(vm, ref) {
+          ref.inspect
         }
         add_method 'each', ->(vm, ref, block) {
           ref.list.each do |item|

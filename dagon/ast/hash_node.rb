@@ -9,7 +9,12 @@ module Dagon
       end
 
       def evaluate(interpreter)
-        interpreter.get_class("Hash").dagon_new(interpreter, @assignments)
+        hash = {}
+        @assignments.each do |assignment|
+          value = assignment.variable_value.evaluate(interpreter)
+          hash[assignment.variable_name] = value
+        end
+        interpreter.get_class("Hash").dagon_new(interpreter, hash)
       end
     end
   end
