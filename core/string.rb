@@ -53,6 +53,9 @@ module Dagon
         add_method 'inspect', ->(vm, ref) {
           vm.get_class("String").dagon_new(vm, ref.value.inspect)
         }
+        add_method 'upcase', ->(vm, ref) {
+          dagon_new(vm, ref.value.upcase)
+        }
       end
 
       def dagon_new interpreter, string = ""

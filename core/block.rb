@@ -12,6 +12,20 @@ module Dagon
       def arity
         @arguments.length
       end
+
+      def call(vm, *args)
+        a_frame = frame.dup
+        arguments.each_with_index { |variable_name, index| a_frame[variable_name] = args[index] }
+        vm.frame_eval(a_frame) {
+          return_value = nil
+          statements.map { |statement|
+            unless a_frame.popped?
+              return_value = statement.evaluate(vm)
+            end
+          }
+          return_value
+        }
+      end
     end
 
     class DG_BlockClass < DG_Class
@@ -21,17 +35,7 @@ module Dagon
 
       def boot
         add_method "call", ->(vm, instance, *args) {
-          frame = instance.frame.dup
-          instance.arguments.each_with_index { |variable_name, index| frame[variable_name] = args[index] }
-          vm.frame_eval(frame) {
-            return_value = nil
-            instance.statements.map { |statement|
-              unless frame.popped?
-                return_value = statement.evaluate(vm)
-              end
-            }
-            return_value
-          }
+          instance.call(vm, *args)
         }
       end
 

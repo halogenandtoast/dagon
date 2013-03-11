@@ -89,7 +89,7 @@ module Dagon
         }
         add_method "times", ->(vm, ref, block) {
           ref.value.times do
-            block.evaluate vm
+            block.call vm
           end
         }
         add_method "to-s", ->(vm, ref) {

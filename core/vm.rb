@@ -8,7 +8,7 @@ require "pry"
 module Dagon
   module Core
     class VM
-      attr_reader :globals
+      attr_reader :globals, :top_object
       def initialize main = nil
         $runtime = self
         @load_paths = [File.expand_path(".")]

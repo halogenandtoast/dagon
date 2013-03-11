@@ -11,8 +11,20 @@ describe("Numbers") ->
   it("can be divided") ->
     assert-equal(6 / 3, 2)
 
-  it("can do interger division") ->
+  it("can do integer division") ->
     assert-equal(3 / 2, 1)
 
   it("can be taken to a power") ->
     assert-equal(2 ** 3, 8)
+
+  it("knows the greater value") ->
+    assert(2 > 1)
+
+  it("knows the lesser value") ->
+    assert(1 < 2)
+
+  it("evalualates a block n times") ->
+    x: 0
+    5.times ->
+      x: x + 1
+    assert-equal(x, 5)

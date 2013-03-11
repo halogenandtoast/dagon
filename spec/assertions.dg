@@ -1,18 +1,18 @@
--assert(expression):
+assert(expression):
   if expression
     true
   else
     false
 
 assert-equal(lhs, rhs):
-  -assert(lhs = rhs)
+  assert(lhs = rhs)
 
 assert-not-equal(lhs, rhs):
-  -assert(lhs != rhs)
+  assert(lhs != rhs)
 
 assert-raises(block, message):
   begin ->
     block.call()
-    -assert(false)
+    assert(false)
   rescue(Error) ->(e)
     assert-equal(e.message, message)

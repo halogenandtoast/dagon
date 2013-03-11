@@ -1,2 +1,7 @@
 say: "I love Dagon"
 puts(say)
+
+puts(say.upcase)
+
+5.times ->
+  puts(say)
