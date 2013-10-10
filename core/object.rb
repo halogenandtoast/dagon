@@ -10,6 +10,10 @@ module Dagon
         @klass = klass || DG_Class.new
       end
 
+      def eql? object
+        self == object
+      end
+
       def dagon_define_class name, parent
         name = name.to_sym
         klass = DG_Class.new(name, parent)

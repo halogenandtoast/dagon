@@ -3,3 +3,9 @@ describe("Hash") ->
     assert-equal({}, {})
   it("can have keys with values") ->
     assert-not-equal({ foo: "bar" }, {})
+  it("can retrieve a value") ->
+    assert-equal({ foo: "bar" }.get("foo"), "bar")
+  it("can set keys") ->
+    hash: {}
+    hash.set("foo", "bar")
+    assert-equal({ foo: "bar" }.get("foo"), "bar")

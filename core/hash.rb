@@ -15,6 +15,14 @@ module Dagon
         "{ " + key_value_pairs.join(", ") + " } "
       end
 
+      def [](key)
+        @hash[key]
+      end
+
+      def []=(key, value)
+        @hash[key] = value
+      end
+
       private
 
       def key_value_pairs
@@ -37,6 +45,15 @@ module Dagon
         add_method "!=", ->(vm, ref, other) do
           ref.hash != other.hash ? Dtrue : Dfalse
         end
+
+        add_method "get", ->(vm, ref, key) do
+          ref[key.value]
+        end
+
+        add_method "set", ->(vm, ref, key, value) do
+          ref[key.value] = value
+        end
+
         add_method 'inspect', ->(vm, ref) do
           ref.inspect
         end
