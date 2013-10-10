@@ -16,6 +16,7 @@
   exponent = ' ** ';
   lparen = '(';
   rparen = ')';
+  key_assignment = ']:';
   lbracket = '[';
   rbracket = ']';
   lbrace = '{';
@@ -37,6 +38,7 @@
     string => { parse_string(data, ts, te) };
     constant => { emit(:CONSTANT, data, ts, te) };
     identifier => { emit(:IDENTIFIER, data, ts, te) };
+    key_assignment => { emit(:KEY_ASSIGNMENT, data, ts, te-1) };
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
     arrow => { emit(:ARROW, data, ts, te) };
     colon => { emit(':', data, ts, te) };
@@ -76,6 +78,7 @@ module Dagon
     end
   end
   class Scanner
+    LBRACKET_METHOD_CALL_TYPES = [:IDENTIFIER, :RBRACKET, :RBRACE]
 
     def initialize
       %% write data;
@@ -115,6 +118,12 @@ module Dagon
       @current_indents = indent_count
     end
 
+    def lbracket_method_call?(name)
+      name == :LBRACKET &&
+      @tokens.last &&
+      LBRACKET_METHOD_CALL_TYPES.include?(@tokens.last[0])
+    end
+
     def emit(name, data, start_char, end_char)
       if name == :ELSE || name == :ELSEIF
         pop_newlines
@@ -130,7 +139,7 @@ module Dagon
         @current_indents = 0
       end
       @last_was_newline = false
-      if @tokens.last && @tokens.last[0] == :IDENTIFIER && name == :LBRACKET
+      if lbracket_method_call?(name)
         @tokens << ['[', Token.new(data[start_char...end_char], @line)]
       else
         @tokens << [name, Token.new(data[start_char...end_char], @line)]

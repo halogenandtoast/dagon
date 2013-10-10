@@ -1,11 +1,14 @@
 describe("Hash") ->
   it("can be empty") ->
     assert-equal({}, {})
+
   it("can have keys with values") ->
     assert-not-equal({ foo: "bar" }, {})
+
   it("can retrieve a value") ->
-    assert-equal({ foo: "bar" }.get("foo"), "bar")
+    assert-equal({ foo: "bar" }["foo"], "bar")
+
   it("can set keys") ->
     hash: {}
-    hash.set("foo", "bar")
-    assert-equal({ foo: "bar" }.get("foo"), "bar")
+    hash["foo"]: "bar"
+    assert-equal(hash["foo"], "bar")

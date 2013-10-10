@@ -19,6 +19,7 @@ rule
 
   core_statement: class_definition
                 | method_definition
+                | key_assignment
                 | assignment
                 | expression
                 | conditional_statement
@@ -81,6 +82,7 @@ rule
   list_member: expression { result = val[0] }
              | assignment { result = val[0] }
 
+  key_assignment: term '[' expression KEY_ASSIGNMENT expression { result = AST::FunctionCallNode.new(@filename, nil, val[0], '[]:', [val[2], val[4]], nil) }
 
   method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, @line, val[0].data) }
 

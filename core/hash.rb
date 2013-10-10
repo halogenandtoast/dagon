@@ -46,11 +46,11 @@ module Dagon
           ref.hash != other.hash ? Dtrue : Dfalse
         end
 
-        add_method "get", ->(vm, ref, key) do
+        add_method "[]", ->(vm, ref, key) do
           ref[key.value]
         end
 
-        add_method "set", ->(vm, ref, key, value) do
+        add_method "[]:", ->(vm, ref, key, value) do
           ref[key.value] = value
         end
 
