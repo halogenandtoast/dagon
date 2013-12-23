@@ -29,14 +29,14 @@ fibonacci-imperative(n):
 ### Hello
 
 ```
-puts "Hello World"
+puts("Hello World")
 ```
 
 Outputs strings "Hello " "World\n" (same result as above):
 
 ```
-print "Hello "
-print "World\n"
+print("Hello ")
+print("World\n")
 ```
 
 ## Syntax
