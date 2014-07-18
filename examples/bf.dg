@@ -1,0 +1,43 @@
+BrainfuckInterpreter:
+
+  init(program):
+    @memory: [0] * 255
+    @m-ptr: 0
+    @i-ptr-stack: []
+    @i-ptr: 0
+    @program: program
+
+  run:
+    while @program[@i-ptr]
+      instruction: @program[@i-ptr]
+      if instruction = ">"
+        @m-ptr: @m-ptr + 1
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "<"
+        @m-ptr: @m-ptr - 1
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "+"
+        @memory[@m-ptr]: @memory[@m-ptr] + 1
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "-"
+        @memory[@m-ptr]: @memory[@m-ptr] - 1
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "."
+        print(@memory[@m-ptr].chr)
+        @i-ptr: @i-ptr + 1
+      elseif instruction = ","
+        @memory[@m-ptr]: STDIN.getc
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "["
+        @i-ptr-stack.push(@i-ptr + 1)
+        @i-ptr: @i-ptr + 1
+      elseif instruction = "]"
+        if @memory[@m-ptr] = 0
+          @i-ptr-stack.pop
+          @i-ptr: @i-ptr + 1
+        else
+          @i-ptr: @i-ptr-stack.last
+
+program: "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
+
+BrainfuckInterpreter(program).run
