@@ -53,6 +53,13 @@ module Dagon
         add_method 'upcase', ->(vm, ref) {
           dagon_new(vm, ref.value.upcase)
         }
+        add_method '[]', ->(vm, ref, location) {
+          if ref.value[location.value]
+            dagon_new(vm, ref.value[location.value])
+          else
+            Dvoid
+          end
+        }
       end
 
       def dagon_new interpreter, string = ""

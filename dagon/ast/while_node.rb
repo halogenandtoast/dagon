@@ -8,7 +8,7 @@ module Dagon
       end
 
       def evaluate interpreter
-        while @condition.evaluate(interpreter) == Dtrue
+        until [Dfalse, Dvoid].include? @condition.evaluate(interpreter)
           execute_list interpreter, @statements
         end
       end

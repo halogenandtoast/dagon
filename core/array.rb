@@ -28,12 +28,27 @@ module Dagon
         add_method '[]', ->(vm, ref, index) {
           ref.list[index.value]
         }
+        add_method '[]:', ->(vm, ref, index, value) {
+          ref.list[index.value] = value
+        }
+        add_method 'push', ->(vm, ref, value) {
+          ref.list << value
+        }
+        add_method 'last', ->(vm, ref) {
+          ref.list.last
+        }
+        add_method 'pop', ->(vm, ref) {
+          ref.list.pop
+        }
         add_method '+', ->(vm, ref, other) {
           DG_Array.new(ref.list + other.list, self)
         }
         add_method '-', ->(vm, ref, other) {
           result = ref.list.reject { |item| other.list.include?(item) }
           DG_Array.new(result, self)
+        }
+        add_method '*', ->(vm, ref, other) {
+          DG_Array.new(ref.list * other.value, self)
         }
         add_method '=', ->(vm, ref, other) {
           ref.list == other.list ? Dtrue : Dfalse

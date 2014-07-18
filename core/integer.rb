@@ -98,6 +98,9 @@ module Dagon
         add_method "to-s", ->(vm, ref) {
           vm.string(ref.value.to_s)
         }
+        add_method "chr", ->(vm, ref) {
+          vm.string(ref.value.chr)
+        }
       end
     end
   end
