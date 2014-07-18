@@ -2,6 +2,9 @@
 
 require("readline")
 
+trap("INT") ->
+  exit
+
 Idg:
   read-line:
     Readline.readline("idg:> ", true)
@@ -9,6 +12,8 @@ Idg:
   start:
     while true
       line: read-line
+      if line = void
+        exit
       begin ->
         if line != ""
           result: eval(line)

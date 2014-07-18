@@ -1,0 +1,6 @@
+trap("INT") ->
+  puts("Exiting")
+  exit
+
+while true
+  1

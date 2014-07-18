@@ -13,6 +13,7 @@ module Dagon
           print: ->(vm, ref, *args) { print *args.map(&:to_s) },
           gets: ->(vm, ref, *args) { vm.string($stdin.gets) },
           system: ->(vm, ref, *args) { vm.string(Kernel.send(:`, *args.map(&:to_s))) },
+          trap: ->(vm, ref, *args) { trap(args[0].to_s) { args[1].call(vm) } },
           eval: ->(vm, ref, *args) {
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)') do |error|
               vm.error("SyntaxError", error)
