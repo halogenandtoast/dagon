@@ -1,7 +1,7 @@
 class Dagon::Parser
 prechigh
   right EXPONENT
-  left '!'
+  nonassoc '!'
   left '&&' '||' '^'
   left '*' '/'
   left '+' '-'
@@ -52,8 +52,6 @@ rule
             | expression '+' expression { result = call_on_object(val[0], '+', val[2]) }
             | expression '*' expression { result = call_on_object(val[0], '*', val[2]) }
             | expression '/' expression { result = call_on_object(val[0], '/', val[2]) }
-            | expression '&&' expression { result = call_on_object(val[0], '&&', val[2]) }
-            | expression '||' expression { result = call_on_object(val[0], '||', val[2]) }
             | expression '^' expression { result = call_on_object(val[0], '^', val[2]) }
             | expression EXPONENT expression { result = call_on_object(val[0], '**', val[2]) }
             | condition
@@ -66,6 +64,8 @@ rule
            | expression '>=' expression { result = call_on_object(val[0], '>=', val[2]) }
            | expression '=' expression { result = call_on_object(val[0], '=', val[2]) }
            | expression '!=' expression { result = call_on_object(val[0], '!=', val[2]) }
+            | expression '&&' expression { result = call_on_object(val[0], '&&', val[2]) }
+            | expression '||' expression { result = call_on_object(val[0], '||', val[2]) }
            | unary_expression
            | term
 
@@ -85,6 +85,7 @@ rule
   key_assignment: term '[' expression KEY_ASSIGNMENT expression { result = AST::FunctionCallNode.new(@filename, nil, val[0], '[]:', [val[2], val[4]], nil) }
 
   method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, @line, val[0].data) }
+             | IDENTIFIER '?' { result = AST::VarRefNode.new(@filename, @line, val[0].data + "?") }
 
   term: '@' IDENTIFIER { result = AST::InstanceVarRefNode.new(@filename, @line, "@#{val[1].data}") }
       | '$' IDENTIFIER { result = AST::GlobalVarRefNode.new(@filename, @line, "$#{val[1].data}") }

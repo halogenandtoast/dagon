@@ -91,6 +91,7 @@ module Dagon
           ref.value.times do
             block.call vm
           end
+          ref
         }
         add_method "inspect", ->(vm, ref) {
           vm.string(ref.inspect)

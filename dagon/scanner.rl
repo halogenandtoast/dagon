@@ -29,6 +29,7 @@
   indent = "  "+;
   at = "@";
   dollar = "$";
+  qmark = "?";
 
   main := |*
     comment;
@@ -54,6 +55,7 @@
     bang => { emit('!', data, ts, te) };
     at => { emit('@', data, ts, te) };
     dollar => { emit('$', data, ts, te) };
+    qmark => { emit('?', data, ts, te) };
     operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
     exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     comma => { emit(:COMMA, data, ts, te) };

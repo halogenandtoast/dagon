@@ -37,6 +37,9 @@ module Dagon
         add_method 'last', ->(vm, ref) {
           ref.list.last
         }
+        add_method 'join', ->(vm, ref, glue) {
+          vm.string(ref.list.join(glue.value))
+        }
         add_method 'pop', ->(vm, ref) {
           ref.list.pop
         }
@@ -71,6 +74,16 @@ module Dagon
         }
         add_method 'inspect', ->(vm, ref) {
           vm.string(ref.inspect)
+        }
+        add_method 'any?', ->(vm, ref) {
+          ref.list.any? ? Dtrue : Dfalse
+        }
+        add_method 'reduce', ->(vm, ref, initial, block) {
+          value = initial
+          ref.list.each do |item|
+            value = block.dagon_send(vm, "call", value, item)
+          end
+          value
         }
         add_method 'each', ->(vm, ref, block) {
           ref.list.each do |item|

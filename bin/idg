@@ -9,16 +9,34 @@ Idg:
   read-line:
     Readline.readline("idg:> ", true)
 
+  read-next-line:
+    Readline.readline("idg:..", true)
+
   start:
+    lines: []
+    line: void
+
     while true
-      line: read-line
-      if line = void
-        exit
+      if lines.any?
+        line: read-next-line
+      else
+        line: read-line
+
+      lines.push(line)
+
       begin ->
-        if line != ""
-          result: eval(line)
-          print("=> ")
-          puts(result.inspect)
+        if line = void
+          if lines.any?
+            result: eval(lines.join("\n"))
+            print("=> ")
+            puts(result.inspect)
+          exit
+        else
+          if !line.start-with?("  ") && !line.contains?("->")
+            result: eval(lines.join("\n"))
+            print("=> ")
+            puts(result.inspect)
+            lines: []
       rescue ->(e)
         puts(e.message)
 

@@ -53,6 +53,12 @@ module Dagon
         add_method 'upcase', ->(vm, ref) {
           dagon_new(vm, ref.value.upcase)
         }
+        add_method 'contains?', ->(vm, ref, search) {
+          ref.value.include?(search.value) ? Dtrue : Dfalse
+        }
+        add_method 'start-with?', ->(vm, ref, search) {
+          ref.value.start_with?(search.value) ? Dtrue : Dfalse
+        }
         add_method '[]', ->(vm, ref, location) {
           if ref.value[location.value]
             dagon_new(vm, ref.value[location.value])

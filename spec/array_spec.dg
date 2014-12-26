@@ -21,3 +21,10 @@ describe("Array") ->
     array.each ->(i)
       x: x + i
     assert-equal(x, 6)
+
+  it("can reduce the array") ->
+    array: [1, 2, 3]
+    value: array.reduce(0) ->(sum, current)
+      sum + current
+    assert-equal(value, 6)
+
