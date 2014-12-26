@@ -26,7 +26,7 @@ Idg:
 
       begin ->
         if line = void
-          if lines.any?
+          if lines.count > 1
             result: eval(lines.join("\n"))
             print("=> ")
             puts(result.inspect)

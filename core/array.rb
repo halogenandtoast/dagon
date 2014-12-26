@@ -8,7 +8,7 @@ module Dagon
       end
 
       def to_s
-        '['+@list.map(&:to_s).join(', ')+']'
+        '['+@list.map(&:inspect).join(', ')+']'
       end
 
       def inspect
@@ -42,6 +42,9 @@ module Dagon
         }
         add_method 'pop', ->(vm, ref) {
           ref.list.pop
+        }
+        add_method 'count', ->(vm, ref){
+          vm.int(ref.list.count)
         }
         add_method '+', ->(vm, ref, other) {
           DG_Array.new(ref.list + other.list, self)
@@ -93,6 +96,7 @@ module Dagon
               block.dagon_send(vm, 'call')
             end
           end
+          ref
         }
       end
 

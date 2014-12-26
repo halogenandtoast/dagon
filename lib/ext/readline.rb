@@ -8,7 +8,7 @@ class DG_ReadlineClass < Dagon::Core::DG_Class
   def boot
     add_class_method "readline", ->(vm, ref, prompt, add_history) {
       string = Readline.readline(prompt.value, add_history == Dfalse ? false : true)
-      vm.string(string)
+      string ? vm.string(string) : Dvoid
     }
   end
 end
