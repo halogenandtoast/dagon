@@ -19,6 +19,9 @@ module Dagon
     def parse_double_quoted_string
       io = StringIO.new(string)
       actual_string = ""
+
+      dstr = false
+
       while current_char = io.getc
         if current_char == "\\"
           value = parse_escape(io)
@@ -48,6 +51,7 @@ module Dagon
           actual_string << current_char
         end
       end
+
       if dstr
         if actual_string.length > 0
           @tokens << [:STRING, Token.new(actual_string, @line)]
@@ -56,6 +60,7 @@ module Dagon
       else
         @tokens << [:STRING, Token.new(actual_string, @line)]
       end
+
       @tokens
     end
 
@@ -73,8 +78,7 @@ module Dagon
         io.ungetc(c)
         parse_octal(io, 3).chr
       else
-        io.ungetc(c)
-        ""
+        c
       end
     end
 

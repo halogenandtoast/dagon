@@ -5,7 +5,11 @@ assert(expression):
     false
 
 assert-equal(lhs, rhs):
-  assert(lhs = rhs)
+  if lhs = rhs
+    true
+  else
+    puts("expected #{lhs} to equal #{rhs}")
+    false
 
 assert-not-equal(lhs, rhs):
   assert(lhs != rhs)
