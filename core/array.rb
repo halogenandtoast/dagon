@@ -33,6 +33,7 @@ module Dagon
         }
         add_method 'push', ->(vm, ref, value) {
           ref.list << value
+          ref
         }
         add_method 'last', ->(vm, ref) {
           ref.list.last
@@ -42,9 +43,6 @@ module Dagon
         }
         add_method 'pop', ->(vm, ref) {
           ref.list.pop
-        }
-        add_method 'count', ->(vm, ref){
-          vm.int(ref.list.count)
         }
         add_method '+', ->(vm, ref, other) {
           DG_Array.new(ref.list + other.list, self)

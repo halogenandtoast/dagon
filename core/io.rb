@@ -58,6 +58,7 @@ module Dagon
         }
         add_method "close", ->(vm, ref) {
           ref.io.close
+          Dvoid
         }
         add_method "read", ->(vm, ref) {
           vm.string(ref.io.read)
