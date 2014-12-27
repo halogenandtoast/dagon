@@ -37,8 +37,7 @@ rule
   while_statement: WHILE condition block { result = AST::WhileNode.new(@filename, @line, val[1], val[2]) }
 
   conditional_statement: IF condition block else_stmt { result = AST::IfNode.new(@filename, @line, val[1], val[2], val[3]) }
-  else_stmt: { result = nil }
-           | ELSEIF condition block else_stmt{ result = [AST::IfNode.new(@filename, @line, val[1], val[2], val[3])] }
+  else_stmt: ELSEIF condition block else_stmt{ result = [AST::IfNode.new(@filename, @line, val[1], val[2], val[3])] }
            | ELSE block { result = val[1] }
 
   class_definition: CONSTANT ':' block { result = AST::ClassDefinitionNode.new(@filename, @line, val[0].data, val[2]) }

@@ -37,9 +37,6 @@ describe("Array") ->
   it("can repeat itself") ->
     assert-equal([1] * 3, [1, 1, 1])
 
-  it("can compact") ->
-    assert-equal([1, void, 2].compact, [1, 2])
-
   it("can unshift an element") ->
     array: [2, 3]
     array.unshift(1)

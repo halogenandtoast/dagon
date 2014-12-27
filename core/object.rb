@@ -34,7 +34,7 @@ module Dagon
         if method
           frame = Frame.new(self, self)
           interpreter.frame_eval frame do
-            method.call(interpreter, self, *args) || Dvoid
+            method.call(interpreter, self, *args)
           end
         else
           if self == interpreter.top_object

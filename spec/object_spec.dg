@@ -7,10 +7,3 @@ describe("Object") ->
         @wombat
     wombat: Wombat()
     assert-equal(wombat.value, "Wombat")
-
-  it("starts instance variables off as void") ->
-    Wallaby:
-      value:
-        @wallaby
-    wallaby: Wallaby()
-    assert-equal(wallaby.value, void)

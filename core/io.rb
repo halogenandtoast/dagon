@@ -27,7 +27,7 @@ module Dagon
           end
           @io.puts
         end
-        Dvoid
+        Dtrue
       end
 
       def to_s
@@ -58,7 +58,7 @@ module Dagon
         }
         add_method "close", ->(vm, ref) {
           ref.io.close
-          Dvoid
+          Dtrue
         }
         add_method "read", ->(vm, ref) {
           vm.string(ref.io.read)

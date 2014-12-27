@@ -57,10 +57,6 @@ module Dagon
         add_method '=', ->(vm, ref, other) {
           ref.list == other.list ? Dtrue : Dfalse
         }
-        add_method 'compact', ->(vm, ref) {
-          result = ref.list.reject{ |item| item == Dvoid }
-          DG_Array.new(result, self)
-        }
         add_method 'unshift', ->(vm, ref, object) {
           ref.list.unshift(object)
         }

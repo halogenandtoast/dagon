@@ -4,7 +4,7 @@
 %%{
   machine new_parser;
   newline = ("\r"? "\n" | "\r") %{ @last_was_newline = true };
-  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'void' | 'begin' | 'rescue';
+  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'begin' | 'rescue';
   string = '"' ( /#{[^}]*}/ | [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline %{ @line += 1 };
   constant = upper (alnum | '_')*;

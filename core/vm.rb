@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame integer string true void hash io file error dir)
+CORE = %w(object class array block false float frame integer string true hash io file error dir)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -39,7 +39,6 @@ module Dagon
         add_class("Integer", DG_IntegerClass.new)
         add_class("String", DG_StringClass.new)
         add_class("True", DG_TrueClass.new)
-        add_class("Void", DG_VoidClass.new)
 
         add_class("NoMethodError", DG_NoMethodErrorClass.new)
         add_class("ArgumentError", DG_ArgumentErrorClass.new)
@@ -73,9 +72,6 @@ module Dagon
         end
         unless Kernel.const_defined?("Dfalse")
           Kernel.const_set("Dfalse", Dagon::Core::False.instance)
-        end
-        unless Kernel.const_defined?("Dvoid")
-          Kernel.const_set("Dvoid", Dagon::Core::Void.instance)
         end
       end
 
@@ -236,7 +232,7 @@ module Dagon
       end
 
       def is_truthy(object)
-        object != Dfalse && object != Dvoid
+        object != Dfalse
       end
 
       def string(native_string)

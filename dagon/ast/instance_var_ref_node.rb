@@ -12,8 +12,7 @@ module Dagon
         if current
           current
         else
-          interpreter.frame.object.set_instance_variable(@instance_variable_name, Dvoid)
-          Dvoid
+          interpreter.error("NameError", "No value named #{@instance_variable_name}")
         end
       end
     end

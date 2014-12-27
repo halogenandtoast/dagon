@@ -2,7 +2,7 @@ Truthiness
 ----------
 
 Like Ruby, Dagon objects are truthy by default. Exceptions to this rule are
-`false` and `void`, which are falsy.
+`false` which is falsy.
 
 Classes can also override `Object`'s `truthy`<a name='truthyref'></a>**[\*]**
 method to return false and become falsy.

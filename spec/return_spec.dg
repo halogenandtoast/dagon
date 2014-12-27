@@ -4,6 +4,8 @@ test-method:
 test-conditional-method:
   if true
     "wombat"
+  else
+    "failure"
 
 describe("Return values") ->
   it("returns the result of a one-line method") ->

@@ -14,7 +14,7 @@ Idg:
 
   start:
     lines: []
-    line: void
+    line: false
 
     while true
       if lines.any?
@@ -25,11 +25,13 @@ Idg:
       lines.push(line)
 
       begin ->
-        if line = void
+        if line = false
           if lines.length > 1
             result: eval(lines.join("\n"))
             print("=> ")
             puts(result.inspect)
+          else
+            false
           exit
         else
           if !line.start-with?("  ") && !line.contains?("->")
@@ -37,6 +39,8 @@ Idg:
             print("=> ")
             puts(result.inspect)
             lines: []
+          else
+            false
       rescue ->(e)
         lines: []
         puts(e.message)

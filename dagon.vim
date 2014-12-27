@@ -11,7 +11,6 @@ endif
 
 syntax keyword dagonConditional if elseif else while break
 syntax keyword dagonBoolean true false
-syntax keyword dagonKeyword void
 syntax keyword dagonFunction print puts
 syntax match dagonNumber '\d'
 syntax match dagonFloat '\d+\.\d+'

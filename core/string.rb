@@ -60,7 +60,7 @@ module Dagon
           if ref.value[location.value]
             dagon_new(vm, ref.value[location.value])
           else
-            Dvoid
+            vm.error("NullReferenceError", "no element exists at #{location.value}")
           end
         }
       end

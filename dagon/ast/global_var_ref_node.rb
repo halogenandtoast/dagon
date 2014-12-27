@@ -12,8 +12,7 @@ module Dagon
         if current
           current
         else
-          interpreter.dg_global_set(@instance_variable_name, Dvoid)
-          Dvoid
+          interpreter.error("NameError", "No object named #{@instance_variable_name}")
         end
       end
     end

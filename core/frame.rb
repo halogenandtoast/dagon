@@ -42,13 +42,7 @@ module Dagon
       end
 
       def rescue_from(vm, error)
-        result = Dvoid
-        if @catch_all_errors
-          result = @rescue_block.dagon_send(vm, "call", error)
-        else
-          block = @errors_to_catch[error.klass]
-          result = block.dagon_send(vm, "call", error)
-        end
+        result = perform_rescue_from(vm, error)
         pop # this is a pretty naive solution, we need something better but not sure what
         result
       end
@@ -60,6 +54,17 @@ module Dagon
       def catch_all_errors(block)
         @catch_all_errors = true
         @rescue_block = block
+      end
+
+      private
+
+      def perform_rescue_from(vm, error)
+        if @catch_all_errors
+          @rescue_block.dagon_send(vm, "call", error)
+        else
+          block = @errors_to_catch[error.klass]
+          block.dagon_send(vm, "call", error)
+        end
       end
     end
   end

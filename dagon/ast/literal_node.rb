@@ -15,7 +15,6 @@ module Dagon
         when "Float" then interpreter.float(@value)
         when "TrueClass" then Dtrue
         when "FalseClass" then Dfalse
-        when "NilClass" then Dvoid
         end
       end
     end

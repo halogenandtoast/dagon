@@ -114,7 +114,7 @@ module Dagon
       def dagon_send interpreter, name, *args
         method = @class_methods[name.to_sym]
         if method
-          method.call(interpreter, self, *args) || Dvoid
+          method.call(interpreter, self, *args)
         elsif @parent != self
           @parent.dagon_send(interpreter, name, *args)
         else

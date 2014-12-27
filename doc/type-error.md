@@ -35,15 +35,6 @@ Only the initial assignment to a variable sets the variable type.
     baz: Qux() # also allowed. The variable type of baz does not change after
                # the assignment of a Bar.
 
-`void` does not affect the type of a variable.
-
-    trait: void # trait is untyped
-    trait: 5 # trait is of type Integer
-
-    category: "animals"
-    category: void # Allowed, but type of category remains string
-    category: 5 # TypeError
-
 Boolean values are a special case with regard to variable types. Either true or
 false can be stored in a variable intially assigned a boolean value, even though
 true is typed `Dagon::Core::True` and false is of type `Dagon::Core::False`
