@@ -20,7 +20,7 @@ require("spec/assertions")
 ARGV.shift
 
 spec-files:
-  if ARGV.empty
+  if ARGV.empty?
     Dir.glob("spec/*_spec.dg")
   else
     ARGV

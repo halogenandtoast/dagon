@@ -74,7 +74,7 @@ module Dagon
         parse_octal(io, 3).chr
       else
         io.ungetc(c)
-        "\\"
+        ""
       end
     end
 

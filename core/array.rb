@@ -39,7 +39,7 @@ module Dagon
           ref.list.last
         }
         add_method 'join', ->(vm, ref, glue) {
-          vm.string(ref.list.join(glue.value))
+          vm.string(ref.list.map(&:to_s).join(glue.value))
         }
         add_method 'pop', ->(vm, ref) {
           ref.list.pop
@@ -67,17 +67,17 @@ module Dagon
         add_method 'shift', ->(vm, ref) {
           ref.list.shift
         }
-        add_method 'empty', ->(vm, ref) {
+        add_method 'empty?', ->(vm, ref) {
           ref.list.empty? ? Dtrue : Dfalse
+        }
+        add_method 'any?', ->(vm, ref) {
+          ref.list.any? ? Dtrue : Dfalse
         }
         add_method 'length', ->(vm, ref) {
           vm.int(ref.list.length)
         }
         add_method 'inspect', ->(vm, ref) {
           vm.string(ref.inspect)
-        }
-        add_method 'any?', ->(vm, ref) {
-          ref.list.any? ? Dtrue : Dfalse
         }
         add_method 'reduce', ->(vm, ref, initial, block) {
           value = initial
