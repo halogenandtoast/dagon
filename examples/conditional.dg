@@ -1,3 +1,4 @@
 if true
   puts("Hello wombat")
-
+else
+  false

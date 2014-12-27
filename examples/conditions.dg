@@ -1,6 +1,6 @@
 if false
   puts(1)
 elseif true
-  puts("fuck yeah")
+  puts("the middle road")
 else
   puts("huh?")

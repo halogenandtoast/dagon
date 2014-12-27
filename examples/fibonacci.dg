@@ -1,4 +1,3 @@
-current: 3
 fibonacci-imperative(n):
   current: 0
   next: 1
@@ -10,6 +9,11 @@ fibonacci-imperative(n):
 
   current
 
+fibonacci-recursive(n):
+  if n <= 1
+    n
+  else
+    fibonacci-recursive(n - 1) + fibonacci-recursive(n - 2)
 
 puts(fibonacci-imperative(10))
-puts(current)
+puts(fibonacci-recursive(10))
