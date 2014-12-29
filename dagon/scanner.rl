@@ -127,12 +127,6 @@ module Dagon
     end
 
     def emit(name, data, start_char, end_char)
-      if name == :ELSE || name == :ELSEIF
-        pop_newlines
-      end
-      if name == :RESCUE && @tokens.last && @tokens.last[0] == :NEWLINE
-        pop_newlines
-      end
       if @last_was_newline
         @current_indents.times do
           @tokens << [:DEDENT, Token.new("<dedent>", @line)]

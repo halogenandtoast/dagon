@@ -8,7 +8,7 @@ BrainfuckInterpreter:
     @program: program
 
   run:
-    while @program[@i-ptr]
+    while @i-ptr < @program.length
       instruction: @program[@i-ptr]
       if instruction = ">"
         @m-ptr: @m-ptr + 1
@@ -37,6 +37,8 @@ BrainfuckInterpreter:
           @i-ptr: @i-ptr + 1
         else
           @i-ptr: @i-ptr-stack.last
+      else
+        false
 
 program: "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
 

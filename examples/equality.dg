@@ -1,6 +1,14 @@
 if 1 = 1
   puts("numbers")
+else
+  false
+
 if "foo" = "foo"
   puts("strings")
+else
+  false
+
 if "foo" = "bar"
   puts("Should not see this")
+else
+  false

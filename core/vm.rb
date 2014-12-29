@@ -45,6 +45,7 @@ module Dagon
         add_class("SyntaxError", DG_SyntaxErrorClass.new)
         add_class("LoadError", DG_LoadErrorClass.new)
         add_class("NameError", DG_NameErrorClass.new)
+        add_class("NullReferenceError", DG_NullReferenceErrorClass.new)
 
         dg_const_set("ARGV", array([]))
 

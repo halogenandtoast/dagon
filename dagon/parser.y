@@ -26,18 +26,18 @@ rule
                 | while_statement
                 | begin_block
 
-  begin_block: BEGIN multiline_lambda rescue_block { result = AST::BeginBlockNode.new(@filename, @line, val[1], val[2]) }
+  begin_block: BEGIN multiline_lambda NEWLINE rescue_block { result = AST::BeginBlockNode.new(@filename, @line, val[1], val[3]) }
 
-  rescue_block: {}
-              | RESCUE LPAREN list RPAREN multiline_lambda { result = AST::RescueBlockNode.new(@filename, @line, val[4], val[2]) }
+  rescue_block: RESCUE LPAREN list RPAREN multiline_lambda { result = AST::RescueBlockNode.new(@filename, @line, val[4], val[2]) }
               | RESCUE multiline_lambda { result = AST::RescueBlockNode.new(@filename, @line, val[1], nil) }
 
   block: INDENT statements DEDENT { result = val[1] }
 
   while_statement: WHILE condition block { result = AST::WhileNode.new(@filename, @line, val[1], val[2]) }
 
-  conditional_statement: IF condition block else_stmt { result = AST::IfNode.new(@filename, @line, val[1], val[2], val[3]) }
-  else_stmt: ELSEIF condition block else_stmt{ result = [AST::IfNode.new(@filename, @line, val[1], val[2], val[3])] }
+  conditional_statement: IF condition block NEWLINE else_stmt { result = AST::IfNode.new(@filename, @line, val[1], val[2], val[4]) }
+
+  else_stmt: ELSEIF condition block NEWLINE else_stmt{ result = [AST::IfNode.new(@filename, @line, val[1], val[2], val[4])] }
            | ELSE block { result = val[1] }
 
   class_definition: CONSTANT ':' block { result = AST::ClassDefinitionNode.new(@filename, @line, val[0].data, val[2]) }
