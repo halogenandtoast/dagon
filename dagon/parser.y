@@ -42,7 +42,6 @@ rule
 
   class_definition: CONSTANT ':' block { result = AST::ClassDefinitionNode.new(@filename, @line, val[0].data, val[2]) }
 
-
   assignment: method_name ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, @line, val[0].variable_name, val[2]) }
             | method_name ASSIGNMENT multiline_lambda { result = AST::AssignmentNode.new(@filename, @line, val[0].variable_name, val[2]) }
             | '@' method_name ASSIGNMENT expression { result = AST::AssignmentNode.new(@filename, @line, "@#{val[1].variable_name}", val[3]) }
@@ -63,21 +62,25 @@ rule
            | expression '>=' expression { result = call_on_object(val[0], '>=', val[2]) }
            | expression '=' expression { result = call_on_object(val[0], '=', val[2]) }
            | expression '!=' expression { result = call_on_object(val[0], '!=', val[2]) }
-            | expression '&&' expression { result = call_on_object(val[0], '&&', val[2]) }
-            | expression '||' expression { result = call_on_object(val[0], '||', val[2]) }
+           | expression '&&' expression { result = call_on_object(val[0], '&&', val[2]) }
+           | expression '||' expression { result = call_on_object(val[0], '||', val[2]) }
            | unary_expression
            | term
 
   hash: LBRACE hash_list RBRACE { result = AST::HashNode.new(@filename, @line, val[1]) }
+
   hash_list: { result = [] }
            | hash_member { result = val }
            | hash_list COMMA hash_member { result << val }
+
   hash_member: assignment { result = val[0] }
 
   array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, @line, val[1]) }
+
   list: { result = [] }
       | list_member { result = val }
       | list COMMA list_member { result.push val[2] }
+
   list_member: expression { result = val[0] }
              | assignment { result = val[0] }
 
@@ -99,11 +102,10 @@ rule
 
   literal: FLOAT { result = AST::LiteralNode.new(@filename, @line, val[0].data.to_f) }
          | INTEGER { result = AST::LiteralNode.new(@filename, @line, val[0].data.to_i) }
-         | STRING { result = AST::StringNode.new(@filename, @line, val[0].data) }
-         | dstring
          | TRUE { result = AST::LiteralNode.new(@filename, @line, true) }
          | FALSE { result = AST::LiteralNode.new(@filename, @line, false) }
-         | VOID { result = AST::LiteralNode.new(@filename, @line, nil) }
+         | STRING { result = AST::StringNode.new(@filename, @line, val[0].data) }
+         | dstring
 
   dstring: DSTRING_BEGIN dstring_contents DSTRING_END { result = AST::DStringNode.new(@filename, @line, val[1]) }
 
@@ -129,6 +131,7 @@ rule
 
   singleline_lambda: ARROW LPAREN list RPAREN LBRACE statement RBRACE { result = AST::BlockNode.new(@filename, @line, [val[5]], val[2]) }
                    | ARROW LBRACE statement RBRACE { result = AST::BlockNode.new(@filename, @line, [val[2]], []) }
+
   lambda: multiline_lambda { result = val[0] }
         | singleline_lambda { result = val[0] }
 
