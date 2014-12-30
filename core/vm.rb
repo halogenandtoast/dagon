@@ -11,15 +11,12 @@ module Dagon
       attr_reader :globals, :top_object, :load_paths, :stack
       attr_accessor :filename, :line_number
       def initialize main = nil
-        $runtime = self
         @load_paths = [File.expand_path("."), File.join(File.dirname(__FILE__), "..", "lib")]
         @required_files = []
         @stack = []
         @top_object = main || Dagon::Core::DG_Object.new
         @stack.push Frame.new(@top_object, '(toplevel)')
         @globals = {}
-        @classes = {}
-        @arguments = []
         @catch_all_errors = false
         @filename = nil
         @line_number = 0
@@ -47,8 +44,6 @@ module Dagon
         add_class("NameError", DG_NameErrorClass.new)
         add_class("NullReferenceError", DG_NullReferenceErrorClass.new)
 
-        dg_const_set("ARGV", array([]))
-
         add_class("IO", DG_IOClass.new)
         add_class("File", DG_FileClass.new(self))
 
@@ -56,21 +51,20 @@ module Dagon
         stdout = from_native("IO", int(STDOUT.fileno))
         stderr = from_native("IO", int(STDERR.fileno))
 
+        dg_const_set("ARGV", array([]))
         dg_const_set("STDIN", stdin)
-        dg_global_set("$stdin", stdin)
-
         dg_const_set("STDOUT", stdout)
-        dg_global_set("$stdout", stdout)
-
         dg_const_set("STDERR", stderr)
+
+        dg_global_set("$stdin", stdin)
+        dg_global_set("$stdout", stdout)
         dg_global_set("$stderr", stderr)
-
         dg_global_set("$LOAD_PATH", array(@load_paths))
-
 
         unless Kernel.const_defined?("Dtrue")
           Kernel.const_set("Dtrue", Dagon::Core::True.instance)
         end
+
         unless Kernel.const_defined?("Dfalse")
           Kernel.const_set("Dfalse", Dagon::Core::False.instance)
         end
@@ -267,4 +261,3 @@ module Dagon
     end
   end
 end
-
