@@ -71,7 +71,7 @@ module Dagon
       end
     end
 
-    class DG_NullReferenceErrorClass <DG_ErrorClass
+    class DG_NullReferenceErrorClass < DG_ErrorClass
       def initialize
         super("NullReferenceError")
       end

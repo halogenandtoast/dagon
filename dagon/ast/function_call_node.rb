@@ -28,6 +28,7 @@ module Dagon
           if object
             object.dagon_send interpreter, @function_name, *arguments
           else
+            binding.pry
             $stderr.puts "Could not call #{@function_name} on nil"
             exit(1)
           end

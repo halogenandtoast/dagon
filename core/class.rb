@@ -16,6 +16,9 @@ module Dagon
           system: ->(vm, ref, *args) { vm.string(Kernel.send(:`, *args.map(&:to_s))) },
           trap: ->(vm, ref, *args) { trap(args[0].to_s) { args[1].call(vm) } },
           eval: ->(vm, ref, *args) {
+            if args[0].value.strip == ""
+              vm.error "ArgumentError", "Can not eval an empty line"
+            end
             tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)') do |error|
               vm.error("SyntaxError", error)
               return
