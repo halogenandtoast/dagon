@@ -34,7 +34,7 @@ Idg:
             false
           exit
         else
-          not-expecting-more: !line.contains?("->") && !line.contains?(":")
+          not-expecting-more: !line.strip.end-with?("->") && !line.strip.end-with?(":")
           if !line.start-with?("  ") && not-expecting-more
             result: eval(lines.join("\n"))
             print("=> ")

@@ -18,6 +18,7 @@ module Dagon
             statement.evaluate interpreter
           end.last
         end
+        klass
       end
     end
   end

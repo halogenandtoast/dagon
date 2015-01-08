@@ -38,6 +38,9 @@ module Dagon
         add_method 'length', ->(vm, ref) {
           vm.int(ref.value.length)
         }
+        add_method 'strip', ->(vm, ref) {
+          dagon_new(vm, ref.value.strip)
+        }
         add_method 'to-i', ->(vm, ref) {
           vm.int(ref.value.to_i)
         }
@@ -55,6 +58,9 @@ module Dagon
         }
         add_method 'start-with?', ->(vm, ref, search) {
           ref.value.start_with?(search.value) ? Dtrue : Dfalse
+        }
+        add_method 'end-with?', ->(vm, ref, search) {
+          ref.value.end_with?(search.value) ? Dtrue : Dfalse
         }
         add_method '[]', ->(vm, ref, location) {
           if ref.value[location.value]

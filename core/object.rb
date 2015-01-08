@@ -10,6 +10,10 @@ module Dagon
         @klass = klass || DG_Class.new
       end
 
+      def to_s
+        @klass.to_s
+      end
+
       def eql? object
         self == object
       end
