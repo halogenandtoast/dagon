@@ -68,8 +68,11 @@ module Dagon
           inspect: ->(vm, ref) {
             ref.name
           },
-          class: ->(vm, ref) {
+          superclass: ->(vm, ref) {
             ref.parent
+          },
+          class: ->(vm, ref) {
+            vm.get_class("Class")
           }
         }
         @class_methods["=".to_sym] = ->(vm, ref, other_class) {
