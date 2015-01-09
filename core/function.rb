@@ -1,12 +1,16 @@
 module Dagon
   module Core
     class DG_Function < DG_Object
-      attr_reader :binding, :name
-      def initialize binding, name, code, klass
-        @binding = binding
+      attr_reader :dg_binding, :name
+      def initialize dg_binding, name, code, klass
+        @dg_binding = dg_binding
         @name = name
         @code = code
         @klass = klass
+      end
+
+      def to_proc
+
       end
 
       def to_s

@@ -7,7 +7,8 @@ module Dagon
         @methods = {
           class: ->(vm, ref) { ref.klass },
           inspect: ->(vm, ref, *args) { vm.string("#<#{name}>") },
-          methods: ->(vm, ref, *args) { vm.array(@methods.keys) },
+          methods: ->(vm, ref, *args) { vm.array(@methods.map {|name, block| vm.method(ref, name, block.to_proc) }) },
+          method: ->(vm, ref, *args) { vm.method(ref, args[0].value.to_sym, @methods.fetch(args[0].value.to_sym) { vm.error("ArgumentError", "No method #{args[0].value}") }) },
           init: ->(vm, ref, *args) { },
           exit: ->(vm, ref, *args) { exit(0) },
           puts: ->(vm, ref, *args) { vm.dg_const_get("STDOUT").dagon_send(vm, "puts", *args) },

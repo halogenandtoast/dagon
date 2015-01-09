@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame function integer string true hash io file error dir)
+CORE = %w(object class array block false float frame function integer string true hash io file error dir method)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -35,6 +35,7 @@ module Dagon
         add_class("Function", DG_FunctionClass.new)
         add_class("Hash", DG_HashClass.new)
         add_class("Integer", DG_IntegerClass.new)
+        add_class("Method", DG_MethodClass.new)
         add_class("String", DG_StringClass.new)
         add_class("True", DG_TrueClass.new)
 
@@ -152,7 +153,8 @@ module Dagon
         else
           current_object.klass.add_method name, block
         end
-        get_class("Function").dagon_new(self, current_object, name, block)
+        method(current_object, name, block)
+        # get_class("Function").dagon_new(self, current_object, name, block)
       end
 
       def find_file_path filename
@@ -230,6 +232,10 @@ module Dagon
 
       def is_truthy(object)
         object != Dfalse
+      end
+
+      def method(dg_binding, name, block)
+        get_class("Method").dagon_new(self, dg_binding, name, block)
       end
 
       def string(native_string)

@@ -7,6 +7,10 @@ module Dagon
         @body = body
       end
 
+      def to_proc
+        method(:call)
+      end
+
       def call(interpreter, object, *args)
         unless args.size == @params.size
           interpreter.error("ArgumentError", "wrong number of arguments (#{args.size} for #{@params.size})")

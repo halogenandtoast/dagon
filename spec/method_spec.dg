@@ -1,0 +1,13 @@
+describe("Method") ->
+  it("can be accessed") ->
+    assert-equal(1.method("to-s").call, "1")
+
+  it("is bound for added methods") ->
+    Greeter:
+      init(name):
+        @name: name
+      greet:
+        @name
+
+    g: Greeter("Matt")
+    assert-equal(g.method("greet").call, "Matt")
