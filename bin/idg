@@ -33,7 +33,7 @@ Idg:
           else
             false
           exit
-        elseif line != ""
+        else
           not-expecting-more: !line.strip.end-with?("->") && !line.strip.end-with?(":")
           if !line.start-with?("  ") && not-expecting-more
             result: eval(lines.join("\n"))
@@ -42,8 +42,6 @@ Idg:
             lines: []
           else
             false
-        else
-          true
       rescue ->(e)
         lines: []
         puts("#{e.class}: #{e.message}")
