@@ -5,7 +5,7 @@ module Dagon
       def initialize name = nil, parent = nil
         @constants = {}
         @methods = {
-          class: ->(vm, ref) { name },
+          class: ->(vm, ref) { ref.klass },
           inspect: ->(vm, ref, *args) { vm.string("#<#{name}>") },
           methods: ->(vm, ref, *args) { vm.array(@methods.keys) },
           init: ->(vm, ref, *args) { },
@@ -65,11 +65,11 @@ module Dagon
           methods: ->(vm, ref) {
             vm.array(ref.class_methods.keys)
           },
-          superclass: ->(vm, ref) {
-            vm.get_class(ref.parent.name)
-          },
           inspect: ->(vm, ref) {
             ref.name
+          },
+          class: ->(vm, ref) {
+            ref.parent
           }
         }
         @class_methods["=".to_sym] = ->(vm, ref, other_class) {

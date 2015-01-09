@@ -1,7 +1,7 @@
 module Dagon
   module Core
     class DG_Integer < DG_Object
-      attr_reader :value
+      attr_reader :value, :klass
       def initialize value, klass
         @value = value
         @klass = klass
