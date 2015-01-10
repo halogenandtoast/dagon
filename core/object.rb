@@ -41,12 +41,21 @@ module Dagon
             method.call(interpreter, self, *args)
           end
         else
-          if self == interpreter.top_object
-            error_message = "undefined method '#{name}' for main:Object"
+          old_frame = interpreter.pop_frame
+          if variable = interpreter.frame[name]
+            if variable.respond_to?(:call)
+              variable.call(interpreter, *args)
+            else
+              interpreter.error("NoMethodError", "#{name} is not a callable")
+            end
           else
-            error_message = "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
+            if self == interpreter.top_object
+              error_message = "undefined method '#{name}' for main:Object"
+            else
+              error_message = "undefined method '#{name}' for #{self.inspect}:#{self.klass.name}"
+            end
+            interpreter.error("NoMethodError", error_message)
           end
-          interpreter.error("NoMethodError", error_message)
         end
       end
 

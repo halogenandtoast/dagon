@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame function integer string true hash io file error dir method)
+CORE = %w(object class array block false float frame function integer string true hash io file error dir method curried_method)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -28,6 +28,7 @@ module Dagon
         add_class("Class", DG_Class.new)
         add_class("Array", DG_ArrayClass.new)
         add_class("Block", DG_BlockClass.new)
+        add_class("CurriedMethod", DG_CurriedMethodClass.new)
         add_class("Dir", DG_DirClass.new)
         add_class("Error", DG_ErrorClass.new)
         add_class("False", DG_FalseClass.new)
@@ -232,6 +233,10 @@ module Dagon
 
       def is_truthy(object)
         object != Dfalse
+      end
+
+      def curry(dg_binding, name, function, *args)
+        get_class("CurriedMethod").dagon_new(self, dg_binding, name, function, args)
       end
 
       def method(dg_binding, name, block)

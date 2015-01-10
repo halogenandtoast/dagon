@@ -9,10 +9,6 @@ module Dagon
         @klass = klass
       end
 
-      def to_proc
-
-      end
-
       def to_s
         "<fun##{name}>"
       end

@@ -112,16 +112,25 @@ rule
   dstring_contents: dstring_contents expression { result.push(val[1]) }
                   | expression { result = [val[0]] }
 
-  method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, [], val[2])) }
-                   | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, val[2], val[5])) }
+  method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, val[0].variable_name, [], val[2])) }
+                   | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, val[0].variable_name, val[2], val[5])) }
 
   method_call: term DOT method_name lambda { result = AST::FunctionCallNode.new(@filename, @line, val[0], val[2].variable_name, [], val[3]) }
              | term DOT method_name { result = AST::FunctionCallNode.new(@filenme, @line, val[0], val[2].variable_name, [], nil) }
              | term DOT method_name LPAREN list RPAREN lambda { result = AST::FunctionCallNode.new(@filename, @line, val[0], val[2].variable_name, val[4], val[6]) }
-             | term DOT method_name LPAREN list RPAREN { result = AST::FunctionCallNode.new(@filename, @line, val[0], val[2].variable_name, val[4], nil) }
              | method_name LPAREN list RPAREN lambda { result = AST::FunctionCallNode.new(@filename, @line, nil, val[0].variable_name, val[2], val[4]) }
-             | method_name LPAREN list RPAREN { result = AST::FunctionCallNode.new(@filename, @line, nil, val[0].variable_name, val[2], nil) }
              | term '[' expression RBRACKET { result = AST::FunctionCallNode.new(@filename, @line, val[0], '[]', [val[2]], nil) }
+             | simple_method_call
+             | nested_method_call
+             | final_nested_method_call
+
+  nested_method_call: nested_method_call LPAREN list RPAREN { result = AST::CurriedFunctionCallNode.new(@filename, @line, val[0], val[2], nil) }
+                    | simple_method_call LPAREN list RPAREN { result = AST::CurriedFunctionCallNode.new(@filename, @line, val[0], val[2], nil) }
+
+  final_nested_method_call: nested_method_call LPAREN list RPAREN lambda { result = AST::CurriedFunctionCallNode.new(@filename, @line, val[0], val[2], val[4]) }
+
+  simple_method_call: term DOT method_name LPAREN list RPAREN { result = AST::FunctionCallNode.new(@filename, @line, val[0], val[2].variable_name, val[4], nil) }
+                    | method_name LPAREN list RPAREN { result = AST::FunctionCallNode.new(@filename, @line, nil, val[0].variable_name, val[2], nil) }
 
   object_call: CONSTANT LPAREN list RPAREN lambda { result = AST::InstanceInitNode.new(@filename, @line, val[0].data, val[2], val[4]) }
              | CONSTANT LPAREN list RPAREN { result = AST::InstanceInitNode.new(@filename, @line, val[0].data, val[2], nil) }
@@ -142,6 +151,7 @@ rule
   class_definition_node instance_init_node block_node hash_node array_node
   unary_function_call_node constant_ref_node instance_var_ref_node
   dstring_node begin_block_node rescue_block_node global_var_ref_node
+  curried_function_call_node
 ).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner

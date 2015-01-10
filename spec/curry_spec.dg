@@ -1,0 +1,11 @@
+describe("CurriedMethod") ->
+  it("curries arguments") ->
+    adder(x, y):
+      x + y
+    fun: adder(1)
+    assert-equal(fun(2), 3)
+
+  it("be chained") ->
+    add3(x, y, z):
+      x + y + z
+    assert-equal(add3(1)(2)(3), 6)

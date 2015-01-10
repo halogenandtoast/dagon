@@ -7,6 +7,10 @@ module Dagon
         @variable_name = variable_name
       end
 
+      def inspect
+        "<var-ref##{variable_name}>"
+      end
+
       def evaluate interpreter
         interpreter.notify(self)
         if interpreter.frame.local_variable? @variable_name

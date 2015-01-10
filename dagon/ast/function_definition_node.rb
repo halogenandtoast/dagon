@@ -7,6 +7,10 @@ module Dagon
         @function_object = function_object
       end
 
+      def inspect
+        "<fun-def##{@function_name}>"
+      end
+
       def evaluate interpreter
         interpreter.define_function @function_name, @function_object
       end

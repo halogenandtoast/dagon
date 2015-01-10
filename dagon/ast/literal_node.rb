@@ -9,6 +9,10 @@ module Dagon
         @value = literal
       end
 
+      def inspect
+        @value.inspect
+      end
+
       def evaluate interpreter
         case @value.class.name
         when "Fixnum" then interpreter.int(@value)

@@ -4,12 +4,18 @@ module Dagon
     class DagonArgumentError < DagonError; end
 
     class FunctionCallNode < Node
+      attr_reader :function_name
+
       def initialize filename, line_number, object, function_name, arguments, block
         super filename, line_number
         @function_name = function_name
         @arguments = arguments
         @block = block
         @object = object
+      end
+
+      def inspect
+        "<fun-call##{function_name}(#{@arguments.map(&:inspect).join(", ")})>"
       end
 
       def evaluate interpreter

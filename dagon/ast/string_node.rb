@@ -6,6 +6,10 @@ module Dagon
         @value = string
       end
 
+      def inspect
+        "<string##{@value.inspect}>"
+      end
+
       def evaluate interpreter
         interpreter.string(@value)
       end
