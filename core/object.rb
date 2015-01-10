@@ -49,6 +49,7 @@ module Dagon
               interpreter.error("NoMethodError", "#{name} is not a callable")
             end
           else
+            interpreter.push_frame old_frame
             if self == interpreter.top_object
               error_message = "undefined method '#{name}' for main:Object"
             else

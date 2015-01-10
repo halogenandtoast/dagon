@@ -99,7 +99,21 @@ my-fun(number-of-times, block):
   number-of-times.times(block)
 ```
 
+Additionally functions which have not been sent all their arguments can be passed as well
 
+```
+adder(x, y):
+  x + y
+
+subtracter(x, y):
+  x - y
+
+perform(fun, y):
+  fun(y)
+
+perform(adder(3), 4) # 7
+perform(subtracter(4), 2) # 2
+```
 
 ### Conditionals
 
