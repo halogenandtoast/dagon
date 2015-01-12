@@ -8,6 +8,10 @@ module Dagon
         @function_name = function_name
       end
 
+      def arity
+        @params.length + 2
+      end
+
       def to_proc
         method(:call)
       end

@@ -36,9 +36,14 @@ module Dagon
       def dagon_send interpreter, name, *args
         method = @klass.get_method(name)
         if method
-          frame = Frame.new(self, self)
-          interpreter.frame_eval frame do
-            method.call(interpreter, self, *args)
+          if method.arity > 0 && (args.length + 2) > method.arity
+            interpreter.error("ArgumentError", "Wrong number of arguments #{args.length} for #{method.arity - 2}")
+            return
+          else
+            frame = Frame.new(self, self)
+            interpreter.frame_eval frame do
+              method.call(interpreter, self, *args)
+            end
           end
         else
           old_frame = interpreter.pop_frame
