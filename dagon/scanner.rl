@@ -30,6 +30,7 @@
   at = "@";
   dollar = "$";
   qmark = "?";
+  glyph = '+' | '-' | '*' | '/' | '=' | '!=' | '<' | '>' | '<=' | '>=' | '&&' | '||' | '^' | '**';
 
   main := |*
     comment;
@@ -59,6 +60,7 @@
     operator => { emit(data[(ts+1)...(te-1)], data, ts + 1, te - 1) };
     exponent => { emit(:EXPONENT, data, ts + 1, te - 1) };
     comma => { emit(:COMMA, data, ts, te) };
+    glyph => { emit(:GLYPH, data, ts, te) };
     space;
 
     any => { problem(data, ts, te); fbreak; };

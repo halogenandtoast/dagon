@@ -88,6 +88,7 @@ rule
 
   method_name: IDENTIFIER { result = AST::VarRefNode.new(@filename, @line, val[0].data) }
              | IDENTIFIER '?' { result = AST::VarRefNode.new(@filename, @line, val[0].data + "?") }
+             | GLYPH { result = AST::VarRefNode.new(@filename, @line, val[0].data) }
 
   term: '@' IDENTIFIER { result = AST::InstanceVarRefNode.new(@filename, @line, "@#{val[1].data}") }
       | '$' IDENTIFIER { result = AST::GlobalVarRefNode.new(@filename, @line, "$#{val[1].data}") }
