@@ -9,19 +9,19 @@ module Dagon
           inspect: ->(vm, ref, *args) { vm.string("#<#{name}>") },
           methods: ->(vm, ref, *args) { vm.array(@methods.map {|name, block| vm.method(ref, name, block.to_proc) }) },
           method: ->(vm, ref, *args) { vm.method(ref, args[0].value.to_sym, @methods.fetch(args[0].value.to_sym) { vm.error("ArgumentError", "No method #{args[0].value}") }) },
-          init: ->(vm, ref, *args) { },
+          init: ->(vm, ref, *args) { Dtrue },
           exit: ->(vm, ref, *args) { exit(0) },
           puts: ->(vm, ref, *args) { vm.dg_const_get("STDOUT").dagon_send(vm, "puts", *args) },
-          print: ->(vm, ref, *args) { print *args.map(&:to_s) },
+          print: ->(vm, ref, *args) { print(*args.map(&:to_s)); Dtrue },
           gets: ->(vm, ref, *args) { vm.string($stdin.gets) },
           system: ->(vm, ref, *args) { vm.string(Kernel.send(:`, *args.map(&:to_s))) },
           trap: ->(vm, ref, *args) { trap(args[0].to_s) { args[1].call(vm) } },
           self: ->(vm, ref) { ref },
-          eval: ->(vm, ref, *args) {
-            if args[0].value.strip == ""
+          :"binding-eval" => ->(vm, ref, code, dg_binding) {
+            if code.value.strip == ""
               vm.error "ArgumentError", "Can not eval an empty line"
             end
-            tokens = Dagon::Scanner.tokenize(args[0].value, '(eval)') do |error|
+            tokens = Dagon::Scanner.tokenize(code.value, '(eval)') do |error|
               vm.error("SyntaxError", error)
               return
             end
@@ -29,9 +29,15 @@ module Dagon
               vm.error("SyntaxError", error)
               return
             end
-            vm.top_level_eval do
+            vm.frame_eval dg_binding.frame do
               tree.evaluate(vm)
             end
+          },
+          eval: ->(vm, ref, code) {
+            locals = vm.frame.local_variables
+            frame = Frame.new(ref, "(eval)", locals)
+            dg_binding = vm.from_native("Binding", frame)
+            @methods[:"binding-eval"].call(vm, ref, code, dg_binding)
           },
           load: ->(vm, ref, *args) {
             filename = args[0]

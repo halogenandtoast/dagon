@@ -10,7 +10,7 @@ module Dagon
       end
 
       def inspect
-        @value.inspect
+        "<literal#{@value.inspect}>"
       end
 
       def evaluate interpreter

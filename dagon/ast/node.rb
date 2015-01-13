@@ -11,10 +11,8 @@ module Dagon
       def execute_list interpreter, nodes
         frame = interpreter.frame
         nodes.map do |node|
-          unless frame.popped?
-            interpreter.notify(node)
-            node.evaluate(interpreter)
-          end
+          interpreter.notify(node)
+          node.evaluate(interpreter)
         end.last
       end
 

@@ -27,7 +27,7 @@ Idg:
       begin ->
         if line = false
           if lines.length > 1
-            result: eval(lines.join("\n"))
+            result: binding-eval(lines.join("\n"), TOP_LEVEL_BINDING)
             print("=> ")
             puts(result.inspect)
           else
@@ -36,7 +36,7 @@ Idg:
         else
           not-expecting-more: !line.strip.end-with?("->") && !line.strip.end-with?(":")
           if !line.start-with?("  ") && not-expecting-more
-            result: eval(lines.join("\n"))
+            result: binding-eval(lines.join("\n"), TOP_LEVEL_BINDING)
             print("=> ")
             puts(result.inspect)
             lines: []

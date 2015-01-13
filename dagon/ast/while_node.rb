@@ -8,9 +8,11 @@ module Dagon
       end
 
       def evaluate interpreter
+        result = Dfalse
         while @condition.evaluate(interpreter) != Dfalse
-          execute_list interpreter, @statements
+          result = execute_list(interpreter, @statements)
         end
+        result
       end
     end
   end

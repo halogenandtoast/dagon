@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame function integer string true hash io file error dir method curried_method)
+CORE = %w(object class array block false float frame function integer string true hash io file error dir method curried_method binding)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -15,7 +15,8 @@ module Dagon
         @required_files = []
         @stack = []
         @top_object = main || Dagon::Core::DG_Object.new
-        @stack.push Frame.new(@top_object, '(toplevel)')
+        @top_level_frame = Frame.new(@top_object, '(toplevel)')
+        @stack.push @top_level_frame
         @globals = {}
         @catch_all_errors = false
         @filename = nil
@@ -27,6 +28,7 @@ module Dagon
       def boot_core
         add_class("Class", DG_Class.new)
         add_class("Array", DG_ArrayClass.new)
+        add_class("Binding", DG_BindingClass.new)
         add_class("Block", DG_BlockClass.new)
         add_class("CurriedMethod", DG_CurriedMethodClass.new)
         add_class("Dir", DG_DirClass.new)
@@ -54,10 +56,13 @@ module Dagon
         stdout = from_native("IO", int(STDOUT.fileno))
         stderr = from_native("IO", int(STDERR.fileno))
 
+        top_level_binding = from_native("Binding", @top_level_frame)
+
         dg_const_set("ARGV", array([]))
         dg_const_set("STDIN", stdin)
         dg_const_set("STDOUT", stdout)
         dg_const_set("STDERR", stderr)
+        dg_const_set("TOP_LEVEL_BINDING", top_level_binding)
 
         dg_global_set("$stdin", stdin)
         dg_global_set("$stdout", stdout)
@@ -176,11 +181,8 @@ module Dagon
         path = find_file_path(file)
         if path
           @required_files << path
-          vm = VM.new(@top_object)
-          program = File.read(path)
-          tokens = Dagon::Scanner.tokenize(program, file)
-          tree = Dagon::Parser.parse(tokens, file, false)
-          tree.evaluate(vm)
+          program = string(File.read(path))
+          @top_object.dagon_send(self, :eval, program)
           Dtrue
         else
           error "LoadError", "No such file or directory - #{file}\n" +
