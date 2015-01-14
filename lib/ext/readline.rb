@@ -2,6 +2,12 @@ require 'readline'
 
 class DG_ReadlineClass < Dagon::Core::DG_Class
   def initialize
+    Readline.completion_proc = ->(s) do
+      if s.strip == ""
+        "  "
+      end
+    end
+    Readline.completion_append_character = ""
     super('Readline', Dagon::Core::DG_Class.new)
   end
 
