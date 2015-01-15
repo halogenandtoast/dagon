@@ -10,19 +10,25 @@ module Dagon
     class VM
       attr_reader :globals, :top_object, :load_paths, :stack
       attr_accessor :filename, :line_number
-      def initialize main = nil
+
+      def initialize
+        setup_load_paths
+        setup_top_level
+        boot_core
+        setup_globals_and_constants
+        set_arguments(ARGV)
+      end
+
+      def setup_load_paths
         @load_paths = [File.expand_path("."), File.join(File.dirname(__FILE__), "..", "lib")]
         @required_files = []
+      end
+
+      def setup_top_level
         @stack = []
-        @top_object = main || Dagon::Core::DG_Object.new
+        @top_object = Dagon::Core::DG_Object.new
         @top_level_frame = Frame.new(@top_object, '(toplevel)')
         @stack.push @top_level_frame
-        @globals = {}
-        @catch_all_errors = false
-        @filename = nil
-        @line_number = 0
-        boot_core
-        set_arguments(ARGV)
       end
 
       def boot_core
@@ -52,6 +58,18 @@ module Dagon
         add_class("IO", DG_IOClass.new)
         add_class("File", DG_FileClass.new(self))
 
+        unless Kernel.const_defined?("Dtrue")
+          Kernel.const_set("Dtrue", Dagon::Core::True.instance)
+        end
+
+        unless Kernel.const_defined?("Dfalse")
+          Kernel.const_set("Dfalse", Dagon::Core::False.instance)
+        end
+      end
+
+      def setup_globals_and_constants
+        @globals = {}
+
         stdin = from_native("IO", int(STDIN.fileno))
         stdout = from_native("IO", int(STDOUT.fileno))
         stderr = from_native("IO", int(STDERR.fileno))
@@ -69,13 +87,6 @@ module Dagon
         dg_global_set("$stderr", stderr)
         dg_global_set("$LOAD_PATH", array(@load_paths))
 
-        unless Kernel.const_defined?("Dtrue")
-          Kernel.const_set("Dtrue", Dagon::Core::True.instance)
-        end
-
-        unless Kernel.const_defined?("Dfalse")
-          Kernel.const_set("Dfalse", Dagon::Core::False.instance)
-        end
       end
 
       def set_arguments arguments
@@ -86,7 +97,7 @@ module Dagon
       def frame_eval current_frame, &block
         push_frame current_frame
         result = block.call
-        if frame == current_frame
+        if frame == current_frame # TODO: remember why I do this
           pop_frame
         end
         result
@@ -205,19 +216,10 @@ module Dagon
         end
         if frame == nil
           dg_global_get("$stderr").dagon_send(self, "puts", error.printable_error(self))
-          unless @catch_all_errors
-            exit(1)
-          else
-            @stack.push Frame.new(@top_object, '(toplevel)')
-            nil
-          end
+          exit(1)
         else
           frame.rescue_from(self, error)
         end
-      end
-
-      def catch_all_errors
-        @catch_all_errors = true
       end
 
       def rescue_from_all_errors(block)
@@ -231,10 +233,6 @@ module Dagon
       def error(klass, message)
         error = get_class(klass).dagon_new(self, message)
         dg_raise(error)
-      end
-
-      def is_truthy(object)
-        object != Dfalse
       end
 
       def curry(dg_binding, name, function, *args)

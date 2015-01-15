@@ -1,0 +1,11 @@
+require("socket")
+
+describe("TCP") ->
+  it("can communicate over sockets") ->
+    server: TCPServer(2000)
+    client: TCPSocket("localhost", 2000)
+    channel: server.accept
+    channel.puts("Wombat")
+    response: client.gets
+    client.close
+    assert-equal("Wombat\n", response)

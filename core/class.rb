@@ -52,8 +52,7 @@ module Dagon
             filename = vm.string("#{args[0]}.dg")
             @methods[:load].call(vm, ref, filename)
           },
-          :"require-ext" => ->(vm, ref, *args) {
-            filename = args[0]
+          :"require-ext" => ->(vm, ref, filename) {
             vm.load_paths.each do |path|
               file = File.join(path, "ext", filename.value)
               if File.exists?("#{file}.rb")
@@ -64,8 +63,8 @@ module Dagon
                 return status
               end
             end
-            vm.dg_const_get("STDERR").io.puts("Could not load #{filename}")
-            exit(1)
+            vm.error("LoadError", "Could not load #{filename}")
+            Dfalse
           }
         }
         @class_ivars = {}
