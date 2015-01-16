@@ -1,5 +1,3 @@
-require 'core/hash'
-
 module Dagon
   module AST
     class HashNode < Node
