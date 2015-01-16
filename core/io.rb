@@ -9,7 +9,7 @@ module Dagon
       end
 
       def write_array array
-        array.list.each do |item|
+        array.value.each do |item|
           dg_puts(item)
         end
       end

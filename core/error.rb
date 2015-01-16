@@ -76,5 +76,11 @@ module Dagon
         super("NullReferenceError")
       end
     end
+
+    class DG_InternalErrorClass < DG_ErrorClass
+      def initialize
+        super("InternalError")
+      end
+    end
   end
 end

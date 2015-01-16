@@ -3,10 +3,11 @@ require "core/class"
 module Dagon
   module Core
     class DG_Object
-      attr_reader :klass, :value
+      attr_reader :klass
+      attr_accessor :value
       def initialize klass = nil
         @ivars = {}
-        @value = self
+        @value ||= self
         @klass = klass || DG_Class.new
       end
 
@@ -37,7 +38,7 @@ module Dagon
         method = @klass.get_method(name)
         if method
           if method.arity > 0 && (args.length + 2) > method.arity
-            interpreter.error("ArgumentError", "Wrong number of arguments #{args.length} for #{method.arity - 2}")
+            interpreter.error("ArgumentError", "Wrong number of arguments for #{name} (#{args.length} for #{method.arity - 2})")
             return
           else
             frame = Frame.new(self, self)

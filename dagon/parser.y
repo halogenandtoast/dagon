@@ -71,15 +71,20 @@ rule
 
   hash_list: { result = [] }
            | hash_member { result = val }
-           | hash_list COMMA hash_member { result << val }
+           | hash_list COMMA hash_member { result << val[2] }
 
   hash_member: assignment { result = val[0] }
 
-  array: LBRACKET list RBRACKET { result = AST::ArrayNode.new(@filename, @line, val[1]) }
+  empty_array: LBRACKET RBRACKET
+
+  array: empty_array { result = AST::ArrayNode.new(@filename, @line, []) }
+       | LBRACKET non_empty_list RBRACKET { result = AST::ArrayNode.new(@filename, @line, val[1]) }
 
   list: { result = [] }
-      | list_member { result = val }
-      | list COMMA list_member { result.push val[2] }
+      | non_empty_list
+
+  non_empty_list: list_member { result = val }
+                | list COMMA list_member { result.push val[2] }
 
   list_member: expression { result = val[0] }
              | assignment { result = val[0] }
@@ -115,6 +120,8 @@ rule
 
   method_definition: method_name ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, val[0].variable_name, [], val[2])) }
                    | method_name LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, val[0].variable_name, AST::Function.new(@filename, @line, val[0].variable_name, val[2], val[5])) }
+                   | empty_array LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, "[]", AST::Function.new(@filename, @line, "[]", val[2], val[5])) }
+                   | LBRACKET KEY_ASSIGNMENT LPAREN list RPAREN ':' block { result = AST::FunctionDefinitionNode.new(@filename, @line, "[]:", AST::Function.new(@filename, @line, "[]:", val[3], val[6])) }
 
   method_call: term DOT method_name lambda { result = AST::FunctionCallNode.new(@filename, @line, val[0], val[2].variable_name, [], val[3]) }
              | term DOT method_name { result = AST::FunctionCallNode.new(@filenme, @line, val[0], val[2].variable_name, [], nil) }

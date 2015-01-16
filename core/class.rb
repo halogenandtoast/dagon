@@ -116,6 +116,14 @@ module Dagon
         @methods[name.to_sym] = block
       end
 
+      def add_compiled_methods filename, code
+        stripped_code = code.gsub(/\A(\s+)/, "").gsub(/^#{$1}/, "")
+        frame = Frame.new(self, self.to_s)
+        $vm.frame_eval frame do
+          $vm.dg_eval(filename, stripped_code)
+        end
+      end
+
       def get_method name
         @methods[name.to_sym]
       end

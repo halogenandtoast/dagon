@@ -4,7 +4,13 @@ module Dagon
       attr_reader :value
       def initialize value, klass
         @value = value
-        @klass = klass
+        super(klass)
+        begin
+          set_instance_variable("@length", $vm.int(@value.length))
+        rescue
+          binding.pry
+          raise
+        end
       end
 
       def == other
@@ -26,18 +32,18 @@ module Dagon
       end
 
       def boot
-        add_method "+", ->(vm, ref, other) {
-          dagon_new(vm, ref.value + other.value)
-        }
-        add_method "=", ->(vm, ref, other) {
-          ref.value == other.value ? Dtrue : Dfalse
-        }
-        add_method "!=", ->(vm, ref, other) {
-          ref.value != other.value ? Dtrue : Dfalse
-        }
-        add_method 'length', ->(vm, ref) {
-          vm.int(ref.value.length)
-        }
+        add_compiled_methods("string.rb", <<-DEF)
+          +(other):
+            DAGONVM.primitive-add(self, other)
+          =(other):
+            DAGONVM.primitive-eq?(self, other)
+          !=(other):
+            DAGONVM.primitive-neq?(self, other)
+          length:
+            @length
+          [](index):
+            DAGONVM.aref(self, index)
+        DEF
         add_method 'strip', ->(vm, ref) {
           dagon_new(vm, ref.value.strip)
         }
@@ -61,13 +67,6 @@ module Dagon
         }
         add_method 'end-with?', ->(vm, ref, search) {
           ref.value.end_with?(search.value) ? Dtrue : Dfalse
-        }
-        add_method '[]', ->(vm, ref, location) {
-          if ref.value[location.value]
-            dagon_new(vm, ref.value[location.value])
-          else
-            vm.error("NullReferenceError", "no element exists at #{location.value}")
-          end
         }
       end
 

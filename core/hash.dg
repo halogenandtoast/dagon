@@ -1,0 +1,28 @@
+Hash:
+  init(native):
+    DAGONVM.set-value(self, native)
+  =(other):
+    DAGONVM.primitive-eq?(self, other)
+  !=(other):
+    DAGONVM.primitive-neq?(self, other)
+  [](index):
+    DAGONVM.aref(self, index)
+  []:(index, value):
+    DAGONVM.aref-set(self, index, value)
+  keys:
+    DAGONVM.hash-keys(self)
+  each(fun):
+    keys.each ->(key)
+      fun(key, self[key])
+  map(fun):
+    result: []
+    self.each ->(key, value)
+      result: result + [fun(key, value)]
+    result
+  inspect:
+    pairs: self.map ->(key, value)
+      "#{key}: #{value.inspect}"
+    if pairs.any?
+      "{ #{pairs.join(", ")} }"
+    else
+      "{}"

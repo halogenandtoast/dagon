@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame function integer string true hash io file error dir method curried_method binding)
+CORE = %w(object class array block false float frame function integer string true io file error dir method curried_method binding dagonvm)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -12,6 +12,7 @@ module Dagon
       attr_accessor :filename, :line_number
 
       def initialize
+        $vm = self
         setup_load_paths
         setup_top_level
         boot_core
@@ -32,7 +33,13 @@ module Dagon
       end
 
       def boot_core
+        add_class("DAGONVM", DG_DAGONVMClass.new)
+        dg_const_set("DAGONVM", DAGONVM.instance)
+
+        add_class("Method", DG_MethodClass.new)
         add_class("Class", DG_Class.new)
+
+        add_class("String", DG_StringClass.new)
         add_class("Array", DG_ArrayClass.new)
         add_class("Binding", DG_BindingClass.new)
         add_class("Block", DG_BlockClass.new)
@@ -42,13 +49,12 @@ module Dagon
         add_class("False", DG_FalseClass.new)
         add_class("Float", DG_FloatClass.new)
         add_class("Function", DG_FunctionClass.new)
-        add_class("Hash", DG_HashClass.new)
+        load_core("hash")
         add_class("Integer", DG_IntegerClass.new)
-        add_class("Method", DG_MethodClass.new)
-        add_class("String", DG_StringClass.new)
         add_class("True", DG_TrueClass.new)
 
         add_class("NoMethodError", DG_NoMethodErrorClass.new)
+        add_class("InternalError", DG_InternalErrorClass.new)
         add_class("ArgumentError", DG_ArgumentErrorClass.new)
         add_class("SyntaxError", DG_SyntaxErrorClass.new)
         add_class("LoadError", DG_LoadErrorClass.new)
@@ -92,6 +98,18 @@ module Dagon
       def set_arguments arguments
         values = arguments.map { |arg| string(arg) }
         dg_const_set("ARGV", array(values))
+      end
+
+      def load_core(name)
+        filename = "core/#{name}.dg"
+        code = File.read(filename)
+        dg_eval(filename, code)
+      end
+
+      def dg_eval(filename, code)
+        tokens = Dagon::Scanner.tokenize(code, filename)
+        tree = Dagon::Parser.parse(tokens, filename)
+        tree.evaluate(self)
       end
 
       def frame_eval current_frame, &block
@@ -233,6 +251,9 @@ module Dagon
       def error(klass, message)
         error = get_class(klass).dagon_new(self, message)
         dg_raise(error)
+      rescue
+        binding.pry
+        1
       end
 
       def curry(dg_binding, name, function, *args)
@@ -243,8 +264,24 @@ module Dagon
         get_class("Method").dagon_new(self, dg_binding, name, block)
       end
 
+      def cast(native_value)
+        case native_value.class.to_s
+        when "String" then string(native_value)
+        when "Array" then array(native_value)
+        when "Fixnum" then int(native_value)
+        when "Float" then float(native_value)
+        when "TrueClass", "FalseClass" then bool(native_value)
+        else
+          native_value
+        end
+      end
+
       def string(native_string)
         from_native("String", native_string)
+      end
+
+      def bool(native_bool)
+        native_bool ? Dtrue : Dfalse
       end
 
       def array(native_array)

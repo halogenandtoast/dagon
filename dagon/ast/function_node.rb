@@ -20,7 +20,7 @@ module Dagon
         if args.size < @params.size
           interpreter.curry(object, @function_name, self, *args)
         elsif args.size > @params.size
-          interpreter.error("ArgumentError", "wrong number of arguments (#{args.size} for #{@params.size})")
+          interpreter.error("ArgumentError", "wrong number of arguments for #{@function_name} (#{args.size} for #{@params.size})")
         else
           frame = interpreter.frame
           args.each_with_index do |arg, index|
