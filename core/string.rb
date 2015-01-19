@@ -3,14 +3,9 @@ module Dagon
     class DG_String < DG_Object
       attr_reader :value
       def initialize value, klass
-        @value = value
+        @value = $vm.unwrap(value)
         super(klass)
-        begin
-          set_instance_variable("@length", $vm.int(@value.length))
-        rescue
-          binding.pry
-          raise
-        end
+        set_instance_variable("@length", $vm.int(@value.length))
       end
 
       def == other

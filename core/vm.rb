@@ -276,6 +276,14 @@ module Dagon
         end
       end
 
+      def unwrap(dagon_object)
+        if dagon_object.kind_of? DG_Object
+          dagon_object.value
+        else
+          dagon_object
+        end
+      end
+
       def string(native_string)
         from_native("String", native_string)
       end
