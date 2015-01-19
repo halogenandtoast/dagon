@@ -11,14 +11,9 @@ Hash:
     DAGONVM.aref-set(self, index, value)
   keys:
     DAGONVM.hash-keys(self)
-  each(fun):
-    keys.each ->(key)
-      fun(key, self[key])
   map(fun):
-    result: []
-    self.each ->(key, value)
-      result: result + [fun(key, value)]
-    result
+    keys.map ->(key)
+      [fun(key, self[value])]
   inspect:
     pairs: self.map ->(key, value)
       "#{key}: #{value.inspect}"

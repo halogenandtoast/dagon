@@ -33,7 +33,7 @@ DSpecRunner:
     run-spec-files
 
   run-spec-files:
-    @spec-files.each ->(file)
+    @spec-files.map ->(file)
       load(file)
 
 runner: DSpecRunner(spec-files)

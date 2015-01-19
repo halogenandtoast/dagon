@@ -1,2 +1,2 @@
-ARGV.each ->(arg)
+ARGV.map ->(arg)
   puts(arg)

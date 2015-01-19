@@ -70,7 +70,6 @@ describe("Array") ->
 
   it("can iterate over the array") ->
     array: [1, 2, 3]
-    x: 0
-    array.each ->(i)
-      x: x + i
-    assert-equal(x, 6)
+    mapped: array.map ->(i)
+      i * 2
+    assert-equal(mapped, [2, 4, 6])

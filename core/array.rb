@@ -80,15 +80,11 @@ module Dagon
           end
           value
         }
-        add_method 'each', ->(vm, ref, block) {
-          ref.value.each do |item|
-            if block.arity == 1
-              block.dagon_send(vm, 'call', item)
-            else
-              block.dagon_send(vm, 'call')
-            end
+        add_method 'map', ->(vm, ref, block) {
+          result = ref.value.map do |item|
+            block.dagon_send(vm, 'call', item)
           end
-          ref
+          vm.array(result)
         }
       end
 
