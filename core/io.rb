@@ -18,6 +18,14 @@ module Dagon
         args.each do |arg|
           if arg.class == DG_String
             @io.write(arg.value)
+          elsif arg.class == DG_Object
+            if arg.klass.name == :Array
+              write_array(arg)
+              next
+            else
+              value = arg.to_s
+              @io.write(value)
+            end
           else
             value = arg.to_s
             @io.write(value)
@@ -48,7 +56,7 @@ module Dagon
           ref.instance_variable_set("@file_descriptor", file_descriptor)
         }
         add_method "write", ->(vm, ref, value) {
-          ref.io.write(value.to_s)
+          ref.io.write(value.dagon_send(vm, "to-s"))
         }
         add_method "puts", ->(vm, ref, *args) {
           ref.dg_puts(*args)
