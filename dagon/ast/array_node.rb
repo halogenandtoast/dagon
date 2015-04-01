@@ -1,5 +1,3 @@
-require 'core/array'
-
 module Dagon
   module AST
     class ArrayNode < Node

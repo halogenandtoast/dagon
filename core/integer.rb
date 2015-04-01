@@ -93,7 +93,12 @@ module Dagon
           end
           ref
         }
-
+        add_method "downto", ->(vm, ref, value, block) {
+          ref.value.downto(value.value) do |i|
+            block.call vm, vm.int(i)
+          end
+          ref
+        }
         add_method "times", ->(vm, ref, block) {
           ref.value.times do
             block.call vm

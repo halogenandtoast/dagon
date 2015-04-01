@@ -1,4 +1,4 @@
-CORE = %w(object class array block false decimal frame function integer string true io file error dir method curried_method binding dagonvm)
+CORE = %w(object class block false decimal frame function integer string true io file error dir method curried_method binding dagonvm)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -40,7 +40,7 @@ module Dagon
         add_class("Class", DG_Class.new)
 
         add_class("String", DG_StringClass.new)
-        add_class("Array", DG_ArrayClass.new)
+        load_core("array")
         add_class("Binding", DG_BindingClass.new)
         add_class("Block", DG_BlockClass.new)
         add_class("CurriedMethod", DG_CurriedMethodClass.new)

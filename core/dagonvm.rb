@@ -30,6 +30,11 @@ module Dagon
           object.value = native
           object
         }
+        add_method 'native-send', ->(vm, ref, method, args, native) {
+          value = native.send(method.value.to_sym, args.value)
+          vm.cast(value)
+        }
+
         add_method 'primitive-add', ->(vm, ref, left, right) {
           vm.cast(left.value + right.value)
         }
@@ -48,6 +53,9 @@ module Dagon
         }
         add_method 'aref-set', ->(vm, ref, object, index, value) {
           object.value[index.value] = value
+        }
+        add_method 'aref-del', ->(vm, ref, object, index) {
+          object.value.delete_at(index.value)
         }
         add_method 'hash-keys', ->(vm, ref, object) {
           vm.array(object.value.keys.map { |key| vm.string(key) })

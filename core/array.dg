@@ -1,0 +1,113 @@
+Array:
+  init(native):
+    DAGONVM.set-value(self, native)
+    @length: DAGONVM.native-send("length", [], native)
+
+  length:
+    @length
+
+  [](index):
+    DAGONVM.aref(self, index)
+
+  []:(index, value):
+    DAGONVM.aref-set(self, index, value)
+
+  delete-at(index):
+    DAGONVM.aref-del(self, index)
+
+  pop:
+    delete-at(length - 1)
+
+  shift:
+    delete-at(0)
+
+  +(other):
+    new: []
+    offset: length
+    0.upto(length - 1) ->(i)
+      new[i]: self[i]
+    0.upto(other.length - 1) ->(i)
+      new[i + offset]: other[i]
+    new
+
+  -(other):
+    new: []
+    0.upto(length - 1) ->(i)
+      include: true
+      0.upto(other.length - 1) ->(j)
+        test: other[j] != self[i]
+        include: include && test
+      if include
+        new[new.length]: self[i]
+      else
+        true
+    new
+
+  =(other):
+    if other.length = length
+      truth: true
+      0.upto(length - 1) ->(i)
+        truth: truth && self[i] = other[i]
+      truth
+    else
+      false
+
+  push(value):
+    self[length]: value
+    self
+
+  last:
+    self[length - 1]
+
+  join(glue):
+    if length = 0
+      ""
+    elseif length = 1
+      self[0]
+    else
+      str: self[0].to-s
+      1.upto(length - 1) ->(i)
+        str: str + glue + self[i].to-s
+      str
+
+  empty?:
+    length = 0
+
+  any?:
+    length != 0
+
+  reduce(initial, block):
+    value: initial
+    0.upto(length - 1) ->(i)
+      value: block.call(value, self[i])
+    value
+
+  map(block):
+    new: []
+    0.upto(length - 1) ->(i)
+      new[i]: block.call(self[i])
+    new
+
+  *(times):
+    new: []
+    1.upto(times) ->(i)
+      0.upto(length - 1) ->(j)
+        new[new.length]: self[j]
+    new
+
+  inspect:
+    if length = 0
+      "[]"
+    elseif length = 1
+      "[" + self[0].to-s + "]"
+    else
+      str: "["
+      0.upto(length - 2) ->(i)
+        str: str + self[i].to-s + ", "
+      str + self.last.to-s + "]"
+
+  unshift(value):
+    length.downto(1) ->(i)
+      self[i]: self[i - 1]
+    self[0]: value
+    self
