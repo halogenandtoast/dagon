@@ -34,6 +34,8 @@ module Dagon
             DAGONVM.primitive-eq?(self, other)
           !=(other):
             DAGONVM.primitive-neq?(self, other)
+          to-s:
+            self
           length:
             @length
           [](index):
