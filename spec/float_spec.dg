@@ -1,5 +1,5 @@
-describe("Float") ->
-  it("is equal to an identical float") ->
+describe("Decimal") ->
+  it("is equal to an identical decimal") ->
     assert-equal(1.2, 1.2)
 
   it("addable") ->
@@ -10,3 +10,6 @@ describe("Float") ->
 
   it("can compare to integers") ->
     assert-equal(2.0, 2)
+
+  it("does not have float problems") ->
+    assert-equal(0.1 + 0.2, 0.3)

@@ -1,4 +1,4 @@
-CORE = %w(object class array block false float frame function integer string true io file error dir method curried_method binding dagonvm)
+CORE = %w(object class array block false decimal frame function integer string true io file error dir method curried_method binding dagonvm)
 CORE.each do |klass|
   require "core/#{klass}"
 end
@@ -47,7 +47,7 @@ module Dagon
         add_class("Dir", DG_DirClass.new)
         add_class("Error", DG_ErrorClass.new)
         add_class("False", DG_FalseClass.new)
-        add_class("Float", DG_FloatClass.new)
+        add_class("Decimal", DG_DecimalClass.new)
         add_class("Function", DG_FunctionClass.new)
         load_core("hash")
         add_class("Integer", DG_IntegerClass.new)
@@ -269,7 +269,7 @@ module Dagon
         when "String" then string(native_value)
         when "Array" then array(native_value)
         when "Fixnum" then int(native_value)
-        when "Float" then float(native_value)
+        when "Decimal" then decimal(native_value)
         when "TrueClass", "FalseClass" then bool(native_value)
         else
           native_value
@@ -300,8 +300,8 @@ module Dagon
         literal("Integer", native_int)
       end
 
-      def float(native_float)
-        literal("Float", native_float)
+      def decimal(native_decimal)
+        literal("Decimal", native_decimal)
       end
 
       def from_native(klass, native_value)

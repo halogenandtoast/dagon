@@ -14,8 +14,8 @@ describe("String") ->
   it("can convert to an Integer") ->
     assert-equal("12".to-i, 12)
 
-  it("can convert to a Float") ->
-    assert-equal("12.5".to-f, 12.5)
+  it("can convert to a Decimal") ->
+    assert-equal("12.5".to-d, 12.5)
 
   it("can be inspected") ->
     assert-equal("Foo\nBar".inspect, "\"Foo\\nBar\"")

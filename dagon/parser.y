@@ -106,7 +106,7 @@ rule
       | method_call
       | object_call
 
-  literal: FLOAT { result = AST::LiteralNode.new(@filename, @line, val[0].data.to_f) }
+  literal: DECIMAL { result = AST::LiteralNode.new(@filename, @line, BigDecimal.new(val[0].data)) }
          | INTEGER { result = AST::LiteralNode.new(@filename, @line, val[0].data.to_i) }
          | TRUE { result = AST::LiteralNode.new(@filename, @line, true) }
          | FALSE { result = AST::LiteralNode.new(@filename, @line, false) }
@@ -153,6 +153,7 @@ rule
         | singleline_lambda { result = val[0] }
 
 ---- header
+require 'bigdecimal'
 %w(
   node root_node function_call_node function_definition_node function_node
   string_node literal_node var_ref_node if_node assignment_node while_node

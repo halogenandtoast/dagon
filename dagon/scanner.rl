@@ -24,7 +24,7 @@
   comma = ', ';
   bang = '!';
   dot = '.';
-  float = digit+ '.' digit+;
+  decimal = digit+ '.' digit+;
   integer = '-'? digit+;
   indent = "  "+;
   at = "@";
@@ -44,7 +44,7 @@
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
     arrow => { emit(:ARROW, data, ts, te) };
     colon => { emit(':', data, ts, te) };
-    float => { emit(:FLOAT, data, ts, te) };
+    decimal => { emit(:DECIMAL, data, ts, te) };
     integer => { emit(:INTEGER, data, ts, te) };
     lparen => { emit(:LPAREN, data, ts, te) };
     rparen => { emit(:RPAREN, data, ts, te) };

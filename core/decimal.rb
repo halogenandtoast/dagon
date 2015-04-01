@@ -1,6 +1,6 @@
 module Dagon
   module Core
-    class DG_Float < DG_Object
+    class DG_Decimal < DG_Object
       attr_reader :value
       def initialize value, klass
         @value = value
@@ -12,23 +12,23 @@ module Dagon
       end
 
       def to_s
-        @value
+        @value.to_s("F")
       end
 
       def inspect
-        @value
+        @value.to_s("F")
       end
     end
 
-    class DG_FloatClass < DG_Class
+    class DG_DecimalClass < DG_Class
       undef :dagon_new
 
       def initialize value = ""
-        super("Float", Dagon::Core::DG_Class.new)
+        super("Decimal", Dagon::Core::DG_Class.new)
       end
 
       def instance value
-        DG_Float.new(value, self)
+        DG_Decimal.new(value, self)
       end
 
       def boot

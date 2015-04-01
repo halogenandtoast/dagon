@@ -45,8 +45,8 @@ module Dagon
         add_method 'to-i', ->(vm, ref) {
           vm.int(ref.value.to_i)
         }
-        add_method 'to-f', ->(vm, ref) {
-          vm.float(ref.value.to_f)
+        add_method 'to-d', ->(vm, ref) {
+          vm.decimal(BigDecimal.new(ref.value))
         }
         add_method 'inspect', ->(vm, ref) {
           dagon_new(vm, ref.value.inspect)

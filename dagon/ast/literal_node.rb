@@ -1,6 +1,3 @@
-require 'core/integer'
-require 'core/float'
-
 module Dagon
   module AST
     class LiteralNode < Node
@@ -16,7 +13,7 @@ module Dagon
       def evaluate interpreter
         case @value.class.name
         when "Fixnum" then interpreter.int(@value)
-        when "Float" then interpreter.float(@value)
+        when "BigDecimal" then interpreter.decimal(@value)
         when "TrueClass" then Dtrue
         when "FalseClass" then Dfalse
         end
