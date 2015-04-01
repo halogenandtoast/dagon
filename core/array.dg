@@ -1,66 +1,68 @@
 Array:
   init(native):
     DAGONVM.set-value(self, native)
-    @length: DAGONVM.native-send("length", [], native)
-
   length:
-    @length
-
+    DAGONVM.native-property(self, "length")
   [](index):
-    DAGONVM.aref(self, index)
-
+    DAGONVM.aref-get(self, index)
   []:(index, value):
     DAGONVM.aref-set(self, index, value)
-
   delete-at(index):
     DAGONVM.aref-del(self, index)
-
   pop:
     delete-at(length - 1)
-
   shift:
     delete-at(0)
-
   +(other):
     new: []
     offset: length
-    0.upto(length - 1) ->(i)
-      new[i]: self[i]
-    0.upto(other.length - 1) ->(i)
-      new[i + offset]: other[i]
+    if self.any?
+      0.upto(length - 1) ->(i)
+        new[i]: self[i]
+    else
+      new
+    if other.any?
+      0.upto(other.length - 1) ->(i)
+        new[i + offset]: other[i]
+    else
+      new
     new
-
   -(other):
     new: []
-    0.upto(length - 1) ->(i)
-      include: true
-      0.upto(other.length - 1) ->(j)
-        test: other[j] != self[i]
-        include: include && test
-      if include
-        new[new.length]: self[i]
-      else
-        true
+    if self.any?
+      0.upto(length - 1) ->(i)
+        include: true
+        if other.any?
+          0.upto(other.length - 1) ->(j)
+            test: other[j] != self[i]
+            include: include && test
+        else
+          new
+        if include
+          new[new.length]: self[i]
+        else
+          true
+    else
+      new
     new
-
   =(other):
     if other.length = length
-      truth: true
-      0.upto(length - 1) ->(i)
-        truth: truth && self[i] = other[i]
-      truth
+      if self.empty?
+        true
+      else
+        truth: true
+        0.upto(length - 1) ->(i)
+          truth: truth && self[i] = other[i]
+        truth
     else
       false
-
   push(value):
     self[length]: value
     self
-
   last:
     self[length - 1]
-
   join(glue):
-    if length = 0
+    if self.empty?
       ""
     elseif length = 1
       self[0]
@@ -69,45 +71,52 @@ Array:
       1.upto(length - 1) ->(i)
         str: str + glue + self[i].to-s
       str
-
   empty?:
     length = 0
-
   any?:
     length != 0
-
   reduce(initial, block):
-    value: initial
-    0.upto(length - 1) ->(i)
-      value: block.call(value, self[i])
-    value
-
+    if self.empty?
+      initial
+    else
+      value: initial
+      0.upto(length - 1) ->(i)
+        value: block.call(value, self[i])
+      value
   map(block):
-    new: []
-    0.upto(length - 1) ->(i)
-      new[i]: block.call(self[i])
-    new
-
+    if self.empty?
+      []
+    else
+      new: []
+      0.upto(length - 1) ->(i)
+        new[i]: block.call(self[i])
+      new
   *(times):
-    new: []
-    1.upto(times) ->(i)
-      0.upto(length - 1) ->(j)
-        new[new.length]: self[j]
-    new
-
+    if self.empty?
+      []
+    else
+      new: []
+      1.upto(times) ->(i)
+        0.upto(length - 1) ->(j)
+          new[new.length]: self[j]
+      new
   inspect:
-    if length = 0
+    if self.empty?
       "[]"
     elseif length = 1
-      "[" + self[0].to-s + "]"
+      "[" + self[0].inspect + "]"
     else
       str: "["
       0.upto(length - 2) ->(i)
         str: str + self[i].to-s + ", "
-      str + self.last.to-s + "]"
-
+      str + self.last.inspect + "]"
+  to-s:
+    inspect
   unshift(value):
-    length.downto(1) ->(i)
-      self[i]: self[i - 1]
+    if self.any?
+      length.downto(1) ->(i)
+        self[i]: self[i - 1]
+    else
+      true
     self[0]: value
     self

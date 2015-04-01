@@ -18,9 +18,6 @@ module Dagon
         args.each do |arg|
           if arg.class == DG_String
             @io.write(arg.value)
-          elsif arg.class == DG_Array
-            write_array(arg)
-            next
           else
             value = arg.to_s
             @io.write(value)

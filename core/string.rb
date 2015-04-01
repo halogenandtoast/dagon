@@ -39,7 +39,7 @@ module Dagon
           length:
             @length
           [](index):
-            DAGONVM.aref(self, index)
+            DAGONVM.aref-get(self, index)
         DEF
         add_method 'strip', ->(vm, ref) {
           dagon_new(vm, ref.value.strip)

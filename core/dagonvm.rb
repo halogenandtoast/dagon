@@ -30,11 +30,10 @@ module Dagon
           object.value = native
           object
         }
-        add_method 'native-send', ->(vm, ref, method, args, native) {
-          value = native.send(method.value.to_sym, args.value)
+        add_method 'native-property', ->(vm, ref, object, method) {
+          value = object.value.send(method.value.to_sym)
           vm.cast(value)
         }
-
         add_method 'primitive-add', ->(vm, ref, left, right) {
           vm.cast(left.value + right.value)
         }
@@ -44,7 +43,7 @@ module Dagon
         add_method 'primitive-neq?', ->(vm, ref, left, right) {
           vm.bool(left.value != right.value)
         }
-        add_method 'aref', ->(vm, ref, object, index) {
+        add_method 'aref-get', ->(vm, ref, object, index) {
           if object.value[index.value]
             vm.cast(object.value[index.value])
           else

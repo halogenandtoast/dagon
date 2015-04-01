@@ -6,7 +6,7 @@ Hash:
   !=(other):
     DAGONVM.primitive-neq?(self, other)
   [](index):
-    DAGONVM.aref(self, index)
+    DAGONVM.aref-get(self, index)
   []:(index, value):
     DAGONVM.aref-set(self, index, value)
   keys:
