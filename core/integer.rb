@@ -87,6 +87,13 @@ module Dagon
           right = other.value
           left <= right ? Dtrue : Dfalse
         }
+        add_method "upto", ->(vm, ref, value, block) {
+          ref.value.upto(value.value) do |i|
+            block.call vm, vm.int(i)
+          end
+          ref
+        }
+
         add_method "times", ->(vm, ref, block) {
           ref.value.times do
             block.call vm

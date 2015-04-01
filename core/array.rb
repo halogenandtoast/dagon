@@ -31,29 +31,71 @@ module Dagon
           []:(index, value):
             DAGONVM.aref-set(self, index, value)
           +(other):
-            DAGONVM.primitive-add(self, other)
+            new: []
+            offset: length
+            0.upto(length - 1) ->(i)
+              new[i]: self[i]
+            0.upto(other.length - 1) ->(i)
+              new[i + offset]: other[i]
+            new
+          -(other):
+            new: []
+            0.upto(length - 1) ->(i)
+              include: true
+              0.upto(other.length - 1) ->(j)
+                test: other[j] != self[i]
+                include: include && test
+              if include
+                new[new.length]: self[i]
+              else
+                true
+            new
           =(other):
-            DAGONVM.primitive-eq?(self, other)
+            if other.length = length
+              truth: true
+              0.upto(length - 1) ->(i)
+                truth: truth && self[i] = other[i]
+              truth
+            else
+              false
+          push(value):
+            self[length]: value
+            self
+          last:
+            self[length - 1]
+          join(glue):
+            if length = 0
+              ""
+            elseif length = 1
+              self[0]
+            else
+              str: self[0].to-s
+              1.upto(length - 1) ->(i)
+                str: str + glue + self[i].to-s
+              str
+          empty?:
+            length = 0
+          any?:
+            length != 0
+          reduce(initial, block):
+            value: initial
+            0.upto(length - 1) ->(i)
+              value: block.call(value, self[i])
+            value
+          map(block):
+            new: []
+            0.upto(length - 1) ->(i)
+              new[i]: block.call(self[i])
+            new
+          *(times):
+            new: []
+            1.upto(times) ->(i)
+              0.upto(length - 1) ->(j)
+                new[new.length]: self[j]
+            new
         DEF
-        add_method 'push', ->(vm, ref, value) {
-          ref.value << value
-          ref
-        }
-        add_method 'last', ->(vm, ref) {
-          ref.value.last
-        }
-        add_method 'join', ->(vm, ref, glue) {
-          vm.string(ref.value.map(&:to_s).join(glue.value))
-        }
         add_method 'pop', ->(vm, ref) {
           ref.value.pop
-        }
-        add_method '-', ->(vm, ref, other) {
-          result = ref.value.reject { |item| other.value.include?(item) }
-          DG_Array.new(result, self)
-        }
-        add_method '*', ->(vm, ref, other) {
-          DG_Array.new(ref.value * other.value, self)
         }
         add_method 'unshift', ->(vm, ref, object) {
           ref.value.unshift(object)
@@ -61,30 +103,11 @@ module Dagon
         add_method 'shift', ->(vm, ref) {
           ref.value.shift
         }
-        add_method 'empty?', ->(vm, ref) {
-          ref.value.empty? ? Dtrue : Dfalse
-        }
-        add_method 'any?', ->(vm, ref) {
-          ref.value.any? ? Dtrue : Dfalse
-        }
         add_method 'length', ->(vm, ref) {
           vm.int(ref.value.length)
         }
         add_method 'inspect', ->(vm, ref) {
           vm.string(ref.inspect)
-        }
-        add_method 'reduce', ->(vm, ref, initial, block) {
-          value = initial
-          ref.value.each do |item|
-            value = block.dagon_send(vm, "call", value, item)
-          end
-          value
-        }
-        add_method 'map', ->(vm, ref, block) {
-          result = ref.value.map do |item|
-            block.dagon_send(vm, 'call', item)
-          end
-          vm.array(result)
         }
       end
 
