@@ -4,12 +4,13 @@
 %%{
   machine new_parser;
   newline = ("\r"? "\n" | "\r") %{ @last_was_newline = true };
-  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'begin' | 'rescue';
+  keyword = 'if' | 'elseif' | 'else' | 'while' | 'true' | 'false' | 'begin' | 'rescue' | 'case';
   string = '"' ( /#{[^}]*}/ | [^"\\] | /\\./ )* '"';
   comment = '#' (any - newline)* newline %{ @line += 1 };
   constant = upper (alnum | '_')*;
   identifier = '-'? lower (lower | digit | '-')*;
   assignment = ': ';
+  case_any = '_';
   arrow = '->';
   colon = ':';
   operator = ' + ' | ' - ' | ' * ' | ' / ' | ' = ' | ' != ' | ' < ' | ' > ' | ' <= ' | ' >= ' | ' && ' | ' || ' | ' ^ ';
@@ -42,6 +43,7 @@
     identifier => { emit(:IDENTIFIER, data, ts, te) };
     key_assignment => { emit(:KEY_ASSIGNMENT, data, ts, te-1) };
     assignment => { emit(:ASSIGNMENT, data, ts, te-1) };
+    case_any => { emit(:CASE_ANY, data, ts, te) };
     arrow => { emit(:ARROW, data, ts, te) };
     colon => { emit(':', data, ts, te) };
     decimal => { emit(:DECIMAL, data, ts, te) };

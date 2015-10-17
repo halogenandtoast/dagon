@@ -25,6 +25,16 @@ rule
                 | conditional_statement
                 | while_statement
                 | begin_block
+                | case_statement
+
+  case_statement: CASE expression INDENT cases DEDENT { result = AST::CaseStatementNode.new(@filename, @line, val[1], val[3]) }
+
+  cases: cases case { result << val[1] }
+       | case { result = [val[0]] }
+
+
+  case: expression block NEWLINE { result = AST::CaseNode.new(@filename, @line, val[0], val[1]) }
+      | CASE_ANY block NEWLINE { result = AST::CaseNode.new(@filename, @line, AST::CaseAnyNode.new(@filename, @line), val[1]) }
 
   begin_block: BEGIN multiline_lambda NEWLINE rescue_block { result = AST::BeginBlockNode.new(@filename, @line, val[1], val[3]) }
 
@@ -160,7 +170,7 @@ require 'bigdecimal'
   class_definition_node instance_init_node block_node hash_node array_node
   unary_function_call_node constant_ref_node instance_var_ref_node
   dstring_node begin_block_node rescue_block_node global_var_ref_node
-  curried_function_call_node
+  curried_function_call_node case_statement_node case_node case_any_node
 ).each { |node| require_relative "../dagon/ast/#{node}" }
 
 ---- inner
