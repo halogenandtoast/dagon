@@ -157,7 +157,7 @@ rescue ->(e)
 
 ## Authors
 
-This language was designed and implemented by [Caleb Thompson](/calebthompson) and [Goose Mongeau](/halogenandtoast).
+This language was designed and implemented by [Caleb Thompson](https://github.com/calebthompson) and [Goose Mongeau](https://github.com/halogenandtoast).
 
 ## License
 
